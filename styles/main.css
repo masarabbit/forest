@@ -141,7 +141,7 @@ a:hover {
   height: 400px;
   width: 800px;
   border: red 1px solid;
-  overflow: hidden;
+  /* overflow: hidden; */
   background-color: rgb(255, 255, 255);
 }
 

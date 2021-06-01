@@ -5,17 +5,16 @@ function init() {
   const sprite = document.querySelector('.sprite')
   const height = 10
   const width = 20
+  const iHeight = 20
+  const iWidth = 40
   let cellSize = 40
   let spritePos = -cellSize
-  let x = -200
-  let y = -200
+  let x = ((iWidth * cellSize) - (width * cellSize)) * -0.5
+  let y = ((iHeight * cellSize) - (height * cellSize)) * -0.5
   let start = 89
 
   const indicator = document.querySelector('.indicator')
 
-  // const cellsWithWalls = [
-  //   31,45,69,68,71,73,82,83,85,88,91,94,95,96,98,105,110,111,112,123,125,128,137,141,142,143,145,146,154,156,157,171
-  // ]
   
   const mapMap = ()=>{
     const mapArr = []   
@@ -40,19 +39,26 @@ function init() {
   }
 
   map.innerHTML = mapMap()
+  map.style.height = `${height * cellSize}px`
+  map.style.width = `${width * cellSize}px`
   const mapTiles = document.querySelectorAll('.map_tile')
 
   const mapMapImage = () =>{
     const mapArr = []   
-    for (let i = 0; i < (40 * 20); i++){
+    for (let i = 0; i < (iWidth * iHeight); i++){
       mapArr.push(i)
     }
 
     return mapArr.map((_ele,i)=>{
+      const dataX = i % iWidth
+      const dataY = Math.floor(i / iWidth)
+
       return `
         <div 
           class="map_image_tile"
           data-index=${i}
+          data-x=${dataX}
+          data-y=${dataY}
         >
           ${i}
         </div>  
@@ -62,6 +68,9 @@ function init() {
 
 
   mapImage.innerHTML = mapMapImage()
+  mapImage.style.height = `${iHeight * cellSize}px`
+  mapImage.style.width = `${iWidth * cellSize}px`
+  const mapImageTiles = document.querySelectorAll('.map_image_tile')
 
   const setX = num =>{
     x = num
@@ -87,19 +96,20 @@ function init() {
     spriteContainer.style.left = `${paraX}px`
     spriteContainer.style.top = `${paraY}px`
   }
+  
 
   // const NoWall = pos =>{
   //   return !mapTiles[pos].classList.contains('wall')
   // }
 
-  // const setUpWalls = ()=>{
-  //   mapTiles.forEach(tile=>{
-  //     if (tile.dataset.y === '0' || 
-  //         tile.dataset.y === '9' || 
-  //         tile.dataset.x === '0' || 
-  //         tile.dataset.x === '19') tile.classList.add('wall')
-  //   })
-  // }
+  const setUpWalls = ()=>{
+    mapImageTiles.forEach(tile=>{
+      if (tile.dataset.y === '0' || 
+          tile.dataset.y === `${(iHeight - 1)}` || 
+          tile.dataset.x === '0' || 
+          tile.dataset.x === `${(iWidth - 1)}`) tile.classList.add('wall')
+    })
+  }
 
   // const clearTiles = ()=>{
   //   mapTiles[goal].innerHTML = ''
@@ -179,6 +189,8 @@ function init() {
   // setUpWalls()
   positionSprite(start)
   resize()
+  setUpWalls()
+
   window.addEventListener('resize', resize)
 }
 
