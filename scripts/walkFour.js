@@ -1,6 +1,7 @@
 function init() {
   const map = document.querySelector('.map')
   const mapImage = document.querySelector('.map_image')
+  const location = document.querySelector('.location_indicator')
   const spriteContainer = document.querySelector('.sprite_container')
   const sprite = document.querySelector('.sprite')
   const height = 10
@@ -12,11 +13,16 @@ function init() {
   let x = ((iWidth * cellSize) - (width * cellSize)) * -0.5
   let y = ((iHeight * cellSize) - (height * cellSize)) * -0.5
   let start = 89
-
-  const indicator = document.querySelector('.indicator')
-
   
-  const mapMap = ()=>{
+  const startLocationPos = (iWidth,iHeight)=> {
+    return ((iWidth) * (iHeight / 2)) - (iWidth / 2) - 1
+  }
+  let locationPos = startLocationPos(iWidth,iHeight)
+  
+  const indicator = document.querySelector('.indicator')
+  
+
+  const mapMap = (width, height, classToAdd)=>{
     const mapArr = []   
     for (let i = 0; i < (width * height); i++){
       mapArr.push(i)
@@ -28,34 +34,7 @@ function init() {
 
       return `
         <div 
-          class="map_tile"
-          data-index=${i}
-          data-x=${dataX}
-          data-y=${dataY}
-        >
-        </div>  
-      `
-    }).join('')
-  }
-
-  map.innerHTML = mapMap()
-  map.style.height = `${height * cellSize}px`
-  map.style.width = `${width * cellSize}px`
-  const mapTiles = document.querySelectorAll('.map_tile')
-
-  const mapMapImage = () =>{
-    const mapArr = []   
-    for (let i = 0; i < (iWidth * iHeight); i++){
-      mapArr.push(i)
-    }
-
-    return mapArr.map((_ele,i)=>{
-      const dataX = i % iWidth
-      const dataY = Math.floor(i / iWidth)
-
-      return `
-        <div 
-          class="map_image_tile"
+          class=${classToAdd}
           data-index=${i}
           data-x=${dataX}
           data-y=${dataY}
@@ -64,10 +43,22 @@ function init() {
         </div>  
       `
     }).join('')
+
+
   }
 
+  map.innerHTML = mapMap(width,height,'map_tile')
+  map.style.height = `${height * cellSize}px`
+  map.style.width = `${width * cellSize}px`
+  const mapTiles = document.querySelectorAll('.map_tile')
 
-  mapImage.innerHTML = mapMapImage()
+
+  location.innerHTML = mapMap(iWidth,iHeight,'location_indicator_tile')
+  const locationTiles = document.querySelectorAll('.location_indicator_tile')
+  locationTiles[locationPos].classList.add('mark')
+
+
+  mapImage.innerHTML = mapMap(iWidth,iHeight,'map_image_tile')
   mapImage.style.height = `${iHeight * cellSize}px`
   mapImage.style.width = `${iWidth * cellSize}px`
   const mapImageTiles = document.querySelectorAll('.map_image_tile')
@@ -98,12 +89,12 @@ function init() {
   }
   
 
-  // const NoWall = pos =>{
-  //   return !mapTiles[pos].classList.contains('wall')
-  // }
+  const noWall = pos =>{
+    return !mapImageTiles[pos].classList.contains('wall')
+  }
 
-  const setUpWalls = ()=>{
-    mapImageTiles.forEach(tile=>{
+  const setUpWalls = target =>{
+    target.forEach(tile=>{
       if (tile.dataset.y === '0' || 
           tile.dataset.y === `${(iHeight - 1)}` || 
           tile.dataset.x === '0' || 
@@ -121,33 +112,52 @@ function init() {
 
   const spriteWalk = e=>{
     if (!e) return
+  
+    locationTiles[locationPos].classList.remove('mark')
 
     const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
-    // const current = (x / cellSize) + ((y / cellSize) * width)
+
     let m = -cellSize
     switch (direction) {
       case 'right': 
-        setX(x - cellSize)
+        if (noWall(locationPos + 1)){
+          setX(x - cellSize)
+          locationPos += 1
+        }
         m = spritePos === m * 8 ? m * 9 : m * 8
         break
       case 'left': 
-        setX(x + cellSize)
+        if (noWall(locationPos - 1)){
+          setX(x + cellSize)
+          locationPos -= 1
+        }
         m = spritePos === m * 6 ? m * 7 : m * 6
         break
       case 'up': 
-        setY(y + cellSize)
+        if (noWall(locationPos - iWidth)){
+          setY(y + cellSize)
+          locationPos -= iWidth
+        }
         m = spritePos === m * 3 ? m * 5 : m * 3
         break
       case 'down': 
-        setY(y - cellSize)
+        if (noWall(locationPos + iWidth)){
+          setY(y - cellSize)
+          locationPos += iWidth
+        }    
         m = spritePos === m * 0 ? m * 2 : m * 0
         break
       default:
         console.log('invalid command')
     }
     setSpritePos(m)
+    locationTiles[locationPos].classList.add('mark')
     // start = (x / cellSize) + ((y / cellSize) * width)
     indicator.innerHTML = `x:${x} y:${y}`
+
+    
+    //! some other number required to indicate position.
+    console.log(((x / -0.5) + (width / cellSize)) / cellSize)
   }
 
 
@@ -162,7 +172,7 @@ function init() {
     if (wrapper.offsetWidth < 800) {
       pWidth = wrapper.offsetWidth
     } 
-    cellSize = Math.floor(pWidth / 20)
+    cellSize = Math.floor(pWidth / width)
     const mapCover = document.querySelector('.map_cover')
 
     //*resize sprite
@@ -175,13 +185,24 @@ function init() {
 
     //* resize map
     map.style.width = `${pWidth}px`
-    map.style.height = `${pWidth / 2}px`
+    map.style.height = `${pWidth / (width / height)}px`
     mapCover.style.width = `${pWidth}px`
-    mapCover.style.height = `${pWidth / 2}px`
-    mapCover.style.marginTop = `-${pWidth / 2}px`
+    mapCover.style.height = `${pWidth / (width / height)}px`
+    mapCover.style.marginTop = `-${pWidth / (width / height)}px`
+
     mapTiles.forEach(tile=>{
-      tile.style.width = `${pWidth / 20}px`
-      tile.style.height = `${pWidth / 20}px`
+      tile.style.width = `${pWidth / width}px`
+      tile.style.height = `${pWidth / width}px`
+    })
+
+    
+    //! needs to be corrected
+    mapImage.style.width = `${cellSize * iWidth}px`
+    mapImage.style.height = `${(cellSize * iWidth) / (iWidth / iHeight)}px`
+
+    mapImageTiles.forEach(tile=>{
+      tile.style.width = `${pWidth / width}px`
+      tile.style.height = `${pWidth / width}px`
     })
   }
   
@@ -189,7 +210,12 @@ function init() {
   // setUpWalls()
   positionSprite(start)
   resize()
-  setUpWalls()
+  setUpWalls(mapImageTiles)
+  setUpWalls(locationTiles)
+
+  // const setMarkPosition = (locationTiles,index) =>{
+  //   locationTiles.forEach()
+  // }
 
   window.addEventListener('resize', resize)
 }
