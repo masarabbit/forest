@@ -216,7 +216,7 @@ function init() {
     //! margin calc not quite right when resized after motion.
     const dataX = mapImageTiles[locationPos].dataset.x
     const dataY = mapImageTiles[locationPos].dataset.y
-    const xMargin = ((+dataX + 1) * cellSize) / -2
+    const xMargin = ((+dataX + 1) * cellSize) / -2  //!割るんじゃなくて、マップの大きさを差し引いてOffsetする？
     const yMargin = ((+dataY + 1) * cellSize) / -2
     
 
