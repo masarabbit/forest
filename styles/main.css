@@ -149,7 +149,7 @@ a:hover {
   position: relative;
   height: 800px;
   width: 1600px;
-  /* background-color: rgb(255, 255, 255); */
+  background-color: rgb(132, 250, 234);
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -185,7 +185,7 @@ a:hover {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
-  transition: 0.5s;
+  /* transition: 0.5s; */
 }
 
 .location_indicator_tile {
@@ -196,7 +196,7 @@ a:hover {
   height: 8px;
   font-size: 4px;
   color: transparent;
-  transition:0.5s;
+  /* transition:0.5s; */
   cursor: pointer;
   /* border: rgb(252, 65, 196) 1px solid; */
 }
@@ -207,4 +207,5 @@ a:hover {
 
 .mark {
   background-color: rgb(231, 255, 125);
+  border-radius: 50%;
 }

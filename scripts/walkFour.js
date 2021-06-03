@@ -1,5 +1,10 @@
+//*resize still imcomplete.
+//*add logic to trigger event when facing particular direction and at a location.
+
+
 function init() {
   const map = document.querySelector('.map')
+  const mapImageContainer = document.querySelector('.map_image_container')
   const mapImage = document.querySelector('.map_image')
   const location = document.querySelector('.location_indicator')
   const spriteContainer = document.querySelector('.sprite_container')
@@ -9,10 +14,16 @@ function init() {
   const iHeight = 20
   const iWidth = 40
   let cellSize = 40
+  // const height = 5
+  // const width = 10
+  // const iHeight = 10
+  // const iWidth = 20
+  // let cellSize = 40
   let spritePos = -cellSize
   let x = ((iWidth * cellSize) - (width * cellSize)) * -0.5
   let y = ((iHeight * cellSize) - (height * cellSize)) * -0.5
   let start = 89
+  // let start = 7
   
   const startLocationPos = (iWidth,iHeight)=> {
     return ((iWidth) * (iHeight / 2)) - (iWidth / 2) - 1
@@ -48,7 +59,7 @@ function init() {
   }
 
   map.innerHTML = mapMap(width,height,'map_tile')
-  map.style.height = `${height * cellSize}px`
+  map.style.height = `${height * cellSize}px`  //! make into function
   map.style.width = `${width * cellSize}px`
   const mapTiles = document.querySelectorAll('.map_tile')
 
@@ -114,7 +125,6 @@ function init() {
     if (!e) return
   
     locationTiles[locationPos].classList.remove('mark')
-
     const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
 
     let m = -cellSize
@@ -153,11 +163,7 @@ function init() {
     setSpritePos(m)
     locationTiles[locationPos].classList.add('mark')
     // start = (x / cellSize) + ((y / cellSize) * width)
-    indicator.innerHTML = `x:${x} y:${y}`
-
-    
-    //! some other number required to indicate position.
-    console.log(((x / -0.5) + (width / cellSize)) / cellSize)
+    indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[locationPos].dataset.index}`
   }
 
 
@@ -173,7 +179,10 @@ function init() {
       pWidth = wrapper.offsetWidth
     } 
     cellSize = Math.floor(pWidth / width)
+    const calcWidth = Math.floor(pWidth / width) * width
     const mapCover = document.querySelector('.map_cover')
+
+    const whRatio = width / height
 
     //*resize sprite
     positionSprite(start)
@@ -184,25 +193,47 @@ function init() {
     spriteContainer.style.width = `${cellSize}px`
 
     //* resize map
-    map.style.width = `${pWidth}px`
-    map.style.height = `${pWidth / (width / height)}px`
-    mapCover.style.width = `${pWidth}px`
-    mapCover.style.height = `${pWidth / (width / height)}px`
-    mapCover.style.marginTop = `-${pWidth / (width / height)}px`
+    map.style.width = `${calcWidth}px`
+    map.style.height = `${calcWidth / whRatio}px`
 
-    mapTiles.forEach(tile=>{
-      tile.style.width = `${pWidth / width}px`
-      tile.style.height = `${pWidth / width}px`
-    })
+    mapCover.style.width = `${calcWidth}px`
+    mapCover.style.height = `${calcWidth / whRatio}px`
+    mapCover.style.marginTop = `-${calcWidth / whRatio}px`
+
+    mapImageContainer.style.width = `${calcWidth}px`
+    mapImageContainer.style.height = `${calcWidth / whRatio}px`
 
     
-    //! needs to be corrected
+
+    mapTiles.forEach(tile=>{
+      tile.style.width = `${cellSize}px`
+      tile.style.height = `${cellSize}px`
+    })
+    
+    console.log('c',cellSize)
+    console.log('xy',locationPos,x,y)
+
+    //! margin calc not quite right when resized after motion.
+    const dataX = mapImageTiles[locationPos].dataset.x
+    const dataY = mapImageTiles[locationPos].dataset.y
+    const xMargin = ((+dataX + 1) * cellSize) / -2
+    const yMargin = ((+dataY + 1) * cellSize) / -2
+    
+
+    console.log(
+      'x',xMargin,
+      'y',yMargin
+      )
+
+    setX(xMargin)  
+    setY(yMargin)
+
+    //* mapImage resize
     mapImage.style.width = `${cellSize * iWidth}px`
     mapImage.style.height = `${(cellSize * iWidth) / (iWidth / iHeight)}px`
-
     mapImageTiles.forEach(tile=>{
-      tile.style.width = `${pWidth / width}px`
-      tile.style.height = `${pWidth / width}px`
+      tile.style.width = `${cellSize}px`
+      tile.style.height = `${cellSize}px`
     })
   }
   
