@@ -1,4 +1,6 @@
-//*resize still imcomplete.
+
+//*setupWalls to be enhanced to takeaway wall in somearea and add obstacles in other areas
+//*maybe design maps first.
 //*add logic to trigger event when facing particular direction and at a location.
 
 function init() {
@@ -69,6 +71,7 @@ function init() {
   let mapImageTiles
 
 
+
   const setLocation = index => {
     height = mapData[index].height
     width = mapData[index].width
@@ -84,8 +87,8 @@ function init() {
     mapImage.innerHTML = mapMap(iWidth,iHeight,'map_image_tile')
     mapImageTiles = document.querySelectorAll('.map_image_tile')
 
-    locationPos = startLocationPos(iWidth,iHeight)
-    start = Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
+    // locationPos = startLocationPos(iWidth,iHeight)
+    // start = Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
   }
 
 
@@ -93,6 +96,10 @@ function init() {
     return ((w) * (h / 2)) - (w / 2) - 1
   }
 
+
+  const adjustLocationPos = () =>{
+    start = Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
+  }
 
 
   const mapMap = (w, h, classToAdd)=>{
@@ -135,9 +142,6 @@ function init() {
     y = num
     mapImage.style.top = `${y}px`
   }
-
-  // setX(x)
-  // setY(y)
 
   const setSpritePos = num =>{
     spritePos = num
@@ -209,17 +213,18 @@ function init() {
     locationTiles[locationPos].classList.add('mark')
     
     //*indicator
-    indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[locationPos].dataset.index}`
     const dataX = mapImageTiles[locationPos].dataset.x
     const dataY = mapImageTiles[locationPos].dataset.y
-    console.log(
-      'cellSize',cellSize,
-      'dataX',dataX,
-      'dataY',dataY,
-      'x',x,
-      'y',y,
-      'los',locationPos
-      )
+    indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[locationPos].dataset.index} dataX:${dataX} dataY:${dataY}`
+
+    // console.log(
+    //   'cellSize',cellSize,
+    //   'dataX',dataX,
+    //   'dataY',dataY,
+    //   'x',x,
+    //   'y',y,
+    //   'los',locationPos
+    //   )
   }
 
 
@@ -248,6 +253,7 @@ function init() {
     setX(xMargin)  
     setY(yMargin)
 
+
     //* adjust sprite
     setSpritePos(-cellSize)
     sprite.style.height = `${cellSize}px`
@@ -271,22 +277,28 @@ function init() {
     
     //* setup mapcover
     adjustRectSize(mapCover,width,height,cellSize)
-    
-    //* setup walls
-    //! can be taken out from here and take to reset
-    setUpWalls(mapImageTiles)
-    setUpWalls(locationTiles)
   }
 
 
   window.addEventListener('resize', ()=>resize(mapData[locationIndex].cellSize))
   setLocation(1)
+  locationPos = startLocationPos(iWidth,iHeight)
+  adjustLocationPos()
   resize('auto')
+   //* setup walls
+  setUpWalls(mapImageTiles)
+  setUpWalls(locationTiles)
+
 
   const toggleLocation = e =>{
     locationIndex = e.target.dataset.index
     setLocation(locationIndex)
+    //! need to change to new location here.
+    //! locationPos = 
+    adjustLocationPos()
     resize(mapData[locationIndex].cellSize)
+    setUpWalls(mapImageTiles)
+    setUpWalls(locationTiles)
   }
 
 
