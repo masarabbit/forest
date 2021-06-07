@@ -4,6 +4,8 @@
 //*add logic to trigger event when facing particular direction and at a location.
 //* create logic to enable bear to move around map (exit and entry)
 
+//! events can be triggered by combination of where the bear is, and dataset.index
+
 function init() {
 
   const tree = () => {
@@ -26,7 +28,15 @@ function init() {
       height: 12,
       iWidth: 30,
       iHeight: 20,
-      cellSize: 'auto',
+      cellD: 'auto',
+      portal:[
+        {
+          name: 'untitled',
+          cell: [5,6],
+          dire: 'down',
+          exit: ''
+        }
+      ],
       exclude: [35],
       map: 'vvvvvbbvvvvvvvvvvvvvvvvvvvvvvvvwwwwbbwwwwwwwwwwwwwwwwwwwwwwvvwbbbbbbbbbbbbbbbbbtbbbbbbbbwvvwbbbbbbbbbbbbtbbbbbbbbbbbtbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbtbbbbbbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbtbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbtbbbtbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbtbbbbbbbbtbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbvwbbbbbbbbbbbbbbbbbbbbbbbtbbbbvwbtbbbbbtbbbbbbbbbbbbtbbbbbwvvwbbbbbbbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv'
     },
@@ -36,7 +46,14 @@ function init() {
       height: 10,
       iWidth: 40,
       iHeight: 30,
-      cellSize: 'auto',
+      cellD: 'auto',
+      portal:[
+        {
+          name: 'untitled',
+          cell: [1179,1178,1180],
+          dire: 'up'
+        }
+      ],
       exclude: [1179],
       map: 'vvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwbbbwwwwwwwwwwwwvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvtvvvvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbtbbbbbbbbbbbbbbbbbbbtbbbwvvvvvtvvwbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbbbbbbbbbbbbbtbbtbbbbbbbbwwwwwwwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbtbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbtbbbbbbbbtbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbtbbbbtbbbbbbbbbtbbbbwvvvvtvvvvtvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvtvvvvvvvwbtbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvtvwbbbbbbbbbbbbtbbbtbbtbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvtvvvvvtvvvwwwwwbbbwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvv'
     },
@@ -46,7 +63,14 @@ function init() {
       height: 6,
       iWidth: 18,
       iHeight: 14,
-      cellSize: 40,
+      cellD: 40,
+      portal:[
+        {
+          name: 'untitled',
+          cell: [242,241,243],
+          dire: 'up'
+        }
+      ],
       exclude: [242],
       map: 'vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvwbooobbbbbbooobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbooobbbbbbooobwvvwwwwwwbbbwwwwwwwvvvvvvvvbbbvvvvvvvv'
     }
@@ -71,7 +95,7 @@ function init() {
   const location = document.querySelector('.location_indicator')
   const spriteContainer = document.querySelector('.sprite_container')
   const sprite = document.querySelector('.sprite')
-  const indicator = document.querySelector('.indicator')
+  // const indicator = document.querySelector('.indicator')
 
   let locationIndex = 0
 
@@ -81,8 +105,8 @@ function init() {
   let iWidth
   let locationPos 
   let start
-  let cellSize 
-  let miniCellSize 
+  let cellD 
+  let minicellD 
   let spritePos 
   let x 
   let y 
@@ -167,8 +191,8 @@ function init() {
   }
 
   const positionSprite = pos =>{
-    const paraX = pos % width * cellSize
-    const paraY = Math.floor(pos / width) * cellSize
+    const paraX = pos % width * cellD
+    const paraY = Math.floor(pos / width) * cellD
     spriteContainer.style.left = `${paraX}px`
     spriteContainer.style.top = `${paraY}px`
   }
@@ -180,16 +204,6 @@ function init() {
     return mapImageTiles[pos].classList.contains('b')
   }
 
-  // const setUpWalls = target =>{
-  //   target.forEach((tile,i)=>{
-  //     if ((tile.dataset.y === '0' || 
-  //         tile.dataset.y === `${(iHeight - 1)}` || 
-  //         tile.dataset.x === '0' || 
-  //         tile.dataset.x === `${(iWidth - 1)}`) &&
-  //         mapData[locationIndex].exclude.filter(a=>a === i).length === 0) tile.classList.add('wall')
-  //   })
-  // }
-
   const setUpWalls = target =>{
     target.forEach((tile,i)=>{
       // if (mapData[locationIndex].map[i]==='w') tile.classList.add('wall')
@@ -198,57 +212,82 @@ function init() {
           mapData[locationIndex].map[i] === 'w') tile.innerHTML = tree()
     })
   }
+  
+  const turnSprite = e => {
+    let m = -cellD
+    const dire = ['right','left','up','down']
+    const spriteChange = [
+      ()=> m = spritePos === m * 9 ? m * 8 : m * 9,
+      ()=> m = spritePos === m * 6 ? m * 7 : m * 6,
+      ()=> m = spritePos === m * 3 ? m * 5 : m * 3,
+      ()=> m = spritePos === m * 0 ? m * 2 : m * 0
+    ]
+    spriteChange[dire.indexOf(e)]()
+    setSpritePos(m)
+  }
+  
+
+  //! something like this to transport the bear to the particular portal.
+  // const transport = target => {
+  //   locationIndex = //!set new location
+  //   setLocation(locationIndex)
+
+  //   locationPos = mapData[locationIndex].portal[0].cell[0]//!needs to be set
+
+  //   placeInCenterOfMap()
+  //   resize(mapData[locationIndex].cellD)//!needs to be set
+  //   setUpWalls(mapImageTiles)
+  //   setUpWalls(locationTiles)
+  //   turnSprite()//! neeed to be set
+  // }
 
 
-  const spriteWalk = e=>{
+  const spriteWalk = e =>{
     if (!e) return
   
     locationTiles[locationPos].classList.remove('mark')
     const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
-    let m = -cellSize
+    turnSprite(direction)
 
     switch (direction) {
       case 'right': 
         if (noWall(locationPos + 1)){
-          setX(x - cellSize)
+          setX(x - cellD)
           locationPos += 1
         }
-        m = spritePos === m * 9 ? m * 8 : m * 9
         break
       case 'left': 
         if (noWall(locationPos - 1)){
-          setX(x + cellSize)
+          setX(x + cellD)
           locationPos -= 1
         }
-        m = spritePos === m * 6 ? m * 7 : m * 6
         break
       case 'up': 
         if (noWall(locationPos - iWidth)){
-          setY(y + cellSize)
+          setY(y + cellD)
           locationPos -= iWidth
         }
-        m = spritePos === m * 3 ? m * 5 : m * 3
         break
       case 'down': 
         if (noWall(locationPos + iWidth)){
-          setY(y - cellSize)
+          setY(y - cellD)
           locationPos += iWidth
         }    
-        m = spritePos === m * 0 ? m * 2 : m * 0
         break
       default:
         console.log('invalid command')
     }
-    setSpritePos(m)
     locationTiles[locationPos].classList.add('mark')
+
+
     
     //*indicator
-    const dataX = mapImageTiles[locationPos].dataset.x
-    const dataY = mapImageTiles[locationPos].dataset.y
-    indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[locationPos].dataset.index} dataX:${dataX} dataY:${dataY}`
+    // const dataX = mapImageTiles[locationPos].dataset.x
+    // const dataY = mapImageTiles[locationPos].dataset.y
+    // indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[locationPos].dataset.index} dataX:${dataX} dataY:${dataY}`
 
     // console.log(
-    //   'cellSize',cellSize,
+    //   'cellD',cellD,
     //   'dataX',dataX,
     //   'dataY',dataY,
     //   'x',x,
@@ -269,8 +308,8 @@ function init() {
       pWidth = wrapper.offsetWidth
     } 
 
-    //! this bit can be commented out to keep cellSizeConsistent
-    cellSize = option === 'auto'
+    //! this bit can be commented out to keep cellDConsistent
+    cellD = option === 'auto'
     ? Math.floor(pWidth / width)
     : option
     positionSprite(start)
@@ -278,58 +317,61 @@ function init() {
     //* update offset margins
     const dataX = mapImageTiles[locationPos].dataset.x
     const dataY = mapImageTiles[locationPos].dataset.y
-    const xMargin = dataX * -cellSize + ((Math.floor(width / 2) - 1) * cellSize)
-    const yMargin = dataY * -cellSize + ((Math.floor(height / 2) - 1) * cellSize) 
+    const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
+    const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
     setX(xMargin)  
     setY(yMargin)
 
 
     //* adjust sprite
-    setSpritePos(-cellSize)
-    sprite.style.height = `${cellSize}px`
-    sprite.style.width = `${cellSize * 10}px`
-    spriteContainer.style.height = `${cellSize}px`
-    spriteContainer.style.width = `${cellSize}px`
+    setSpritePos(-cellD)
+    sprite.style.height = `${cellD}px`
+    sprite.style.width = `${cellD * 10}px`
+    spriteContainer.style.height = `${cellD}px`
+    spriteContainer.style.width = `${cellD}px`
 
     //* resize mapImageContainer
-    adjustRectSize(mapImageContainer,width,height,cellSize)
+    adjustRectSize(mapImageContainer,width,height,cellD)
     
     //* resize map
-    adjustRectSize(map,width,height,cellSize,mapTiles)
+    adjustRectSize(map,width,height,cellD,mapTiles)
     
     //* setup location indicator
-    miniCellSize = Math.floor(cellSize / 8)
-    adjustRectSize(location,iWidth,iHeight,miniCellSize,locationTiles)
+    minicellD = Math.floor(cellD / 8)
+    adjustRectSize(location,iWidth,iHeight,minicellD,locationTiles)
     locationTiles[locationPos].classList.add('mark')
   
     //* setup map image
-    adjustRectSize(mapImage,iWidth,iHeight,cellSize,mapImageTiles)
+    adjustRectSize(mapImage,iWidth,iHeight,cellD,mapImageTiles)
     
     //* setup mapcover
-    adjustRectSize(mapCover,width,height,cellSize)
+    adjustRectSize(mapCover,width,height,cellD)
   }
 
 
-  window.addEventListener('resize', ()=>resize(mapData[locationIndex].cellSize))
+  window.addEventListener('resize', ()=>resize(mapData[locationIndex].cellD))
   setLocation(locationIndex)
   // locationPos = startLocationPos(iWidth,iHeight)
-  locationPos = mapData[locationIndex].exclude[0]
+  locationPos = mapData[locationIndex].portal[0].cell[0]
   placeInCenterOfMap()
   resize('auto')
    //* setup walls
   setUpWalls(mapImageTiles)
   setUpWalls(locationTiles)
+  turnSprite(mapData[locationIndex].portal[0].dire)
 
 
   const toggleLocation = e =>{
     locationIndex = e.target.dataset.index
     setLocation(locationIndex)
-    //! need to change to new location here.
-    locationPos = mapData[locationIndex].exclude[0]
+
+    locationPos = mapData[locationIndex].portal[0].cell[0]
+    console.log('t',mapData[locationIndex].portal[0].dire)
     placeInCenterOfMap()
-    resize(mapData[locationIndex].cellSize)
+    resize(mapData[locationIndex].cellD)
     setUpWalls(mapImageTiles)
     setUpWalls(locationTiles)
+    turnSprite(mapData[locationIndex].portal[0].dire)
   }
 
 
