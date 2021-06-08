@@ -38,6 +38,7 @@ body {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
+  /* border:rgb(209, 255, 6) solid 1px; */
 }
 
 .inner_map {
@@ -83,7 +84,6 @@ body {
   width: 400px;
 }
 
-.start { background-color: rgb(91, 248, 156); }
 
 .sign {
   position: absolute;
@@ -121,6 +121,7 @@ a:hover {
   width: 800px;
   overflow: hidden;
   background-color: transparent;
+  /* border: hotpink solid 1px; */
 }
 
 .map_image {
@@ -141,6 +142,7 @@ a:hover {
   height: 40px;
   font-size: 10px;
   color: blue;
+  /* color: transparent; */
   transition:0.5s;
   cursor: pointer;
   /* background-color: rgb(180, 255, 245); */

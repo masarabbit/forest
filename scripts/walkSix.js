@@ -2,9 +2,11 @@
 
 //*maybe design maps first.
 //*add logic to trigger event when facing particular direction and at a location.
-//* create logic to enable bear to move around map (exit and entry)
 
+//!change resize logic to keep cellsize consistent? - and instead change height and width
 //! events can be triggered by combination of where the bear is, and dataset.index
+//! add transition effect for when the map changes (blank, then appear again, maybe another cover)
+//! some event to be triggered dependant on state (action button, like A to speak, X in playstation)
 
 function init() {
 
@@ -21,14 +23,40 @@ function init() {
     `
   }
 
+  const entryPoints = [
+    {
+      portal: 1,
+      name: 'untitled',
+      cell: 35,
+      dire: 'down',
+    },
+    {
+      portal: 2,
+      name: 'untitled',
+      cell: 1139,
+      dire: 'up'
+    },
+    {
+      portal: 3,
+      name: 'untitled',
+      cell: 224,
+      dire: 'up'
+    }
+  ]
+
+  const events = [
+    transport,
+  ]
+
   const mapData = [
     {
       name: 'one',
-      width: 16,
-      height: 12,
       iWidth: 30,
       iHeight: 20,
-      cellD: 'auto',
+      events: [
+        '5_0-3',
+        '6_0-3'
+      ],
       portal:[
         {
           name: 'untitled',
@@ -37,16 +65,17 @@ function init() {
           exit: ''
         }
       ],
-      exclude: [35],
       map: 'vvvvvbbvvvvvvvvvvvvvvvvvvvvvvvvwwwwbbwwwwwwwwwwwwwwwwwwwwwwvvwbbbbbbbbbbbbbbbbbtbbbbbbbbwvvwbbbbbbbbbbbbtbbbbbbbbbbbtbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbtbbbbbbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbtbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbtbbbtbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbtbbbbbbbbtbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbvwbbbbbbbbbbbbbbbbbbbbbbbtbbbbvwbtbbbbbtbbbbbbbbbbbbtbbbbbwvvwbbbbbbbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv'
     },
     {
       name: 'two',
-      width: 20,
-      height: 10,
       iWidth: 40,
       iHeight: 30,
-      cellD: 'auto',
+      events: [
+        '1178_0-1',
+        '1179_0-1',
+        '1180_0-1'
+      ],
       portal:[
         {
           name: 'untitled',
@@ -54,16 +83,17 @@ function init() {
           dire: 'up'
         }
       ],
-      exclude: [1179],
       map: 'vvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwbbbwwwwwwwwwwwwvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvtvvvvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbtbbbbbbbbbbbbbbbbbbbtbbbwvvvvvtvvwbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbbbbbbbbbbbbbtbbtbbbbbbbbwwwwwwwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbtbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbtbbbbbbbbtbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbtbbbbtbbbbbbbbbtbbbbwvvvvtvvvvtvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvtvvvvvvvwbtbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvtvwbbbbbbbbbbbbtbbbtbbtbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvtvvvvvtvvvwwwwwbbbwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvv'
     },
     {
       name: 'three',
-      width: 8,
-      height: 6,
       iWidth: 18,
       iHeight: 14,
-      cellD: 40,
+      events: [
+        '241_0-2',
+        '242_0-2',
+        '243_0-2'
+      ],
       portal:[
         {
           name: 'untitled',
@@ -71,7 +101,6 @@ function init() {
           dire: 'up'
         }
       ],
-      exclude: [242],
       map: 'vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvwbooobbbbbbooobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbooobbbbbbooobwvvwwwwwwbbbwwwwwwwvvvvvvvvbbbvvvvvvvv'
     }
   ]
@@ -97,15 +126,14 @@ function init() {
   const sprite = document.querySelector('.sprite')
   // const indicator = document.querySelector('.indicator')
 
-  let locationIndex = 0
-
+  let mapIndex = 1
   let height
   let width
   let iHeight
   let iWidth
   let locationPos 
   let start
-  let cellD 
+  let cellD = 40
   let minicellD 
   let spritePos 
   let x 
@@ -115,21 +143,29 @@ function init() {
   let mapImageTiles
 
 
+  const setWidthAndHeight = ()=>{
+    let pWidth = 800
+    if (wrapper.offsetWidth < 800) pWidth = wrapper.offsetWidth
+    width = 2 * Math.floor((pWidth / cellD) / 2)
+    let pHeight = 600
+    if (wrapper.offsetHeight < 600) pHeight = wrapper.offsetWidth
+    height = 2 * Math.floor((pHeight / cellD) / 2)
+  }
 
   const setLocation = index => {
-    height = mapData[index].height
-    width = mapData[index].width
-    iHeight = mapData[index].iHeight
-    iWidth = mapData[index].iWidth
+    mapIndex = index - 1
+    setWidthAndHeight()
 
-    map.innerHTML = mapMap(width,height,'map_tile')
-    mapTiles = document.querySelectorAll('.map_tile')
-  
+    iHeight = mapData[mapIndex].iHeight
+    iWidth = mapData[mapIndex].iWidth
     location.innerHTML = mapMap(iWidth,iHeight,'location_indicator_tile')
     locationTiles = document.querySelectorAll('.location_indicator_tile')
-  
     mapImage.innerHTML = mapMap(iWidth,iHeight,'map_image_tile')
     mapImageTiles = document.querySelectorAll('.map_image_tile')
+
+    mapData[mapIndex].events.forEach(cell=>{
+      mapImageTiles[+cell.split('_')[0]].setAttribute('data-event',cell.split('_')[1])
+    })
   }
 
   
@@ -199,17 +235,16 @@ function init() {
   
 
   const noWall = pos =>{
-    // return !mapImageTiles[pos].classList.contains('w') && 
-    //        !mapImageTiles[pos].classList.contains('v')
+    if (!mapImageTiles[pos]) return false
     return mapImageTiles[pos].classList.contains('b')
   }
 
   const setUpWalls = target =>{
     target.forEach((tile,i)=>{
-      // if (mapData[locationIndex].map[i]==='w') tile.classList.add('wall')
-      tile.classList.add(mapData[locationIndex].map[i])
-      if (mapData[locationIndex].map[i] === 't' ||
-          mapData[locationIndex].map[i] === 'w') tile.innerHTML = tree()
+      // if (mapData[mapIndex].map[i]==='w') tile.classList.add('wall')
+      tile.classList.add(mapData[mapIndex].map[i])
+      if (mapData[mapIndex].map[i] === 't' ||
+          mapData[mapIndex].map[i] === 'w') tile.innerHTML = tree()
     })
   }
   
@@ -225,20 +260,31 @@ function init() {
     spriteChange[dire.indexOf(e)]()
     setSpritePos(m)
   }
+
+
+
+  function transport(index){
+    const entryPoint = entryPoints.find(i=>i.portal === index)
+    setLocation(entryPoint.portal)
+    locationPos = entryPoint.cell
+
+    setWidthAndHeightAndResize()
+    setUpWalls(mapImageTiles)
+    setUpWalls(locationTiles)
+    turnSprite(entryPoint.dire)
+  }
   
 
-  //! something like this to transport the bear to the particular portal.
-  // const transport = target => {
-  //   locationIndex = //!set new location
-  //   setLocation(locationIndex)
+  // const toggleLocation = e =>{
+  //   setLocation(e.target.dataset.index)
 
-  //   locationPos = mapData[locationIndex].portal[0].cell[0]//!needs to be set
-
+  //   locationPos = mapData[mapIndex].portal[0].cell[0]
+  //   // console.log('t',mapData[mapIndex].portal[0].dire)
   //   placeInCenterOfMap()
-  //   resize(mapData[locationIndex].cellD)//!needs to be set
+  //   resize()
   //   setUpWalls(mapImageTiles)
   //   setUpWalls(locationTiles)
-  //   turnSprite()//! neeed to be set
+  //   turnSprite(mapData[mapIndex].portal[0].dire)
   // }
 
 
@@ -279,8 +325,6 @@ function init() {
     }
     locationTiles[locationPos].classList.add('mark')
 
-
-    
     //*indicator
     // const dataX = mapImageTiles[locationPos].dataset.x
     // const dataY = mapImageTiles[locationPos].dataset.y
@@ -294,6 +338,15 @@ function init() {
     //   'y',y,
     //   'los',locationPos
     //   )
+    
+    //! add logic to check which way the bear is facing?
+    //! some event to be triggered dependant on state (action button, like A to speak, X in playstation)
+    if (mapImageTiles[locationPos].dataset.event) {
+      const event = +mapImageTiles[locationPos].dataset.event.split('-')[0]
+      const index = +mapImageTiles[locationPos].dataset.event.split('-')[1]
+      console.log(event,index)
+      events[event](index)
+    } 
   }
 
 
@@ -302,16 +355,7 @@ function init() {
 
 
   
-  const resize = option =>{    　
-    let pWidth = 800
-    if (wrapper.offsetWidth < 800) {
-      pWidth = wrapper.offsetWidth
-    } 
-
-    //! this bit can be commented out to keep cellDConsistent
-    cellD = option === 'auto'
-    ? Math.floor(pWidth / width)
-    : option
+  const resize = () =>{    　
     positionSprite(start)
 
     //* update offset margins
@@ -334,6 +378,8 @@ function init() {
     adjustRectSize(mapImageContainer,width,height,cellD)
     
     //* resize map
+    map.innerHTML = mapMap(width,height,'map_tile')
+    mapTiles = document.querySelectorAll('.map_tile')
     adjustRectSize(map,width,height,cellD,mapTiles)
     
     //* setup location indicator
@@ -347,39 +393,33 @@ function init() {
     //* setup mapcover
     adjustRectSize(mapCover,width,height,cellD)
   }
+  
+  const setWidthAndHeightAndResize = () =>{
+    setWidthAndHeight()
+    placeInCenterOfMap()
+    resize()
+  }
 
-
-  window.addEventListener('resize', ()=>resize(mapData[locationIndex].cellD))
-  setLocation(locationIndex)
-  // locationPos = startLocationPos(iWidth,iHeight)
-  locationPos = mapData[locationIndex].portal[0].cell[0]
+  window.addEventListener('resize', setWidthAndHeightAndResize)
+  setLocation(mapIndex)
+  locationPos = mapData[mapIndex].portal[0].cell[0]
   placeInCenterOfMap()
-  resize('auto')
+  resize()
    //* setup walls
   setUpWalls(mapImageTiles)
   setUpWalls(locationTiles)
-  turnSprite(mapData[locationIndex].portal[0].dire)
+  turnSprite(mapData[mapIndex].portal[0].dire)
 
 
-  const toggleLocation = e =>{
-    locationIndex = e.target.dataset.index
-    setLocation(locationIndex)
 
-    locationPos = mapData[locationIndex].portal[0].cell[0]
-    console.log('t',mapData[locationIndex].portal[0].dire)
-    placeInCenterOfMap()
-    resize(mapData[locationIndex].cellD)
-    setUpWalls(mapImageTiles)
-    setUpWalls(locationTiles)
-    turnSprite(mapData[locationIndex].portal[0].dire)
-  }
+  // events[0] = transport
 
-
-  buttons.forEach(button=>{
-    button.addEventListener('click',(e)=>toggleLocation(e))
-  })
-
-
+  // buttons.forEach(button=>{
+  //   button.addEventListener('click',(e)=>toggleLocation(e))
+  // })
+  buttons[0].addEventListener('click',()=>events[0](1))
+  buttons[1].addEventListener('click',()=>events[0](2))
+  buttons[2].addEventListener('click',()=>events[0](3))
 
 }
 
