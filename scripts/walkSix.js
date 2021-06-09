@@ -25,18 +25,21 @@ function init() {
 
   const entryPoints = [
     {
+      map: 1,
       portal: 1,
       name: 'untitled',
       cell: 35,
       dire: 'down',
     },
     {
+      map: 2,
       portal: 2,
       name: 'untitled',
       cell: 1139,
       dire: 'up'
     },
     {
+      map: 3,
       portal: 3,
       name: 'untitled',
       cell: 224,
@@ -115,7 +118,7 @@ function init() {
   }).join('')
   const buttons = document.querySelectorAll('button')
 
-
+  const transitionCover = document.querySelector('.transition_cover')
   const wrapper = document.querySelector('.wrapper')
   const map = document.querySelector('.map')
   const mapImageContainer = document.querySelector('.map_image_container')
@@ -261,11 +264,17 @@ function init() {
     setSpritePos(m)
   }
 
-
+  const transition = () =>{
+    transitionCover.classList.add('transition')
+    setTimeout(()=>{
+      transitionCover.classList.remove('transition')
+    },500)
+  }
 
   function transport(index){
+    transition()
     const entryPoint = entryPoints.find(i=>i.portal === index)
-    setLocation(entryPoint.portal)
+    setLocation(entryPoint.map)
     locationPos = entryPoint.cell
 
     setWidthAndHeightAndResize()
