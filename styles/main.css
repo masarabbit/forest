@@ -243,9 +243,13 @@ a:hover {
   width: 100%;
   pointer-events: none;
   z-index: 999;
-  transition: 0.3s;
+  transition: 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .transition_cover.transition {
   background-color: rgb(4, 4, 59);
+  transition: 0.3s;
 }

@@ -1,12 +1,7 @@
 
 
 //*maybe design maps first.
-//*add logic to trigger event when facing particular direction and at a location.
 
-//!change resize logic to keep cellsize consistent? - and instead change height and width
-//! events can be triggered by combination of where the bear is, and dataset.index
-//! add transition effect for when the map changes (blank, then appear again, maybe another cover)
-//! some event to be triggered dependant on state (action button, like A to speak, X in playstation)
 
 function init() {
 
@@ -23,33 +18,46 @@ function init() {
     `
   }
 
-  const entryPoints = [
-    {
+  const eventPoints = {
+    tree1:{
+      text: 'hello! I\m a tree!',
+      item: null,
+      direction: 'up'
+    },
+    bunny1:{
+      text: 'hello! Bunny!',
+      item: null,
+      direction: 'left'
+    }
+  }
+
+
+  const entryPoints = {
+    portal1:{
       map: 1,
-      portal: 1,
       name: 'untitled',
       cell: 35,
-      dire: 'down',
+      direction: 'down',
     },
-    {
+    portal2:{
       map: 2,
-      portal: 2,
       name: 'untitled',
       cell: 1139,
-      dire: 'up'
+      direction: 'up'
     },
-    {
+    portal3:{
       map: 3,
-      portal: 3,
       name: 'untitled',
       cell: 224,
-      dire: 'up'
-    }
-  ]
+      direction: 'up'
+    },
+  }
 
-  const events = [
-    transport,
-  ]
+  const events = {
+    transport: transport,
+    check: ()=>null
+  }
+    
 
   const mapData = [
     {
@@ -57,16 +65,8 @@ function init() {
       iWidth: 30,
       iHeight: 20,
       events: [
-        '5_0-3',
-        '6_0-3'
-      ],
-      portal:[
-        {
-          name: 'untitled',
-          cell: [5,6],
-          dire: 'down',
-          exit: ''
-        }
+        '5_transport-portal3',
+        '6_transport-portal3'
       ],
       map: 'vvvvvbbvvvvvvvvvvvvvvvvvvvvvvvvwwwwbbwwwwwwwwwwwwwwwwwwwwwwvvwbbbbbbbbbbbbbbbbbtbbbbbbbbwvvwbbbbbbbbbbbbtbbbbbbbbbbbtbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbtbbbbbbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbtbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbtbbbtbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbtbbbbbbbbtbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbvwbbbbbbbbbbbbbbbbbbbbbbbtbbbbvwbtbbbbbtbbbbbbbbbbbbtbbbbbwvvwbbbbbbbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv'
     },
@@ -75,16 +75,9 @@ function init() {
       iWidth: 40,
       iHeight: 30,
       events: [
-        '1178_0-1',
-        '1179_0-1',
-        '1180_0-1'
-      ],
-      portal:[
-        {
-          name: 'untitled',
-          cell: [1179,1178,1180],
-          dire: 'up'
-        }
+        '1178_transport-portal1',
+        '1179_transport-portal1',
+        '1180_transport-portal1'
       ],
       map: 'vvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwbbbwwwwwwwwwwwwvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvtvvvvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbtbbbbbbbbbbbbbbbbbbbtbbbwvvvvvtvvwbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbbbbbbbbbbbbbtbbtbbbbbbbbwwwwwwwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbtbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbtbbbbbbbbtbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbtbbbbtbbbbbbbbbtbbbbwvvvvtvvvvtvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvtvvvvvvvwbtbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvtvwbbbbbbbbbbbbtbbbtbbtbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvtvvvvvtvvvwwwwwbbbwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvv'
     },
@@ -93,16 +86,11 @@ function init() {
       iWidth: 18,
       iHeight: 14,
       events: [
-        '241_0-2',
-        '242_0-2',
-        '243_0-2'
-      ],
-      portal:[
-        {
-          name: 'untitled',
-          cell: [242,241,243],
-          dire: 'up'
-        }
+        '241_transport-portal2',
+        '242_transport-portal2',
+        '243_transport-portal2',
+        '44_check-tree1',
+        '112_check-bunny1'
       ],
       map: 'vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvwbooobbbbbbooobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbooobbbbbbooobwvvwwwwwwbbbwwwwwwwvvvvvvvvbbbvvvvvvvv'
     }
@@ -128,8 +116,9 @@ function init() {
   const spriteContainer = document.querySelector('.sprite_container')
   const sprite = document.querySelector('.sprite')
   // const indicator = document.querySelector('.indicator')
+  
 
-  let mapIndex = 1
+  //* map related variables
   let height
   let width
   let iHeight
@@ -144,6 +133,11 @@ function init() {
   let mapTiles
   let locationTiles
   let mapImageTiles
+
+  //* gameplay related variables
+  let mapIndex = 1
+  let motion = true
+  let facingDirection = 'down'
 
 
   const setWidthAndHeight = ()=>{
@@ -253,57 +247,57 @@ function init() {
   
   const turnSprite = e => {
     let m = -cellD
-    const dire = ['right','left','up','down']
+    const direction = ['right','left','up','down']
+    facingDirection = e
     const spriteChange = [
       ()=> m = spritePos === m * 9 ? m * 8 : m * 9,
       ()=> m = spritePos === m * 6 ? m * 7 : m * 6,
       ()=> m = spritePos === m * 3 ? m * 5 : m * 3,
       ()=> m = spritePos === m * 0 ? m * 2 : m * 0
     ]
-    spriteChange[dire.indexOf(e)]()
+    spriteChange[direction.indexOf(e)]()
     setSpritePos(m)
   }
 
   const transition = () =>{
     transitionCover.classList.add('transition')
+    motion = false
     setTimeout(()=>{
       transitionCover.classList.remove('transition')
+      motion = true
     },500)
+  }
+
+  function check(){
+    if (mapImageTiles[locationPos].dataset.event) {
+      index = mapImageTiles[locationPos].dataset.event.split('-')[1]
+      const eventPoint = eventPoints[index]
+      if (facingDirection !== eventPoint.direction) return
+      console.log('text',eventPoint.text) 
+      //! maybe somekind of text box to be had, to display this text.
+      // transitionCover.innerText = eventPoint.text
+    } 
   }
 
   function transport(index){
     transition()
-    const entryPoint = entryPoints.find(i=>i.portal === index)
+    // const entryPoint = entryPoints.find(i=>i.portal === index)
+    const entryPoint = entryPoints[index]
     setLocation(entryPoint.map)
     locationPos = entryPoint.cell
 
     setWidthAndHeightAndResize()
     setUpWalls(mapImageTiles)
     setUpWalls(locationTiles)
-    turnSprite(entryPoint.dire)
+    turnSprite(entryPoint.direction)
   }
   
 
-  // const toggleLocation = e =>{
-  //   setLocation(e.target.dataset.index)
-
-  //   locationPos = mapData[mapIndex].portal[0].cell[0]
-  //   // console.log('t',mapData[mapIndex].portal[0].dire)
-  //   placeInCenterOfMap()
-  //   resize()
-  //   setUpWalls(mapImageTiles)
-  //   setUpWalls(locationTiles)
-  //   turnSprite(mapData[mapIndex].portal[0].dire)
-  // }
-
-
   const spriteWalk = e =>{
-    if (!e) return
-  
+    if (!e || !motion) return
     locationTiles[locationPos].classList.remove('mark')
     const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
-    turnSprite(direction)
-
+    
     switch (direction) {
       case 'right': 
         if (noWall(locationPos + 1)){
@@ -331,8 +325,16 @@ function init() {
         break
       default:
         console.log('invalid command')
+        return
     }
+    turnSprite(direction)
     locationTiles[locationPos].classList.add('mark')
+
+    if (mapImageTiles[locationPos].dataset.event) {
+      const event = mapImageTiles[locationPos].dataset.event.split('-')[0]
+      const index = mapImageTiles[locationPos].dataset.event.split('-')[1]
+      events[event](index)
+    } 
 
     //*indicator
     // const dataX = mapImageTiles[locationPos].dataset.x
@@ -347,23 +349,24 @@ function init() {
     //   'y',y,
     //   'los',locationPos
     //   )
-    
-    //! add logic to check which way the bear is facing?
-    //! some event to be triggered dependant on state (action button, like A to speak, X in playstation)
-    if (mapImageTiles[locationPos].dataset.event) {
-      const event = +mapImageTiles[locationPos].dataset.event.split('-')[0]
-      const index = +mapImageTiles[locationPos].dataset.event.split('-')[1]
-      console.log(event,index)
-      events[event](index)
-    } 
+  
+  }
+
+  const handleKeyAction = e =>{
+    if (e.key === 'l' || e.key === 'L') {
+      check()
+      return
+    }
+    spriteWalk(e)
   }
 
 
   //* key control
-  window.addEventListener('keydown', spriteWalk)
-
+  window.addEventListener('keydown', (e)=>handleKeyAction(e))
 
   
+  
+
   const resize = () =>{    　
     positionSprite(start)
 
@@ -374,7 +377,6 @@ function init() {
     const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
     setX(xMargin)  
     setY(yMargin)
-
 
     //* adjust sprite
     setSpritePos(-cellD)
@@ -411,24 +413,22 @@ function init() {
 
   window.addEventListener('resize', setWidthAndHeightAndResize)
   setLocation(mapIndex)
-  locationPos = mapData[mapIndex].portal[0].cell[0]
+  // locationPos = entryPoints.portal1.cell
+  locationPos = 313  //!starting point
   placeInCenterOfMap()
   resize()
    //* setup walls
   setUpWalls(mapImageTiles)
   setUpWalls(locationTiles)
-  turnSprite(mapData[mapIndex].portal[0].dire)
+  turnSprite(entryPoints.portal1.direction)
 
 
 
   // events[0] = transport
 
-  // buttons.forEach(button=>{
-  //   button.addEventListener('click',(e)=>toggleLocation(e))
-  // })
-  buttons[0].addEventListener('click',()=>events[0](1))
-  buttons[1].addEventListener('click',()=>events[0](2))
-  buttons[2].addEventListener('click',()=>events[0](3))
+  buttons[0].addEventListener('click',()=>events['transport']('portal1'))
+  buttons[1].addEventListener('click',()=>events.transport('portal2'))
+  buttons[2].addEventListener('click',()=>events.transport('portal3'))
 
 }
 
