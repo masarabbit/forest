@@ -11,7 +11,8 @@ function init() {
       <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 87.64 87.64">
         <ellipse cx="43.82" cy="43.82" rx="28.191" ry="38.099"/>
       </svg>`,
-      motion: 'udlr'
+      motion: 'udlr',
+      speed: 5000
       }   
     }
 
@@ -50,9 +51,7 @@ function init() {
   const entryPoints = {
     start: {
       map: 1,
-      // cell: 313,
-      cell: 35,
-      // direction: 'down',
+      cell: 313,
     },
     portal1:{
       map: 1,
@@ -86,9 +85,9 @@ function init() {
       iWidth: 30,
       iHeight: 20,
       characters: [
-        '155_avatar',
-        '163_avatar',
-        '311_avatar'
+        '155_avatar_test',
+        '156_avatar_apple',
+        '311_avatar_tomato'
       ],
       events: [
         '5_transport-portal3',
@@ -115,7 +114,9 @@ function init() {
       iWidth: 18,
       iHeight: 14,
       characters: [
-        '135_avatar'
+        '135_avatar',
+        '101_avatar',
+        '165_avatar'
       ],
       events: [
         '241_transport-portal2',
@@ -138,7 +139,7 @@ function init() {
   }).join('')
   const buttons = document.querySelectorAll('button')
 
-  // const stage = document.querySelector('.stage')
+
   const transitionCover = document.querySelector('.transition_cover')
   const wrapper = document.querySelector('.wrapper')
   const map = document.querySelector('.map')
@@ -172,8 +173,7 @@ function init() {
   let motion = true
   let facingDirection = 'down'
   const spawnData = []
-  let motionInterval
-  let spawns
+
 
   const setWidthAndHeight = ()=>{
     let pWidth = 800
@@ -206,27 +206,32 @@ function init() {
   //   return ((w) * (h / 2)) - (w / 2) - 1
   // }
 
-  const spawnWalk = (spawn,i,x,y) =>{
-    // console.log(spawn,i,x,y)
-    console.log('x')
-    spawn.style.left = `${spawnData[i].left + x}px`
-    spawn.style.top = `${spawnData[i].top + y}px`
+  const spawnWalk = (t,i,x,y) =>{
+    if (!spawnData[i]) return
+    if (noWall(spawnData[i].pos + x / cellD)) {
+      spawnData[i].left += x
+      spawnData[i].pos += x / cellD
+      t.style.left = `${spawnData[i].left}px`
+    }
+    if (noWall(spawnData[i].pos + y / cellD * iWidth)){
+      spawnData[i].top += y
+      spawnData[i].pos += y / cellD * iWidth
+      t.style.top = `${spawnData[i].top}px`
+    } 
+    // console.log('pos',spawnData[i].pos,x / cellD)
+  }
+  
+
+  const spawnMotion = (s,i) =>{
+      const motionOption = [
+        ()=>spawnWalk(s,i,0,cellD),
+        ()=>spawnWalk(s,i,cellD,0),
+        ()=>spawnWalk(s,i,0,-cellD),
+        ()=>spawnWalk(s,i,-cellD,0)
+      ]
+      motionOption[Math.floor(Math.random() * 4)]()
   }
 
-  const spawnMotion = () =>{
-    console.log('test')
-    
-    spawns.forEach((spawn,i)=>{ 
-      // const motionOption = [
-      //   spawnWalk(spawn,i,0,40),
-      //   spawnWalk(spawn,i,40,0),
-      //   spawnWalk(spawn,i,0,-40),
-      //   spawnWalk(spawn,i,-40,0)
-      // ]
-      // motionOption[Math.ceil(Math.random() * 4)]
-      spawnWalk(spawn,i,-40,0)
-    })
-  }
 
 
 
@@ -268,7 +273,7 @@ function init() {
 
   const setX = num =>{
     x = num
-    mapImage.style.left = `${x}px` //! need to calculate from the center.
+    mapImage.style.left = `${x}px`
   }
 
   const setY = num =>{
@@ -289,8 +294,8 @@ function init() {
   }
   
 
-  const noWall = pos =>{
-    if (!mapImageTiles[pos]) return false
+  const noWall = pos =>{    
+    if (!mapImageTiles[pos] || locationPos === pos || spawnData.filter(s=>s.pos === pos).length) return false
     return mapImageTiles[pos].classList.contains('b')
   }
 
@@ -302,45 +307,45 @@ function init() {
           mapData[mapIndex].map[i] === 'w') tile.innerHTML = tree()
     })
   }
+  
+  let count = 0
 
   const spawnCharacter = () =>{
-    clearInterval(motionInterval)
+    if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
+    
+    count++
+
     spawnData.length = 0
     mapData[mapIndex].characters.forEach((c,i)=>{
-      // console.log('trigger',target,c)
-      
-      const sx = Math.floor(c.split('_')[0] / mapData[mapIndex].iWidth) * cellD
-      const sy = Math.floor(c.split('_')[0] % mapData[mapIndex].iWidth) * cellD
-      spawnData[i] = {}
-      spawnData[i].left = sx
-      spawnData[i].top = sy
-
+      const pos = +c.split('_')[0]
+      const sx = Math.floor(pos % iWidth) * cellD
+      const sy = Math.floor(pos / iWidth) * cellD
+      spawnData[i] = {
+        interval: null,
+        left: sx,
+        top: sy,
+        pos,
+      }
       const spawn = document.createElement('div')
       spawn.innerHTML = avatars[c.split('_')[1]].sprite
       spawn.classList.add('spawn')
       spawn.style.left = `${sx}px`
       spawn.style.top = `${sy}px`
-      mapImage.appendChild(spawn)
+      mapImage.appendChild(spawn)    
+      spawnData[i].interval = setInterval(()=>spawnMotion(spawn,i),avatars[c.split('_')[1]].speed)
     })
-    
-    console.log(spawnData)
-    spawns = document.querySelectorAll('.spawn')
-    motionInterval = setInterval(()=>{
-      spawnMotion()
-    },2000)
   }
 
   const turnSprite = (e = 'down') => {
     let m = -cellD
-    const direction = ['right','left','up','down']
     facingDirection = e
-    const spriteChange = [
-      ()=> m = spritePos === m * 9 ? m * 8 : m * 9,
-      ()=> m = spritePos === m * 6 ? m * 7 : m * 6,
-      ()=> m = spritePos === m * 3 ? m * 5 : m * 3,
-      ()=> m = spritePos === m * 0 ? m * 2 : m * 0
-    ]
-    spriteChange[direction.indexOf(e)]()
+    const spriteChange = {
+      right: ()=> m = spritePos === m * 9 ? m * 8 : m * 9,
+      left: ()=> m = spritePos === m * 6 ? m * 7 : m * 6,
+      up: ()=> m = spritePos === m * 3 ? m * 5 : m * 3,
+      down: ()=> m = spritePos === m * 0 ? m * 2 : m * 0
+    }
+    spriteChange[e]()
     setSpritePos(m)
   }
 
@@ -375,7 +380,7 @@ function init() {
     setUpWalls(mapImageTiles)
     setUpWalls(locationTiles)
     turnSprite(entryPoint.direction)
-    spawnCharacter(mapImageTiles)
+    spawnCharacter()
   }
   
 
@@ -503,10 +508,6 @@ function init() {
   // resize()
 
 
-
-
-  // events[0] = transport
-
   buttons[0].addEventListener('click',()=>events['transport']('portal1'))
   buttons[1].addEventListener('click',()=>events.transport('portal2'))
   buttons[2].addEventListener('click',()=>events.transport('portal3'))
@@ -516,18 +517,3 @@ function init() {
 window.addEventListener('DOMContentLoaded', init)
 
 
-
-
-  // const spawnCharacter = () =>{
-  //   mapData[mapIndex].characters.forEach(c=>{
-  //     const cx = mapImageTiles[c.split('_')[0]].getBoundingClientRect().x
-  //     const cy = mapImageTiles[c.split('_')[0]].getBoundingClientRect().y
-  //     const spawn = document.createElement('div')
-  //     spawn.innerHTML = avatars[c.split('_')[1]].sprite
-  //     spawn.classList.add('spawn')
-  //     spawn.style.top = `${cx}px`
-  //     spawn.style.left = `${cy}px`
-  //     stage.appendChild(spawn)
-  //   })
-  // }
-  
