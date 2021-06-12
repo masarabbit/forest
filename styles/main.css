@@ -277,16 +277,70 @@ a:hover {
 }
 
 .text {
+  color: white;
+  transition: 0.4s;
+}
+
+.text_display {
   position: fixed;
   bottom: 0;
   width: 100%;
   height: 200px;
+}
+
+.text_display > div:nth-child(1) {
+  width: 100%;
+  height: 100%;
   padding: 20px;
-  color: white;
   background-color: rgba(3, 31, 92, 0.753);
-  transition: 0.4s;
+}
+
+.text_display > div:nth-child(2):empty {
+  right: 100vh;
+  animation: none;
+}
+
+.text_display > div:nth-child(2) {
+  position: absolute;
+  right: 100vh;
+  top: -20px;
+  /* width: 200px;
+  height: 100px; */
+  background-color: rgb(3, 31, 92);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  animation: none;
+  animation: slide-in forwards ease 0.5s;
+  /* padding: 10px 20px; */
+}
+
+
+
+.option {
+  color: white;
+  background-color: transparent;
+  border: 0;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.option.selected {
+  font-size: 18px;
+  color:rgb(3, 31, 92);
+  background-color: rgb(255, 255, 255);
 }
 
 .text:empty {
-  background-color: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes slide-in {
+  0% { right: -100vh; }
+  95% { right: 60px; }
+  100% { right: 50px; }
 }

@@ -4,6 +4,8 @@
 
 //! temporal solution for image display added, but 
 
+//! add ways to decorate map further
+
 function init() {
 
   const avatars = {
@@ -59,8 +61,17 @@ function init() {
     },
     apple:{
       text: [
-        'hello!',
-        'yeah!'
+        'how are you?#q1',
+        'yeah!/really?#yesno',
+        'cool!/too bad'
+      ],
+      q1: [
+        'okay',
+        'not so good'
+      ],
+      yesno: [
+        'yes',
+        'no'
       ]
     }
   }
@@ -166,7 +177,7 @@ function init() {
   const mapImage = document.querySelector('.map_image')
   const location = document.querySelector('.location_indicator')
   const spriteContainer = document.querySelector('.sprite_container')
-  const text = document.querySelector('.text')
+  const texts = document.querySelectorAll('.text')
   const sprite = document.querySelector('.sprite')
   let sprites
   // const indicator = document.querySelector('.indicator')
@@ -188,14 +199,15 @@ function init() {
 
   //* gameplay related variables
   let mapIndex = 1
-  // let motion = true
   const spawnData = []
   const bear = {
     spritePos: null,
     facingDirection: 'down',
     pos: null,
     motion: true,
-    textCount: 0
+    textCount: 0,
+    pause: false,
+    choice: 0
   }
 
   const directionKey = {
@@ -204,20 +216,6 @@ function init() {
     3: 'up',
     0: 'down',
   }
-
-  const talk = () => {
-    const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
-    spawnData.forEach((actor,i)=>{
-      if (actor.pos === bear.pos + key[bear.facingDirection]) {
-        actor.pause = true
-        const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
-        turnSprite(opposite,actor,sprites[i])
-        console.log('t',eventPoints[actor.event])
-        displayText(bear.textCount,eventPoints[actor.event])
-      }
-    })
-  }
-
 
   const setWidthAndHeight = ()=>{
     let pWidth = 800
@@ -397,8 +395,30 @@ function init() {
     },500)
   }
 
+  const talk = () => {
+    const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
+    spawnData.forEach((actor,i)=>{
+      if (actor.pos === bear.pos + key[bear.facingDirection]) {
+        actor.pause = true
+        const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
+        turnSprite(opposite,actor,sprites[i])
+        // console.log('t',eventPoints[actor.event])
+        displayText(bear.textCount,eventPoints[actor.event])
+      }
+    })
+  }
+
+  const displayQuestion = q =>{
+    bear.pause = true
+    bear.choice = 0
+    texts[1].innerHTML = `
+      <div class="option selected">${q[0]}</div>
+      <div class="option">${q[1]}</div>
+    `
+  }
+
   const displayTextGradual = (t,i) =>{
-    text.innerText = t.slice(0,i)
+    texts[0].innerHTML = t.slice(0,i)
     if (i < t.length) {
       setTimeout(()=>{
         displayTextGradual(t, i + 1)
@@ -410,7 +430,16 @@ function init() {
     if (count < eventPoint.text.length){
       bear.textCount++
       bear.motion = false
-      displayTextGradual(eventPoint.text[count],0)
+
+      const text = eventPoint.text[count].split('/')[bear.choice] || eventPoint.text[count]
+
+      if (text.includes('#')) {
+        displayTextGradual(text.split('#')[0],0)
+        displayQuestion(eventPoint[text.split('#')[1]])
+      } else {
+        displayTextGradual(text,0)
+      }
+      
       if (eventPoint.art) transitionCover.innerHTML = `
         <div>
           <img src=${eventPoint.art} />
@@ -420,7 +449,7 @@ function init() {
     }
       bear.textCount = 0
       bear.motion = true
-      text.innerText = ''
+      texts[0].innerText = ''
       transitionCover.innerHTML = ''
   }
 
@@ -493,8 +522,33 @@ function init() {
   
   }
 
+  const select = () =>{
+    texts[1].innerHTML = ''
+    bear.pause = false
+    check(bear.textCount)
+  }
+
   const handleKeyAction = e =>{
-    if (e.key.toLowerCase() === 'l') {
+    const key = e.key.toLowerCase()
+    if (bear.pause) {
+      const options = document.querySelectorAll('.option')
+      options.forEach(option=>option.classList.remove('selected'))
+      switch (key) {
+        case 'arrowup': 
+          options[0].classList.add('selected')
+          bear.choice = 0
+          break
+        case 'arrowdown': 
+          options[1].classList.add('selected')
+          bear.choice = 1
+          break
+        case ' ': select(); break   
+        case 'enter': select(); break   
+        default: console.log('invalid command')
+      }
+      return
+    }
+    if (key === ' ' || key === 'enter') {
       check(bear.textCount)
       return
     }
