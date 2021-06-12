@@ -2,7 +2,7 @@
 
 //*maybe design maps first.
 
-
+//! temporal solution for image display added, but 
 
 function init() {
 
@@ -41,6 +41,7 @@ function init() {
         'hello! I\'m a tree!',
         'yeah!'
     ],
+      art: 'http://masahito.co.uk/img/icecream_bunny.png',
       item: null,
       direction: 'up'
     },
@@ -90,7 +91,7 @@ function init() {
     },
   }
 
-  const events = {
+  const events = {   //! perhaps another event can be added for displaying image?
     transport: transport,
     check: ()=>null
   }
@@ -396,17 +397,31 @@ function init() {
     },500)
   }
 
+  const displayTextGradual = (t,i) =>{
+    text.innerText = t.slice(0,i)
+    if (i < t.length) {
+      setTimeout(()=>{
+        displayTextGradual(t, i + 1)
+      },30)
+    }
+  }
+
   const displayText = (count,eventPoint) =>{
     if (count < eventPoint.text.length){
-      // console.log('test')
       bear.textCount++
       bear.motion = false
-      text.innerText = eventPoint.text[count]
+      displayTextGradual(eventPoint.text[count],0)
+      if (eventPoint.art) transitionCover.innerHTML = `
+        <div>
+          <img src=${eventPoint.art} />
+        </div>
+      `
       return
     }
       bear.textCount = 0
       bear.motion = true
       text.innerText = ''
+      transitionCover.innerHTML = ''
   }
 
   function check(count){
