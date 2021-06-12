@@ -2,6 +2,8 @@
 
 //*maybe design maps first.
 
+//! this code has alternative logic to move the spawn sprites.
+
 
 function init() {
 
@@ -85,9 +87,9 @@ function init() {
       iWidth: 30,
       iHeight: 20,
       characters: [
-        '155_avatar_test',
-        '156_avatar_apple',
-        '311_avatar_tomato'
+        '155_avatar_0_test',
+        '156_avatar_0_apple',
+        '311_avatar_0_tomato'
       ],
       events: [
         '5_transport-portal3',
@@ -100,7 +102,7 @@ function init() {
       iWidth: 40,
       iHeight: 30,
       characters: [
-        '779_avatar'
+        '779_avatar_0'
       ],
       events: [
         '1178_transport-portal1',
@@ -114,9 +116,9 @@ function init() {
       iWidth: 18,
       iHeight: 14,
       characters: [
-        '135_avatar',
-        '101_avatar',
-        '165_avatar'
+        '135_avatar_9',
+        '101_avatar_6',
+        '165_avatar_3'
       ],
       events: [
         '241_transport-portal2',
@@ -128,6 +130,13 @@ function init() {
       map: 'vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvwbooobbbbbbooobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbooobbbbbbooobwvvwwwwwwbbbwwwwwwwvvvvvvvvbbbvvvvvvvv'
     }
   ]
+
+  const directionKey = {
+    9: 'right',
+    6: 'left',
+    3: 'up',
+    0: 'down'
+  }
 
   const buttonWrapper = document.querySelector('.button')
   buttonWrapper.innerHTML = mapData.map((m,i)=>{
@@ -149,6 +158,7 @@ function init() {
   const location = document.querySelector('.location_indicator')
   const spriteContainer = document.querySelector('.sprite_container')
   const sprite = document.querySelector('.sprite')
+  let sprites
   // const indicator = document.querySelector('.indicator')
   
 
@@ -157,11 +167,9 @@ function init() {
   let width
   let iHeight
   let iWidth
-  let locationPos 
   let start
   let cellD = 40
   let minicellD 
-  let spritePos 
   let x 
   let y 
   let mapTiles
@@ -171,8 +179,17 @@ function init() {
   //* gameplay related variables
   let mapIndex = 1
   let motion = true
-  let facingDirection = 'down'
   const spawnData = []
+
+  const bear = {
+    spritePos: null,
+    facingDirection: 'down',
+    pos: null
+  }
+
+  // const talk () = {
+
+  // }
 
 
   const setWidthAndHeight = ()=>{
@@ -202,36 +219,65 @@ function init() {
 
   
   //! center of the map
-  // const startLocationPos = (w,h)=> {
+  // const startbear.pos = (w,h)=> {
   //   return ((w) * (h / 2)) - (w / 2) - 1
   // }
 
-  const spawnWalk = (t,i,x,y) =>{
+  // const spawnWalk = (t,i,x,y,d) =>{
+  //   if (!spawnData[i]) return
+  //   if (noWall(spawnData[i].pos + x / cellD)) {
+  //     spawnData[i].left += x
+  //     spawnData[i].pos += x / cellD
+  //     t.style.left = `${spawnData[i].left}px`
+  //   }
+  //   if (noWall(spawnData[i].pos + y / cellD * iWidth)){
+  //     spawnData[i].top += y
+  //     spawnData[i].pos += y / cellD * iWidth
+  //     t.style.top = `${spawnData[i].top}px`
+  //   } 
+  //   // console.log('pos',spawnData[i].pos,x / cellD)
+  //   turnSprite(d,spawnData[i],sprites[i])
+  // }
+
+  
+
+  // const spawnMotion = (s,i) =>{
+  //     const motionOption = [
+  //       ()=>spawnWalk(s,i,0,cellD,'down'),
+  //       ()=>spawnWalk(s,i,cellD,0,'right'),
+  //       ()=>spawnWalk(s,i,0,-cellD,'up'),
+  //       ()=>spawnWalk(s,i,-cellD,0,'left')
+  //     ]
+  //     motionOption[Math.floor(Math.random() * 4)]()
+  // }
+
+  const spawnWalk = (t,i,x,y,d) =>{
     if (!spawnData[i]) return
-    if (noWall(spawnData[i].pos + x / cellD)) {
-      spawnData[i].left += x
-      spawnData[i].pos += x / cellD
+    if (noWall(spawnData[i].pos + x)) {
+      spawnData[i].left += x * cellD
+      spawnData[i].pos += x
       t.style.left = `${spawnData[i].left}px`
     }
-    if (noWall(spawnData[i].pos + y / cellD * iWidth)){
-      spawnData[i].top += y
-      spawnData[i].pos += y / cellD * iWidth
+    if (noWall(spawnData[i].pos + y * iWidth)){
+      spawnData[i].top += y * cellD
+      spawnData[i].pos += y * iWidth
       t.style.top = `${spawnData[i].top}px`
     } 
     // console.log('pos',spawnData[i].pos,x / cellD)
+    turnSprite(d,spawnData[i],sprites[i])
   }
+
   
 
   const spawnMotion = (s,i) =>{
       const motionOption = [
-        ()=>spawnWalk(s,i,0,cellD),
-        ()=>spawnWalk(s,i,cellD,0),
-        ()=>spawnWalk(s,i,0,-cellD),
-        ()=>spawnWalk(s,i,-cellD,0)
+        ()=>spawnWalk(s,i,0,1,'down'),
+        ()=>spawnWalk(s,i,1,0,'right'),
+        ()=>spawnWalk(s,i,0,-1,'up'),
+        ()=>spawnWalk(s,i,-1,0,'left')
       ]
       motionOption[Math.floor(Math.random() * 4)]()
   }
-
 
 
 
@@ -246,12 +292,7 @@ function init() {
       const dataX = i % w
       const dataY = Math.floor(i / w)
       return `
-        <div 
-          class=${classToAdd}
-          data-index=${i}
-          data-x=${dataX}
-          data-y=${dataY}
-        >
+        <div class=${classToAdd} data-index=${i} data-x=${dataX} data-y=${dataY}>
           ${i}
         </div>  
       `
@@ -281,9 +322,9 @@ function init() {
     mapImage.style.top = `${y}px`
   }
 
-  const setSpritePos = num =>{
-    spritePos = num
-    sprite.style.marginLeft = `${spritePos}px`
+  const setSpritePos = (num,actor,s) =>{
+    actor.spritePos = num
+    s.style.marginLeft = `${num}px`
   }
 
   const positionSprite = pos =>{
@@ -295,25 +336,21 @@ function init() {
   
 
   const noWall = pos =>{    
-    if (!mapImageTiles[pos] || locationPos === pos || spawnData.filter(s=>s.pos === pos).length) return false
+    if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
     return mapImageTiles[pos].classList.contains('b')
   }
 
   const setUpWalls = target =>{
     target.forEach((tile,i)=>{
-      // if (mapData[mapIndex].map[i]==='w') tile.classList.add('wall')
       tile.classList.add(mapData[mapIndex].map[i])
       if (mapData[mapIndex].map[i] === 't' ||
           mapData[mapIndex].map[i] === 'w') tile.innerHTML = tree()
     })
   }
   
-  let count = 0
 
   const spawnCharacter = () =>{
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
-    
-    count++
 
     spawnData.length = 0
     mapData[mapIndex].characters.forEach((c,i)=>{
@@ -322,31 +359,42 @@ function init() {
       const sy = Math.floor(pos / iWidth) * cellD
       spawnData[i] = {
         interval: null,
+        spritePos: +c.split('_')[2],
         left: sx,
         top: sy,
         pos,
       }
       const spawn = document.createElement('div')
-      spawn.innerHTML = avatars[c.split('_')[1]].sprite
+      // spawn.innerHTML = avatars[c.split('_')[1]].sprite
+      spawn.innerHTML = spriteContainer.innerHTML
       spawn.classList.add('spawn')
       spawn.style.left = `${sx}px`
       spawn.style.top = `${sy}px`
+      spawn.style.fill = randomColor()
       mapImage.appendChild(spawn)    
       spawnData[i].interval = setInterval(()=>spawnMotion(spawn,i),avatars[c.split('_')[1]].speed)
     })
+
+    sprites = document.querySelectorAll('.sprite')
+    sprites.forEach((s,i)=>{
+      if (i === sprites.length - 1) return
+      turnSprite(directionKey[spawnData[i].spritePos],spawnData[i],s)
+    })
+
   }
 
-  const turnSprite = (e = 'down') => {
+
+  const turnSprite = (e = 'down',actor,s) => {
     let m = -cellD
-    facingDirection = e
+    actor.facingDirection = e
     const spriteChange = {
-      right: ()=> m = spritePos === m * 9 ? m * 8 : m * 9,
-      left: ()=> m = spritePos === m * 6 ? m * 7 : m * 6,
-      up: ()=> m = spritePos === m * 3 ? m * 5 : m * 3,
-      down: ()=> m = spritePos === m * 0 ? m * 2 : m * 0
+      right: ()=> m = actor.spritePos === m * 9 ? m * 8 : m * 9,
+      left: ()=> m = actor.spritePos === m * 6 ? m * 7 : m * 6,
+      up: ()=> m = actor.spritePos === m * 3 ? m * 5 : m * 3,
+      down: ()=> m = actor.spritePos === m * 0 ? m * 2 : m * 0
     }
     spriteChange[e]()
-    setSpritePos(m)
+    setSpritePos(m,actor,s)
   }
 
   const transition = () =>{
@@ -359,10 +407,10 @@ function init() {
   }
 
   function check(){
-    if (mapImageTiles[locationPos].dataset.event) {
-      index = mapImageTiles[locationPos].dataset.event.split('-')[1]
+    if (mapImageTiles[bear.pos].dataset.event) {
+      index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       const eventPoint = eventPoints[index]
-      if (facingDirection !== eventPoint.direction) return
+      if (bear.facingDirection !== eventPoint.direction) return
       console.log('text',eventPoint.text) 
       //! maybe somekind of text box to be had, to display this text.
       // transitionCover.innerText = eventPoint.text
@@ -371,66 +419,64 @@ function init() {
 
   function transport(index){
     transition()
-    // const entryPoint = entryPoints.find(i=>i.portal === index)
     const entryPoint = entryPoints[index]
     setLocation(entryPoint.map)
-    locationPos = entryPoint.cell
-
+    bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
     setUpWalls(mapImageTiles)
     setUpWalls(locationTiles)
-    turnSprite(entryPoint.direction)
+    turnSprite(entryPoint.direction,bear,sprite)
     spawnCharacter()
   }
   
 
   const spriteWalk = e =>{
     if (!e || !motion) return
-    locationTiles[locationPos].classList.remove('mark')
+    locationTiles[bear.pos].classList.remove('mark')
     const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
     
     switch (direction) {
       case 'right': 
-        if (noWall(locationPos + 1)){
+        if (noWall(bear.pos + 1)){
           setX(x - cellD)
-          locationPos += 1
+          bear.pos += 1
         }
         break
       case 'left': 
-        if (noWall(locationPos - 1)){
+        if (noWall(bear.pos - 1)){
           setX(x + cellD)
-          locationPos -= 1
+          bear.pos -= 1
         }
         break
       case 'up': 
-        if (noWall(locationPos - iWidth)){
+        if (noWall(bear.pos - iWidth)){
           setY(y + cellD)
-          locationPos -= iWidth
+          bear.pos -= iWidth
         }
         break
       case 'down': 
-        if (noWall(locationPos + iWidth)){
+        if (noWall(bear.pos + iWidth)){
           setY(y - cellD)
-          locationPos += iWidth
+          bear.pos += iWidth
         }    
         break
       default:
         console.log('invalid command')
         return
     }
-    turnSprite(direction)
-    locationTiles[locationPos].classList.add('mark')
+    turnSprite(direction,bear,sprite)
+    locationTiles[bear.pos].classList.add('mark')
 
-    if (mapImageTiles[locationPos].dataset.event) {
-      const event = mapImageTiles[locationPos].dataset.event.split('-')[0]
-      const index = mapImageTiles[locationPos].dataset.event.split('-')[1]
+    if (mapImageTiles[bear.pos].dataset.event) {
+      const event = mapImageTiles[bear.pos].dataset.event.split('-')[0]
+      const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       events[event](index)
     } 
 
     //*indicator
-    // const dataX = mapImageTiles[locationPos].dataset.x
-    // const dataY = mapImageTiles[locationPos].dataset.y
-    // indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[locationPos].dataset.index} dataX:${dataX} dataY:${dataY}`
+    // const dataX = mapImageTiles[bear.pos].dataset.x
+    // const dataY = mapImageTiles[bear.pos].dataset.y
+    // indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
 
     // console.log(
     //   'cellD',cellD,
@@ -438,7 +484,7 @@ function init() {
     //   'dataY',dataY,
     //   'x',x,
     //   'y',y,
-    //   'los',locationPos
+    //   'los',bear.pos
     //   )
   
   }
@@ -462,15 +508,15 @@ function init() {
     positionSprite(start)
 
     //* update offset margins
-    const dataX = mapImageTiles[locationPos].dataset.x
-    const dataY = mapImageTiles[locationPos].dataset.y
+    const dataX = mapImageTiles[bear.pos].dataset.x
+    const dataY = mapImageTiles[bear.pos].dataset.y
     const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
     const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
     setX(xMargin)  
     setY(yMargin)
 
     //* adjust sprite
-    setSpritePos(-cellD)
+    setSpritePos(-cellD,bear,sprite)
     sprite.style.height = `${cellD}px`
     sprite.style.width = `${cellD * 10}px`
     spriteContainer.style.height = `${cellD}px`
@@ -487,7 +533,7 @@ function init() {
     //* setup location indicator
     minicellD = Math.floor(cellD / 8)
     adjustRectSize(location,iWidth,iHeight,minicellD,locationTiles)
-    locationTiles[locationPos].classList.add('mark')
+    locationTiles[bear.pos].classList.add('mark')
   
     //* setup map image
     adjustRectSize(mapImage,iWidth,iHeight,cellD,mapImageTiles)
@@ -504,8 +550,6 @@ function init() {
 
   window.addEventListener('resize', setWidthAndHeightAndResize)
   transport('start')
-  // placeInCenterOfMap()
-  // resize()
 
 
   buttons[0].addEventListener('click',()=>events['transport']('portal1'))

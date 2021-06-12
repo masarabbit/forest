@@ -2,7 +2,6 @@
 
 //*maybe design maps first.
 
-//! make function to talk
 
 
 function init() {
@@ -38,14 +37,30 @@ function init() {
 
   const eventPoints = {
     tree1:{
-      text: 'hello! I\m a tree!',
+      text: [
+        'hello! I\'m a tree!',
+        'yeah!'
+    ],
       item: null,
       direction: 'up'
     },
     bunny1:{
-      text: 'hello! Bunny!',
+      text: ['hello! Bunny!'],
       item: null,
       direction: 'left'
+    },
+    hello:{ text: ['hello!']},
+    tomato:{
+      text: [
+        'hello!',
+        'yeah!'
+      ]
+    },
+    apple:{
+      text: [
+        'hello!',
+        'yeah!'
+      ]
     }
   }
 
@@ -87,7 +102,7 @@ function init() {
       iWidth: 30,
       iHeight: 20,
       characters: [
-        '155_avatar_0_test',
+        '155_avatar_0_hello',
         '156_avatar_0_apple',
         '311_avatar_0_tomato'
       ],
@@ -102,7 +117,7 @@ function init() {
       iWidth: 40,
       iHeight: 30,
       characters: [
-        '779_avatar_0'
+        '779_avatar_0_hello'
       ],
       events: [
         '1178_transport-portal1',
@@ -116,9 +131,9 @@ function init() {
       iWidth: 18,
       iHeight: 14,
       characters: [
-        '135_avatar_9',
-        '101_avatar_6',
-        '165_avatar_3'
+        '135_avatar_9_hello',
+        '101_avatar_6_hello',
+        '165_avatar_3_hello'
       ],
       events: [
         '241_transport-portal2',
@@ -130,13 +145,6 @@ function init() {
       map: 'vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvwbooobbbbbbooobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbooobbbbbbooobwvvwwwwwwbbbwwwwwwwvvvvvvvvbbbvvvvvvvv'
     }
   ]
-
-  const directionKey = {
-    9: 'right',
-    6: 'left',
-    3: 'up',
-    0: 'down'
-  }
 
   const buttonWrapper = document.querySelector('.button')
   buttonWrapper.innerHTML = mapData.map((m,i)=>{
@@ -157,6 +165,7 @@ function init() {
   const mapImage = document.querySelector('.map_image')
   const location = document.querySelector('.location_indicator')
   const spriteContainer = document.querySelector('.sprite_container')
+  const text = document.querySelector('.text')
   const sprite = document.querySelector('.sprite')
   let sprites
   // const indicator = document.querySelector('.indicator')
@@ -178,18 +187,35 @@ function init() {
 
   //* gameplay related variables
   let mapIndex = 1
-  let motion = true
+  // let motion = true
   const spawnData = []
-
   const bear = {
     spritePos: null,
     facingDirection: 'down',
-    pos: null
+    pos: null,
+    motion: true,
+    textCount: 0
   }
 
-  // const talk () = {
+  const directionKey = {
+    9: 'right',
+    6: 'left',
+    3: 'up',
+    0: 'down',
+  }
 
-  // }
+  const talk = () => {
+    const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
+    spawnData.forEach((actor,i)=>{
+      if (actor.pos === bear.pos + key[bear.facingDirection]) {
+        actor.pause = true
+        const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
+        turnSprite(opposite,actor,sprites[i])
+        console.log('t',eventPoints[actor.event])
+        displayText(bear.textCount,eventPoints[actor.event])
+      }
+    })
+  }
 
 
   const setWidthAndHeight = ()=>{
@@ -223,32 +249,24 @@ function init() {
   //   return ((w) * (h / 2)) - (w / 2) - 1
   // }
 
-  const spawnWalk = (t,i,x,y,d) =>{
-    if (!spawnData[i]) return
-    if (noWall(spawnData[i].pos + x / cellD)) {
-      spawnData[i].left += x
-      spawnData[i].pos += x / cellD
-      t.style.left = `${spawnData[i].left}px`
-    }
-    if (noWall(spawnData[i].pos + y / cellD * iWidth)){
-      spawnData[i].top += y
-      spawnData[i].pos += y / cellD * iWidth
-      t.style.top = `${spawnData[i].top}px`
-    } 
-    // console.log('pos',spawnData[i].pos,x / cellD)
-    turnSprite(d,spawnData[i],sprites[i])
-  }
 
+  
+  const spawnWalk = (actor,para,m,s) =>{
+    // if (!actor) return
+    actor[para] += m
+    s.style[para]= `${actor[para]}px`
+  }
   
 
   const spawnMotion = (s,i) =>{
-      const motionOption = [
-        ()=>spawnWalk(s,i,0,cellD,'down'),
-        ()=>spawnWalk(s,i,cellD,0,'right'),
-        ()=>spawnWalk(s,i,0,-cellD,'up'),
-        ()=>spawnWalk(s,i,-cellD,0,'left')
-      ]
-      motionOption[Math.floor(Math.random() * 4)]()
+    if (spawnData[i].pause) return
+    const motionOption = [
+      ()=>spriteWalk('down',spawnData[i],sprites[i],s),
+      ()=>spriteWalk('right',spawnData[i],sprites[i],s),
+      ()=>spriteWalk('up',spawnData[i],sprites[i],s),
+      ()=>spriteWalk('left',spawnData[i], sprites[i],s)
+    ]
+    motionOption[Math.floor(Math.random() * 4)]()
   }
 
 
@@ -322,8 +340,8 @@ function init() {
 
   const spawnCharacter = () =>{
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
-
     spawnData.length = 0
+
     mapData[mapIndex].characters.forEach((c,i)=>{
       const pos = +c.split('_')[0]
       const sx = Math.floor(pos % iWidth) * cellD
@@ -331,6 +349,8 @@ function init() {
       spawnData[i] = {
         interval: null,
         spritePos: +c.split('_')[2],
+        event: c.split('_')[3],
+        // pause: false,
         left: sx,
         top: sy,
         pos,
@@ -351,7 +371,6 @@ function init() {
       if (i === sprites.length - 1) return
       turnSprite(directionKey[spawnData[i].spritePos],spawnData[i],s)
     })
-
   }
 
 
@@ -370,22 +389,34 @@ function init() {
 
   const transition = () =>{
     transitionCover.classList.add('transition')
-    motion = false
+    bear.motion = false
     setTimeout(()=>{
       transitionCover.classList.remove('transition')
-      motion = true
+      bear.motion = true
     },500)
   }
 
-  function check(){
+  const displayText = (count,eventPoint) =>{
+    if (count < eventPoint.text.length){
+      // console.log('test')
+      bear.textCount++
+      bear.motion = false
+      text.innerText = eventPoint.text[count]
+      return
+    }
+      bear.textCount = 0
+      bear.motion = true
+      text.innerText = ''
+  }
+
+  function check(count){
     if (mapImageTiles[bear.pos].dataset.event) {
       index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       const eventPoint = eventPoints[index]
-      if (bear.facingDirection !== eventPoint.direction) return
-      console.log('text',eventPoint.text) 
-      //! maybe somekind of text box to be had, to display this text.
-      // transitionCover.innerText = eventPoint.text
-    } 
+      if (bear.facingDirection !== eventPoint.direction) return 
+      displayText(count,eventPoint)
+    }
+    talk()
   }
 
   function transport(index){
@@ -401,44 +432,31 @@ function init() {
   }
   
 
-  const spriteWalk = e =>{
-    if (!e || !motion) return
-    locationTiles[bear.pos].classList.remove('mark')
+  const spriteWalk = (e,actor,sprite, s=undefined) =>{
+    if (!e || !bear.motion) return
+    if (!s) locationTiles[actor.pos].classList.remove('mark')
     const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
     
     switch (direction) {
-      case 'right': 
-        if (noWall(bear.pos + 1)){
-          setX(x - cellD)
-          bear.pos += 1
-        }
-        break
-      case 'left': 
-        if (noWall(bear.pos - 1)){
-          setX(x + cellD)
-          bear.pos -= 1
-        }
-        break
-      case 'up': 
-        if (noWall(bear.pos - iWidth)){
-          setY(y + cellD)
-          bear.pos -= iWidth
-        }
-        break
-      case 'down': 
-        if (noWall(bear.pos + iWidth)){
-          setY(y - cellD)
-          bear.pos += iWidth
-        }    
-        break
-      default:
-        console.log('invalid command')
+      case 'right': if (noWall(actor.pos + 1)){
+          s ? spawnWalk(actor,'left',cellD,s) : setX(x - cellD)
+          actor.pos += 1 } break
+      case 'left': if (noWall(actor.pos - 1)){
+          s ? spawnWalk(actor,'left',-cellD,s) : setX(x + cellD)
+          actor.pos -= 1 } break
+      case 'up': if (noWall(actor.pos - iWidth)){
+          s ? spawnWalk(actor,'top',-cellD,s) : setY(y + cellD)
+          actor.pos -= iWidth } break
+      case 'down': if (noWall(actor.pos + iWidth)){
+          s ? spawnWalk(actor,'top',cellD,s) : setY(y - cellD)
+          actor.pos += iWidth } break
+      default: console.log('invalid command')
         return
     }
-    turnSprite(direction,bear,sprite)
-    locationTiles[bear.pos].classList.add('mark')
+    turnSprite(direction,actor,sprite)
+    if (!s) locationTiles[actor.pos].classList.add('mark')
 
-    if (mapImageTiles[bear.pos].dataset.event) {
+    if (!s && mapImageTiles[bear.pos].dataset.event) {
       const event = mapImageTiles[bear.pos].dataset.event.split('-')[0]
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       events[event](index)
@@ -461,11 +479,11 @@ function init() {
   }
 
   const handleKeyAction = e =>{
-    if (e.key === 'l' || e.key === 'L') {
-      check()
+    if (e.key.toLowerCase() === 'l') {
+      check(bear.textCount)
       return
     }
-    spriteWalk(e)
+    spriteWalk(e, bear, sprites[sprites.length - 1])
   }
 
 
