@@ -159,18 +159,23 @@ function init() {
     }
   ]
 
-  const buttonWrapper = document.querySelector('.button')
-  buttonWrapper.innerHTML = mapData.map((m,i)=>{
-    return `
-      <button data-index=${i}>
-        ${m.name}
-      </button>
-    `
-  }).join('')
-  const buttons = document.querySelectorAll('button')
+  // const buttonWrapper = document.querySelector('.button')
+  // buttonWrapper.innerHTML = mapData.map((m,i)=>{
+  //   return `
+  //     <button data-index=${i}>
+  //       ${m.name}
+  //     </button>
+  //   `
+  // }).join('')
+  // const buttons = document.querySelectorAll('button')
+
+
 
 
   const transitionCover = document.querySelector('.transition_cover')
+  const touchToggle = document.querySelector('.touch_toggle')
+  const control = document.querySelector('.control')
+  const controlButtons = document.querySelectorAll('.control_button')
   const wrapper = document.querySelector('.wrapper')
   const map = document.querySelector('.map')
   const mapImageContainer = document.querySelector('.map_image_container')
@@ -218,6 +223,7 @@ function init() {
     3: 'up',
     0: 'down',
   }
+
 
   const setWidthAndHeight = ()=>{
     let pWidth = 800
@@ -351,7 +357,6 @@ function init() {
         interval: null,
         spritePos: +c.split('_')[2],
         event: c.split('_')[3],
-        // pause: false,
         left: sx,
         top: sy,
         pos,
@@ -417,8 +422,6 @@ function init() {
     
     bear.options = document.querySelectorAll('.option')
     bear.options.forEach((op,i)=>{
-      // op.classList.remove('selected') 
-      // if (i === bear.choice) op.classList.add('selected') 
       op.addEventListener('click',()=>{
         bear.options.forEach(op=>op.classList.remove('selected'))
         op.classList.add('selected')
@@ -494,7 +497,8 @@ function init() {
   const spriteWalk = (e,actor,sprite, s=undefined) =>{
     if (!e || !bear.motion) return
     if (!s) locationTiles[actor.pos].classList.remove('mark')
-    const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
+    // const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
+    const direction = e
     
     switch (direction) {
       case 'right': if (noWall(actor.pos + 1)){
@@ -520,21 +524,6 @@ function init() {
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       events[event](index)
     } 
-
-    //*indicator
-    // const dataX = mapImageTiles[bear.pos].dataset.x
-    // const dataY = mapImageTiles[bear.pos].dataset.y
-    // indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
-
-    // console.log(
-    //   'cellD',cellD,
-    //   'dataX',dataX,
-    //   'dataY',dataY,
-    //   'x',x,
-    //   'y',y,
-    //   'los',bear.pos
-    //   )
-  
   }
 
   const select = () =>{
@@ -546,17 +535,18 @@ function init() {
 
   //! need external index handler if there are more than one choice for answer.
   const handleKeyAction = e =>{
-    const key = e.key.toLowerCase()
+    // const key = e.key.toLowerCase()
+    const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
     if (bear.pause) {
       // const options = document.querySelectorAll('.option')
       bear.options.forEach(option=>option.classList.remove('selected'))
       switch (key) {
-        case 'arrowup': 
+        case 'up': 
           bear.choice > 0
           ? bear.choice--
           : null
           break
-        case 'arrowdown': 
+        case 'down': 
           bear.choice < bear.options.length - 1
           ? bear.choice++
           : null
@@ -572,7 +562,7 @@ function init() {
       check(bear.textCount)
       return
     }
-    spriteWalk(e, bear, sprites[sprites.length - 1])
+    spriteWalk(key, bear, sprites[sprites.length - 1])
   }
 
 
@@ -630,12 +620,35 @@ function init() {
   transport('start')
 
 
-  buttons[0].addEventListener('click',()=>events['transport']('portal1'))
-  buttons[1].addEventListener('click',()=>events.transport('portal2'))
-  buttons[2].addEventListener('click',()=>events.transport('portal3'))
+  // buttons[5].addEventListener('click',()=>events['transport']('portal1'))
+  // buttons[6].addEventListener('click',()=>events.transport('portal2'))
+  // buttons[7].addEventListener('click',()=>events.transport('portal3'))
 
+  controlButtons.forEach(c=>{
+    c.addEventListener('click',()=>{
+      // console.log(c.dataset.c)
+      handleKeyAction(c.dataset.c)
+    })
+  })
+
+  
+  touchToggle.addEventListener('change', ()=>control.classList.toggle('hide'))
 }
 
 window.addEventListener('DOMContentLoaded', init)
 
 
+    //*indicator
+    // const dataX = mapImageTiles[bear.pos].dataset.x
+    // const dataY = mapImageTiles[bear.pos].dataset.y
+    // indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
+
+    // console.log(
+    //   'cellD',cellD,
+    //   'dataX',dataX,
+    //   'dataY',dataY,
+    //   'x',x,
+    //   'y',y,
+    //   'los',bear.pos
+    //   )
+  
