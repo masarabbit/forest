@@ -345,7 +345,8 @@ a:hover {
   position: fixed;
   /* height: 100px; */
   z-index: 99999;
-  bottom: 0;
+  bottom: 10px;
+  left: 10px;
   display: flex;
   align-items: center;
   transition: 0.3s;
@@ -383,6 +384,10 @@ a:hover {
   color: rgb(148, 253, 116);
 }
 
+.control :nth-child(4) {
+  margin: 10px 10px 10px 30px;
+}
+
 /* button.control_toggle {
   position: fixed;
   top: 30px;
@@ -391,16 +396,23 @@ a:hover {
 }
  */
 
-
-
-.switch {
+.toggle_wrapper {
   position: fixed;
   top: 20px;
   right: 20px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  color: white;
+  z-index: 99999;
+}
+
+.switch {
+  position: relative;
   display: inline-block;
   width: 60px;
   height: 36px;
-  z-index: 99999;
+  margin: 0 0 0 10px;
 }
 
 .switch input {
@@ -450,3 +462,4 @@ input:focus + .slider {
 input:checked + .slider:before {
   transform: translateX(24px);
 }
+

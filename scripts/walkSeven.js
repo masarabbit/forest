@@ -632,7 +632,11 @@ function init() {
   })
 
   
-  touchToggle.addEventListener('change', ()=>control.classList.toggle('hide'))
+  touchToggle.addEventListener('change', ()=>{
+    control.classList.toggle('hide')
+    const status = document.querySelector('.touch_status')
+    status.innerHTML = status.innerHTML === 'off' ? 'on' : 'off'
+  })
 }
 
 window.addEventListener('DOMContentLoaded', init)
