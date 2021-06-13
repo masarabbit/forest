@@ -208,6 +208,7 @@ function init() {
     motion: true,
     textCount: 0,
     pause: false,
+    option: null,
     choice: 0
   }
 
@@ -409,10 +410,21 @@ function init() {
     })
   }
 
-  const displayQuestion = q =>{
+  const displayAnswer = q =>{
     bear.pause = true
     bear.choice = 0
     texts[1].innerHTML = q.map((qu,i)=>`<div class="option ${i === 0 && 'selected'}">${qu}</div>`).join('')
+    
+    bear.options = document.querySelectorAll('.option')
+    bear.options.forEach((op,i)=>{
+      // op.classList.remove('selected') 
+      // if (i === bear.choice) op.classList.add('selected') 
+      op.addEventListener('click',()=>{
+        bear.options.forEach(op=>op.classList.remove('selected'))
+        op.classList.add('selected')
+        bear.choice = i
+      })
+    })
   }
 
   const displayTextGradual = (t,i) =>{
@@ -439,7 +451,7 @@ function init() {
       const text = eventPoint.text[count].split('/')[bear.choice] || eventPoint.text[count]
       if (text.includes('#')) {
         displayTextGradual(text.split('#')[0],0)
-        displayQuestion(eventPoint[text.split('#')[1]])
+        displayAnswer(eventPoint[text.split('#')[1]])
       } else if (text !== ' ') {
         displayTextGradual(text,0) 
       } else {
@@ -536,8 +548,8 @@ function init() {
   const handleKeyAction = e =>{
     const key = e.key.toLowerCase()
     if (bear.pause) {
-      const options = document.querySelectorAll('.option')
-      options.forEach(option=>option.classList.remove('selected'))
+      // const options = document.querySelectorAll('.option')
+      bear.options.forEach(option=>option.classList.remove('selected'))
       switch (key) {
         case 'arrowup': 
           bear.choice > 0
@@ -545,7 +557,7 @@ function init() {
           : null
           break
         case 'arrowdown': 
-          bear.choice < options.length - 1
+          bear.choice < bear.options.length - 1
           ? bear.choice++
           : null
           break
@@ -553,7 +565,7 @@ function init() {
         case 'enter': select(); break   
         default: console.log('invalid command')
       }
-      options[bear.choice].classList.add('selected')
+      bear.options[bear.choice].classList.add('selected')
       return
     }
     if (key === ' ' || key === 'enter') {
