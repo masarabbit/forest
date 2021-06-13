@@ -63,7 +63,7 @@ function init() {
       text: [
         'how are you?#q1',
         'yeah!/really?#yesno',
-        'cool!/too bad'
+        'cool!/ /whatever'
       ],
       q1: [
         'okay',
@@ -71,7 +71,8 @@ function init() {
       ],
       yesno: [
         'yes',
-        'no'
+        'no',
+        'maybe'
       ]
     }
   }
@@ -102,7 +103,7 @@ function init() {
     },
   }
 
-  const events = {   //! perhaps another event can be added for displaying image?
+  const events = {
     transport: transport,
     check: ()=>null
   }
@@ -411,10 +412,7 @@ function init() {
   const displayQuestion = q =>{
     bear.pause = true
     bear.choice = 0
-    texts[1].innerHTML = `
-      <div class="option selected">${q[0]}</div>
-      <div class="option">${q[1]}</div>
-    `
+    texts[1].innerHTML = q.map((qu,i)=>`<div class="option ${i === 0 && 'selected'}">${qu}</div>`).join('')
   }
 
   const displayTextGradual = (t,i) =>{
@@ -426,18 +424,26 @@ function init() {
     }
   }
 
+  const clearText = () =>{
+    bear.textCount = 0
+    bear.motion = true
+    texts[0].innerText = ''
+    transitionCover.innerHTML = ''
+  }
+
   const displayText = (count,eventPoint) =>{
     if (count < eventPoint.text.length){
       bear.textCount++
       bear.motion = false
 
       const text = eventPoint.text[count].split('/')[bear.choice] || eventPoint.text[count]
-
       if (text.includes('#')) {
         displayTextGradual(text.split('#')[0],0)
         displayQuestion(eventPoint[text.split('#')[1]])
+      } else if (text !== ' ') {
+        displayTextGradual(text,0) 
       } else {
-        displayTextGradual(text,0)
+        clearText()
       }
       
       if (eventPoint.art) transitionCover.innerHTML = `
@@ -447,10 +453,7 @@ function init() {
       `
       return
     }
-      bear.textCount = 0
-      bear.motion = true
-      texts[0].innerText = ''
-      transitionCover.innerHTML = ''
+    clearText()
   }
 
   function check(count){
@@ -527,7 +530,9 @@ function init() {
     bear.pause = false
     check(bear.textCount)
   }
+  
 
+  //! need external index handler if there are more than one choice for answer.
   const handleKeyAction = e =>{
     const key = e.key.toLowerCase()
     if (bear.pause) {
@@ -535,17 +540,20 @@ function init() {
       options.forEach(option=>option.classList.remove('selected'))
       switch (key) {
         case 'arrowup': 
-          options[0].classList.add('selected')
-          bear.choice = 0
+          bear.choice > 0
+          ? bear.choice--
+          : null
           break
         case 'arrowdown': 
-          options[1].classList.add('selected')
-          bear.choice = 1
+          bear.choice < options.length - 1
+          ? bear.choice++
+          : null
           break
         case ' ': select(); break   
         case 'enter': select(); break   
         default: console.log('invalid command')
       }
+      options[bear.choice].classList.add('selected')
       return
     }
     if (key === ' ' || key === 'enter') {
