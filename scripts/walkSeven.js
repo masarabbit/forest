@@ -186,7 +186,7 @@ function init() {
   const texts = document.querySelectorAll('.text')
   const sprite = document.querySelector('.sprite')
   let sprites
-  // const indicator = document.querySelector('.indicator')
+  const indicator = document.querySelector('.indicator')
   
 
   //* map related variables
@@ -413,6 +413,14 @@ function init() {
         displayText(bear.textCount,eventPoints[actor.event])
       }
     })
+    console.log('test')
+    indicator.innerHTML = (   
+    `
+      <div>
+        <p>bear textCount: ${bear.textCount}</p>
+        <p>bear choice: ${bear.choice}</p>
+      </div>
+    ` )
   }
 
   const displayAnswer = q =>{
@@ -460,6 +468,14 @@ function init() {
       } else {
         clearText()
       }
+
+      indicator.innerHTML = (   
+        `
+          <div>
+            <p>bear textCount: ${bear.textCount}</p>
+            <p>bear choice: ${bear.choice}</p>
+          </div>
+        ` )
       
       if (eventPoint.art) transitionCover.innerHTML = `
         <div>
@@ -557,6 +573,13 @@ function init() {
         case 'right': select(); break 
         default: console.log('invalid command')
       }
+      indicator.innerHTML = (   
+        `
+          <div>
+            <p>bear textCount: ${bear.textCount}</p>
+            <p>bear choice: ${bear.choice}</p>
+          </div>
+        ` )
       bear.options[bear.choice].classList.add('selected')
       return
     }
