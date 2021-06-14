@@ -537,6 +537,7 @@ function init() {
   const handleKeyAction = e =>{
     // const key = e.key.toLowerCase()
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
+    if (!texts[0].innerHTML) spriteWalk(key, bear, sprites[sprites.length - 1])
     if (bear.pause) {
       // const options = document.querySelectorAll('.option')
       bear.options.forEach(option=>option.classList.remove('selected'))
@@ -553,16 +554,17 @@ function init() {
           break
         case ' ': select(); break   
         case 'enter': select(); break   
+        case 'right': select(); break 
         default: console.log('invalid command')
       }
       bear.options[bear.choice].classList.add('selected')
       return
     }
-    if (key === ' ' || key === 'enter') {
+    if (key === ' ' || key === 'enter' || key === 'right') {
       check(bear.textCount)
       return
     }
-    spriteWalk(key, bear, sprites[sprites.length - 1])
+    // spriteWalk(key, bear, sprites[sprites.length - 1])
   }
 
 
