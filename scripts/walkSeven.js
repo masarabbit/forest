@@ -1,10 +1,9 @@
 
 
 //*maybe design maps first.
-
 //! temporal solution for image display added, but 
-
 //! add ways to decorate map further
+
 
 function init() {
 
@@ -170,8 +169,6 @@ function init() {
   // const buttons = document.querySelectorAll('button')
 
 
-
-
   const transitionCover = document.querySelector('.transition_cover')
   const touchToggle = document.querySelector('.touch_toggle')
   const control = document.querySelector('.control')
@@ -185,8 +182,8 @@ function init() {
   const spriteContainer = document.querySelector('.sprite_container')
   const texts = document.querySelectorAll('.text')
   const sprite = document.querySelector('.sprite')
-  let sprites
   const indicator = document.querySelector('.indicator')
+  let sprites
   
 
   //* map related variables
@@ -213,8 +210,9 @@ function init() {
     motion: true,
     textCount: 0,
     pause: false,
-    option: null,
-    choice: 0
+    option: 0,
+    choice: 0,
+    prevChoices: [] 
   }
 
   const directionKey = {
@@ -250,37 +248,14 @@ function init() {
     })
   }
 
-  
   //! center of the map
   // const startbear.pos = (w,h)=> {
   //   return ((w) * (h / 2)) - (w / 2) - 1
   // }
 
-
-  
-  const spawnWalk = (actor,para,m,s) =>{
-    // if (!actor) return
-    actor[para] += m
-    s.style[para]= `${actor[para]}px`
-  }
-  
-
-  const spawnMotion = (s,i) =>{
-    if (spawnData[i].pause) return
-    const motionOption = [
-      ()=>spriteWalk('down',spawnData[i],sprites[i],s),
-      ()=>spriteWalk('right',spawnData[i],sprites[i],s),
-      ()=>spriteWalk('up',spawnData[i],sprites[i],s),
-      ()=>spriteWalk('left',spawnData[i], sprites[i],s)
-    ]
-    motionOption[Math.floor(Math.random() * 4)]()
-  }
-
-
   const placeInCenterOfMap = () =>{
     start = Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
   }
-
 
   const mapMap = (w, h, classToAdd)=>{
     const mapArr = new Array(w * h).fill('').map((_ele,i)=>i)
@@ -295,7 +270,6 @@ function init() {
     }).join('')
   }
 
-
   const adjustRectSize = (target,w,h,c,t) =>{
     target.style.width = `${w * c}px`
     target.style.height = `${h * c}px` 
@@ -306,8 +280,36 @@ function init() {
     })
     : ''
   }
-  
 
+  const noWall = pos =>{    
+    if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
+    return mapImageTiles[pos].classList.contains('b')
+  }
+
+  const setUpWalls = target =>{
+    target.forEach((tile,i)=>{
+      tile.classList.add(mapData[mapIndex].map[i])
+      if (mapData[mapIndex].map[i] === 't' ||
+          mapData[mapIndex].map[i] === 'w') tile.innerHTML = tree()
+    })
+  }
+  
+  const spawnWalk = (actor,para,m,spawn) =>{
+    actor[para] += m
+    spawn.style[para]= `${actor[para]}px`
+  }
+  
+  const spawnMotion = (spawn,i) =>{
+    if (spawnData[i].pause) return
+    const motionOption = [
+      ()=>spriteWalk('down',spawnData[i],sprites[i],spawn),
+      ()=>spriteWalk('right',spawnData[i],sprites[i],spawn),
+      ()=>spriteWalk('up',spawnData[i],sprites[i],spawn),
+      ()=>spriteWalk('left',spawnData[i],sprites[i],spawn)
+    ]
+    motionOption[Math.floor(Math.random() * 4)]()
+  }
+  
   const setX = num =>{
     x = num
     mapImage.style.left = `${x}px`
@@ -331,20 +333,7 @@ function init() {
   }
   
 
-  const noWall = pos =>{    
-    if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
-    return mapImageTiles[pos].classList.contains('b')
-  }
-
-  const setUpWalls = target =>{
-    target.forEach((tile,i)=>{
-      tile.classList.add(mapData[mapIndex].map[i])
-      if (mapData[mapIndex].map[i] === 't' ||
-          mapData[mapIndex].map[i] === 'w') tile.innerHTML = tree()
-    })
-  }
   
-
   const spawnCharacter = () =>{
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
     spawnData.length = 0
@@ -379,19 +368,7 @@ function init() {
     })
   }
 
-
-  const turnSprite = (e = 'down',actor,s) => {
-    let m = -cellD
-    actor.facingDirection = e
-    const spriteChange = {
-      right: ()=> m = actor.spritePos === m * 9 ? m * 8 : m * 9,
-      left: ()=> m = actor.spritePos === m * 6 ? m * 7 : m * 6,
-      up: ()=> m = actor.spritePos === m * 3 ? m * 5 : m * 3,
-      down: ()=> m = actor.spritePos === m * 0 ? m * 2 : m * 0
-    }
-    spriteChange[e]()
-    setSpritePos(m,actor,s)
-  }
+ 
 
   const transition = () =>{
     transitionCover.classList.add('transition')
@@ -402,32 +379,36 @@ function init() {
     },500)
   }
 
-  const talk = () => {
+  const displayChoiceDetails = () =>{
+    indicator.innerHTML = (   
+      `
+        <div>
+          <p>bear textCount: ${bear.textCount}</p>
+          <p>bear choice: ${bear.choice}</p>
+          <p>bear prevchoice: ${bear.prevChoice}</p>
+        </div>
+      ` )
+  }
+
+  const talk = prev => {
     const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
     spawnData.forEach((actor,i)=>{
       if (actor.pos === bear.pos + key[bear.facingDirection]) {
         actor.pause = true
         const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
         turnSprite(opposite,actor,sprites[i])
-        // console.log('t',eventPoints[actor.event])
-        displayText(bear.textCount,eventPoints[actor.event])
+        displayText(bear.textCount,eventPoints[actor.event],prev)
       }
     })
-    console.log('test')
-    indicator.innerHTML = (   
-    `
-      <div>
-        <p>bear textCount: ${bear.textCount}</p>
-        <p>bear choice: ${bear.choice}</p>
-      </div>
-    ` )
   }
-
-  const displayAnswer = q =>{
+  
+  //* displays multiple choice
+  const displayAnswer = (q,prev) =>{ 
     bear.pause = true
-    bear.choice = 0
-    texts[1].innerHTML = q.map((qu,i)=>`<div class="option ${i === 0 && 'selected'}">${qu}</div>`).join('')
+    bear.choice = prev ? bear.prevChoices[bear.textCount - 1] : 0 
+    texts[1].innerHTML = q.map((qu,i)=>`<div class="option ${i === bear.choice && 'selected'}">${qu}</div>`).join('')
     
+    //* makes multiple choice clickable
     bear.options = document.querySelectorAll('.option')
     bear.options.forEach((op,i)=>{
       op.addEventListener('click',()=>{
@@ -449,34 +430,30 @@ function init() {
 
   const clearText = () =>{
     bear.textCount = 0
+    bear.prevChoices.length = 0
     bear.motion = true
-    texts[0].innerText = ''
+    bear.pause = false
+    texts.forEach(t=>t.innerText='')
     transitionCover.innerHTML = ''
   }
 
-  const displayText = (count,eventPoint) =>{
+  const displayText = (count,eventPoint,prev) =>{
     if (count < eventPoint.text.length){
+      
+      //* displays text and answer
+      const text = eventPoint.text[count].split('/')[prev ? bear.prevChoices[bear.textCount - 1]  : bear.choice] || eventPoint.text[count]
       bear.textCount++
       bear.motion = false
-
-      const text = eventPoint.text[count].split('/')[bear.choice] || eventPoint.text[count]
       if (text.includes('#')) {
         displayTextGradual(text.split('#')[0],0)
-        displayAnswer(eventPoint[text.split('#')[1]])
+        displayAnswer(eventPoint[text.split('#')[1]],prev)
       } else if (text !== ' ') {
         displayTextGradual(text,0) 
-      } else {
-        clearText()
-      }
+      } 
+      // else {
+      //   clearText()
+      // }
 
-      indicator.innerHTML = (   
-        `
-          <div>
-            <p>bear textCount: ${bear.textCount}</p>
-            <p>bear choice: ${bear.choice}</p>
-          </div>
-        ` )
-      
       if (eventPoint.art) transitionCover.innerHTML = `
         <div>
           <img src=${eventPoint.art} />
@@ -487,14 +464,15 @@ function init() {
     clearText()
   }
 
-  function check(count){
-    if (mapImageTiles[bear.pos].dataset.event) {
+
+  function check(count,prev=false){
+    if (mapImageTiles[bear.pos].dataset.event) { //* checking static object
       index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       const eventPoint = eventPoints[index]
-      if (bear.facingDirection !== eventPoint.direction) return 
-      displayText(count,eventPoint)
+      if (bear.facingDirection === eventPoint.direction) displayText(count,eventPoint,prev)
+      return
     }
-    talk()
+    talk(prev)
   }
 
   function transport(index){
@@ -509,6 +487,19 @@ function init() {
     spawnCharacter()
   }
   
+
+  const turnSprite = (e = 'down',actor,s) => {
+    let m = -cellD
+    actor.facingDirection = e
+    const spriteChange = {
+      right: ()=> m = actor.spritePos === m * 9 ? m * 8 : m * 9,
+      left: ()=> m = actor.spritePos === m * 6 ? m * 7 : m * 6,
+      up: ()=> m = actor.spritePos === m * 3 ? m * 5 : m * 3,
+      down: ()=> m = actor.spritePos === m * 0 ? m * 2 : m * 0
+    }
+    spriteChange[e]()
+    setSpritePos(m,actor,s)
+  }
 
   const spriteWalk = (e,actor,sprite, s=undefined) =>{
     if (!e || !bear.motion) return
@@ -543,56 +534,55 @@ function init() {
   }
 
   const select = () =>{
+    // bear.textCount++
     texts[1].innerHTML = ''
     bear.pause = false
+    bear.prevChoices[bear.textCount - 1] = bear.choice
     check(bear.textCount)
+  }
+
+  const prevText = () =>{
+    if (bear.textCount > 1) {
+      texts[1].innerHTML = ''
+      //* needs to be minus 2, because textCount would be incremented by then
+      bear.textCount = bear.textCount - 2 
+      bear.pause = false
+      check(bear.textCount,true)
+    } else {
+      clearText()
+    }
   }
   
 
   //! need external index handler if there are more than one choice for answer.
   const handleKeyAction = e =>{
-    // const key = e.key.toLowerCase()
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
-    if (!texts[0].innerHTML) spriteWalk(key, bear, sprites[sprites.length - 1])
     if (bear.pause) {
-      // const options = document.querySelectorAll('.option')
       bear.options.forEach(option=>option.classList.remove('selected'))
       switch (key) {
-        case 'up': 
-          bear.choice > 0
-          ? bear.choice--
-          : null
-          break
-        case 'down': 
-          bear.choice < bear.options.length - 1
-          ? bear.choice++
-          : null
-          break
+        case 'up': if(bear.choice > 0) bear.choice--; break
+        case 'down': if(bear.choice < bear.options.length - 1) bear.choice++; break
         case ' ': select(); break   
         case 'enter': select(); break   
         case 'right': select(); break 
+        case 'left' : prevText(); break
         default: console.log('invalid command')
       }
-      indicator.innerHTML = (   
-        `
-          <div>
-            <p>bear textCount: ${bear.textCount}</p>
-            <p>bear choice: ${bear.choice}</p>
-          </div>
-        ` )
+      displayChoiceDetails()
       bear.options[bear.choice].classList.add('selected')
       return
     }
-    if (key === ' ' || key === 'enter' || key === 'right') {
+    if (key === 'left' && texts[0].innerHTML) prevText()
+    if (key === ' ' || key === 'enter' || (key === 'right' && texts[0].innerHTML)) {
       check(bear.textCount)
       return
     }
-    // spriteWalk(key, bear, sprites[sprites.length - 1])
+    spriteWalk(key, bear, sprites[sprites.length - 1])
   }
 
 
   //* key control
-  window.addEventListener('keydown', (e)=>handleKeyAction(e))
+  window.addEventListener('keyup', (e)=>handleKeyAction(e))
 
   
   
@@ -650,10 +640,7 @@ function init() {
   // buttons[7].addEventListener('click',()=>events.transport('portal3'))
 
   controlButtons.forEach(c=>{
-    c.addEventListener('click',()=>{
-      // console.log(c.dataset.c)
-      handleKeyAction(c.dataset.c)
-    })
+    c.addEventListener('click',()=>handleKeyAction(c.dataset.c))
   })
 
   
