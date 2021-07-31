@@ -4,31 +4,8 @@
 //! temporal solution for image display added, but 
 //! add ways to decorate map further
 
-//! design other avatars and map
-
 
 function init() {
-  
-  //* stops intervals firing while window is inactive
-  let windowActive
-  window.addEventListener('focus', ()=> windowActive = true)
-  window.addEventListener('blur', ()=> windowActive = false)
-
-  const decode = arr =>{
-    return arr.split('').map(c=>{
-      if (c === 'D') return '<path d="M'
-      if (c === 'F') return '<path fill="#fff" d="M'
-      if (c === '/') return '/>'
-      if (c === 'N') return '-1' 
-      if (c === 'T') return '-2'
-      return c
-    }).join('')
-  }
-
-  const svgWrapper = (content, color) =>{
-    return `<svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${color ? color : 'black'}">${content}</svg>`
-  }
-
 
   const avatars = {
     avatar: {
@@ -38,11 +15,7 @@ function init() {
       </svg>`,
       motion: 'udlr',
       speed: 5000
-      },
-    bunny: {
-      sprite: `D 4 0h2v1hTvN"/D 10 0h2v1hTvN"/D 20 0h2v1hTvN"/D 26 0h2v1hTvN"/D 36 0h2v1hTvN"/D 42 0h2v1hTvN"/D 52 0h2v1hTvN"/D 58 0h2v1hTvN"/D 70 0h2v1hTvN"/D 73 0h2v1hTvN"/D 86 0h2v1hTvN"/D 89 0h2v1hTvN"/D 102 0h2v1hTvN"/D 105 0h2v1hTvN"/D 3 1h1v4hNv-4"/>F 4 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv2hTvNhNvNhTvNhNv2hTvNhNv-8h1v-4"/D 6 1h1v2hNvT"/D 9 1h1v2hNvT"/D 12 1h1v4hNv-4"/D 19 1h1v4hNv-4"/>F 20 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv1hTvNh1vNh1v-3hTv2h1v1hNv1h-3vNhNv2hTvNhNv-8h1v-4"/D 22 1h1v2hNvT"/D 25 1h1v2hNvT"/D 28 1h1v4hNv-4"/D 35 1h1v4hNv-4"/>F 36 1h2v2h1v1h2vNh1vTh2v4h1v9hNv1hTvNhNvNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 38 1h1v2hNvT"/D 41 1h1v2hNvT"/D 44 1h1v4hNv-4"/D 51 1h1v4hNv-4"/>F 52 1h2v2h1v1h2vNh1vTh2v4h1v8hNv1h-3vNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 54 1h1v2hNvT"/D 57 1h1v2hNvT"/D 60 1h1v4hNv-4"/D 69 1h1v3hNv-3"/>F 70 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1h-3vNhNvNhNvNh1vNhNv1hNv1h1v1h1v2hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 72 1h1v3hNv-3"/D 75 1h1v3hNv-3"/D 85 1h1v3hNv-3"/>F 86 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvNhNv1hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 88 1h1v3hNv-3"/D 91 1h1v3hNv-3"/D 101 1h1v3hNv-3"/>F 102 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvThNvNhNvNh1vNhNv1hNv1h1v1h1v1h-3v-4hNvNh1vNhNvTh1vNh1v-3"/D 104 1h1v3hNv-3"/D 107 1h1v3hNv-3"/>F 5 3h1v1hNvN"/D 7 3h2v1hTvN"/>F 21 3h1v1hNvN"/D 23 3h2v1hTvN"/D 39 3h2v1hTvN"/D 55 3h2v1hTvN"/D 68 4h1v1hNvN"/D 76 4h1v1hNvN"/D 84 4h1v1hNvN"/D 92 4h1v1hNvN"/D 100 4h1v1hNvN"/D 108 4h1v1hNvN"/D 2 5h1v3hNv-3"/D 5 5h1v2hNvT"/D 10 5h1v2hNvT"/>F 11 5h1v2hNvT"/D 13 5h1v3hNv-3"/D 18 5h1v3hNv-3"/D 21 5h1v2hNvT"/D 26 5h1v2hNvT"/>F 27 5h1v2hNvT"/D 29 5h1v3hNv-3"/D 34 5h1v3hNv-3"/D 45 5h1v3hNv-3"/D 50 5h1v3hNv-3"/D 61 5h1v3hNv-3"/D 67 5h1v2h1v1hTv-3"/D 70 5h1v2hNvT"/D 77 5h1v3hNv-3"/D 83 5h1v2h1v1hTv-3"/D 86 5h1v2hNvT"/D 93 5h1v3hNv-3"/D 99 5h1v2h1v1hTv-3"/D 102 5h1v2hNvT"/D 109 5h1v3hNv-3"/>F 4 6h1v1hNvN"/>F 20 6h1v1hNvN"/D 7 7h2v1hTvN"/D 23 7h2v1hTvN"/>F 6 8h1v1hNvN"/>F 22 8h1v1hNvN"/D 76 8h1v2hNvT"/D 92 8h1v2hNvT"/D 108 8h1v2hNvT"/D 2 9h1v4hNv-4"/D 4 9h1v1hNvN"/>F 5 9h1v1hNvN"/>F 10 9h1v1hNvN"/D 11 9h1v1hNvN"/D 13 9h1v5hNv-5"/D 18 9h1v4hNv-4"/D 20 9h1v1hNvN"/>F 21 9h1v1hNvN"/>F 26 9h1v1hNvN"/D 27 9h1v1hNvN"/D 29 9h1v4hNv-4"/D 34 9h1v4hNv-4"/D 45 9h1v5hNv-5"/D 50 9h1v4hNv-4"/D 61 9h1v4hNv-4"/D 68 9h1v4hNv-4"/D 71 9h1v1hNvN"/D 84 9h1v4hNv-4"/D 87 9h1v1hNvN"/D 100 9h1v4hNv-4"/D 103 9h1v1hNvN"/D 5 10h1v1hNvN"/D 10 10h1v1hNvN"/>F 11 10h1v1hNvN"/D 21 10h1v1hNvN"/D 26 10h1v1hNvN"/>F 27 10h1v1hNvN"/D 39 10h2v1hTvN"/D 55 10h2v1hTvN"/D 70 10h1v1hNvN"/D 77 10h1v2hNvT"/D 86 10h1v1hNvN"/D 93 10h1v2hNvT"/D 102 10h1v1hNvN"/D 109 10h1v2hNvT"/D 4 11h1v1hNvN"/D 11 11h1v1hNvN"/D 20 11h1v1hNvN"/D 27 11h1v1hNvN"/D 38 11h1v2hNvT"/>F 39 11h2v2hTvT"/D 41 11h1v2hNvT"/D 54 11h1v2hNvT"/>F 55 11h2v2hTvT"/D 57 11h1v2hNvT"/D 71 11h1v1hNvN"/D 87 11h1v1hNvN"/D 103 11h1v1hNvN"/>F 6 12h1v1hNvN"/>F 10 12h1v1hNvN"/>F 22 12h1v1hNvN"/>F 26 12h1v1hNvN"/D 72 12h1v1h3v1h-4vT"/D 76 12h1v1hNvN"/D 92 12h1v1hNvN"/D 104 12h1v2h-4vNh3vN"/D 108 12h1v1hNvN"/D 3 13h1v1hNvN"/D 6 13h3v1h-3vN"/>F 12 13h1v1hNvN"/D 19 13h1v1hNvN"/D 22 13h4v1h-4vN"/D 28 13h1v1hNvN"/D 35 13h1v1hNvN"/D 39 13h2v1hTvN"/D 51 13h1v1hNvN"/D 55 13h2v1hTvN"/D 60 13h1v1hNvN"/D 69 13h1v1hNvN"/D 85 13h1v1hNvN"/D 88 13h1v1hNvN"/D 91 13h1v1hNvN"/D 107 13h1v1hNvN"/D 4 14h2v1hTvN"/D 9 14h1v1hNvN"/D 12 14h1v1hNvN"/D 20 14h2v1hTvN"/D 26 14h2v1hTvN"/D 36 14h2v1hTvN"/D 41 14h1v1hNvN"/D 44 14h1v1hNvN"/D 52 14h2v1hTvN"/D 58 14h2v1hTvN"/D 70 14h2v1hTvN"/D 86 14h2v1hTvN"/D 89 14h2v1hTvN"/D 105 14h2v1hTvN"/D 10 15h2v1hTvN"/D 42 15h2v1hTvN"/>`,
-      speed: 2000
-    }     
+      }   
     }
 
   const randomColor = () =>{
@@ -50,20 +23,21 @@ function init() {
     return `rgb(${r()},${r()},${r()})`
   }
 
-  const randomGreen= () =>{
-    const r=()=> Math.ceil(Math.random() * 80)
-    const g=()=> Math.ceil(Math.random() * 155) + 100
-    const b=()=> Math.ceil(Math.random() * 100)
-    return `rgb(${r()},${g()},${b()})`
-  }
-
+  // const tree = () => {
+  //   return `
+  //   <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 45.5 45.5" fill="${randomColor()}">
+  //     <path d="M22.32,13.11L7.46,33.18c-0.74,1-0.03,2.42,1.22,2.42H38.4c1.25,0,1.96-1.42,1.22-2.42L24.76,13.11
+  //       C24.15,12.29,22.93,12.29,22.32,13.11z"/>
+  //     <path d="M27.97,45.5h-8.86c-1,0-1.8-0.81-1.8-1.8V32.43c0-1,0.81-1.8,1.8-1.8h8.86c1,0,1.8,0.81,1.8,1.8v11.26
+  //       C29.77,44.69,28.96,45.5,27.97,45.5z"/>
+  //     <path d="M20.87,5.99L10.65,20.2c-0.68,0.94,0,2.25,1.15,2.25h23.48c1.16,0,1.83-1.31,1.15-2.25L26.21,5.99
+  //       C24.9,4.17,22.18,4.17,20.87,5.99z"/>
+  //   </svg>
+  //   `
+  // }
 
   const tree = () =>{
-    return `D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/`
-  }
-
-  const flowers = () =>{
-    return `D 2 1h2v1hTvN"/ D 1 2h1v1hNvN"/ D 4 2h1v1hNvN"/ D 2 3h2v1hTvN"/ D 11 4h2v1hTvN"/ D 10 5h1v1hNvN"/ D 13 5h1v1hNvN"/ D 11 6h2v1hTvN"/ D 4 8h2v1hTvN"/ D 3 9h1v1hNvN"/ D 6 9h1v1hNvN"/ D 4 10h2v1hTvN"/ D 13 12h2v1hTvN"/ D 12 13h1v1hNvN"/ D 15 13h1v1hNvN"/ D 13 14h2v1hTvN"/`
+    return `<svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${randomColor()}"><path  d="M 6 1 h 4 v 1 h -4 v -1"/> <path  d="M 5 2 h 1 v 1 h 1 v 1 h -3 v -1 h 1 v -1"/> <path fill="#fff" d="M 6 2 h 4 v 1 h 1 v 1 h 1 v 2 h 1 v 2 h 1 v 4 h -2 v 1 h -9 v -1 h 3 v -1 h -4 v -1 h 3 v -1 h -3 v -1 h 4 v -1 h -3 v -1 h 4 v -1 h -3 v -1 h 3 v -1 h -1 v -1"/> <path  d="M 10 2 h 1 v 1 h -1 v -1"/> <path  d="M 11 3 h 1 v 1 h -1 v -1"/> <path  d="M 3 4 h 1 v 1 h 3 v 1 h -4 v -2"/> <path  d="M 12 4 h 1 v 2 h -1 v -2"/> <path  d="M 2 6 h 1 v 1 h 3 v 1 h -4 v -2"/> <path  d="M 13 6 h 1 v 2 h -1 v -2"/> <path  d="M 1 8 h 1 v 1 h 3 v 1 h -3 v 1 h 4 v 1 h -3 v 1 h -1 v -1 h -1 v -4"/> <path  d="M 14 8 h 1 v 4 h -1 v -4"/> <path  d="M 12 12 h 2 v 1 h -1 v 1 h -2 v 2 h -6 v -2 h -2 v -1 h 9 v -1"/></svg>`
   }
 
   const eventPoints = {
@@ -73,12 +47,12 @@ function init() {
         'yeah!'
     ],
       art: 'http://masahito.co.uk/img/icecream_bunny.png',
-      // item: null,
+      item: null,
       direction: 'up'
     },
     bunny1:{
       text: ['hello! Bunny!'],
-      // item: null,
+      item: null,
       direction: 'left'
     },
     hello:{ text: ['hello!']},
@@ -91,14 +65,14 @@ function init() {
     apple:{
       text: [
         'how are you?#q1',
-        'yeah!/really?#yesNo',
+        'yeah!/really?#yesno',
         'cool!/ /whatever'
       ],
       q1: [
         'okay',
         'not so good'
       ],
-      yesNo: [
+      yesno: [
         'yes',
         'no',
         'maybe'
@@ -144,9 +118,9 @@ function init() {
       iWidth: 30,
       iHeight: 20,
       characters: [
-        '155_bunny_0_hello',
-        '156_bunny_0_apple',
-        '311_bunny_0_tomato'
+        '155_avatar_0_hello',
+        '156_avatar_0_apple',
+        '311_avatar_0_tomato'
       ],
       events: [
         '5_transport-portal3',
@@ -159,7 +133,7 @@ function init() {
       iWidth: 40,
       iHeight: 30,
       characters: [
-        '779_bunny_0_hello'
+        '779_avatar_0_hello'
       ],
       events: [
         '1178_transport-portal1',
@@ -173,14 +147,14 @@ function init() {
       iWidth: 18,
       iHeight: 14,
       characters: [
-        '135_bunny_9_hello',
-        '101_bunny_6_hello',
-        '165_bunny_3_hello'
+        '135_avatar_9_hello',
+        '101_avatar_6_hello',
+        '165_avatar_3_hello'
       ],
       events: [
-        '241_transport-portal1',
-        '242_transport-portal1',
-        '243_transport-portal1',
+        '241_transport-portal2',
+        '242_transport-portal2',
+        '243_transport-portal2',
         '44_check-tree1',
         '112_check-bunny1'
       ],
@@ -214,8 +188,6 @@ function init() {
   const sprite = document.querySelector('.sprite')
   const indicator = document.querySelector('.indicator')
   let sprites
-
-  
   
 
   //* map related variables
@@ -224,7 +196,7 @@ function init() {
   let iHeight
   let iWidth
   let start
-  let cellD = 32
+  let cellD = 40
   let minicellD 
   let x 
   let y 
@@ -244,8 +216,7 @@ function init() {
     pause: false,
     option: 0,
     choice: 0,
-    prevChoices: [], 
-    animationTimer: [],
+    prevChoices: [] 
   }
 
   const directionKey = {
@@ -323,8 +294,7 @@ function init() {
     target.forEach((tile,i)=>{
       tile.classList.add(mapData[mapIndex].map[i])
       if (mapData[mapIndex].map[i] === 't' ||
-          mapData[mapIndex].map[i] === 'w') tile.innerHTML = svgWrapper(decode(tree()),randomGreen())
-      if (mapData[mapIndex].map[i] === 'o') tile.innerHTML = svgWrapper(decode(flowers()),randomColor()) 
+          mapData[mapIndex].map[i] === 'w') tile.innerHTML = tree()
     })
   }
   
@@ -334,7 +304,7 @@ function init() {
   }
   
   const spawnMotion = (spawn,i) =>{
-    if (spawnData[i].pause || !windowActive) return
+    if (spawnData[i].pause) return
     const motionOption = [
       ()=>spriteWalk('down',spawnData[i],sprites[i],spawn),
       ()=>spriteWalk('right',spawnData[i],sprites[i],spawn),
@@ -354,9 +324,9 @@ function init() {
     mapImage.style.top = `${y}px`
   }
 
-  const setSpritePos = (num,actor,sprite) =>{
+  const setSpritePos = (num,actor,s) =>{
     actor.spritePos = num
-    sprite.style.marginLeft = `${num}px`
+    s.style.marginLeft = `${num}px`
   }
 
   const positionSprite = pos =>{
@@ -365,6 +335,8 @@ function init() {
     spriteContainer.style.left = `${paraX}px`
     spriteContainer.style.top = `${paraY}px`
   }
+  
+
   
   const spawnCharacter = () =>{
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
@@ -380,41 +352,28 @@ function init() {
         event: c.split('_')[3],
         left: sx,
         top: sy,
-        animationTimer: ['',''],
         pos,
       }
-
-      const spawnContainer = document.createElement('div')
-      spawnContainer.classList.add('spawn_container')
-      spawnContainer.style.left = `${sx}px`
-      spawnContainer.style.top = `${sy}px`
-
       const spawn = document.createElement('div')
-      const sprite = () =>{
-        return `
-        <svg class="sprite" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 112 16" style="height: ${cellD}px; width: ${cellD * 7}px;">
-          ${decode(avatars[c.split('_')[1]].sprite)}
-        </svg>  
-        `
-      }
-
-      spawn.innerHTML = sprite()
-      // spawn.innerHTML = spriteContainer.innerHTML //! this needs to be changed to whatever defined in avatar object
+      // spawn.innerHTML = avatars[c.split('_')[1]].sprite
+      spawn.innerHTML = spriteContainer.innerHTML
       spawn.classList.add('spawn')
+      spawn.style.left = `${sx}px`
+      spawn.style.top = `${sy}px`
       spawn.style.fill = randomColor()
-      spawnContainer.appendChild(spawn)    
-      mapImage.appendChild(spawnContainer)    
-      spawnData[i].interval = setInterval(()=>spawnMotion(spawnContainer,i),avatars[c.split('_')[1]].speed)
+      mapImage.appendChild(spawn)    
+      spawnData[i].interval = setInterval(()=>spawnMotion(spawn,i),avatars[c.split('_')[1]].speed)
     })
 
     sprites = document.querySelectorAll('.sprite')
-    sprites.forEach((sprite,i)=>{
+    sprites.forEach((s,i)=>{
       if (i === sprites.length - 1) return
       sprites[i].style.animationDelay= `${i * 0.1}s`
-      turnSprite(directionKey[spawnData[i].spritePos],spawnData[i],sprite,false)
+      turnSprite(directionKey[spawnData[i].spritePos],spawnData[i],s)
     })
   }
 
+ 
 
   const transition = () =>{
     transitionCover.classList.add('transition')
@@ -438,13 +397,14 @@ function init() {
 
   const talk = prev => {
     const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
-    const talkTarget = spawnData.find(actor => actor.pos === bear.pos + key[bear.facingDirection])
-    const talkTargetIndex = spawnData.findIndex(actor => actor.pos === bear.pos + key[bear.facingDirection])
-
-    talkTarget.pause = true
-    const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
-    turnSprite(opposite,talkTarget,sprites[talkTargetIndex],false)
-    displayText(bear.textCount,eventPoints[talkTarget.event],prev)
+    spawnData.forEach((actor,i)=>{
+      if (actor.pos === bear.pos + key[bear.facingDirection]) {
+        actor.pause = true
+        const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
+        turnSprite(opposite,actor,sprites[i])
+        displayText(bear.textCount,eventPoints[actor.event],prev)
+      }
+    })
   }
   
   //* displays multiple choice
@@ -528,68 +488,50 @@ function init() {
     setWidthAndHeightAndResize()
     setUpWalls(mapImageTiles)
     setUpWalls(locationTiles)
-    turnSprite(entryPoint.direction,bear,sprite,false)
+    turnSprite(entryPoint.direction,bear,sprite)
     spawnCharacter()
   }
   
 
-  const turnSprite = (e = 'down',actor,sprite,animate) => {
+  const turnSprite = (e = 'down',actor,s) => {
     let m = -cellD
     actor.facingDirection = e
-    const animateWalk = (a,b,c,turn) =>{
-      actor.animationTimer.forEach(timer=>clearTimeout(timer))
-      m = animate ? m * a : m * c
-      if (turn) sprite.parentNode.classList.contains('right') 
-        ? sprite.parentNode.classList.remove('right') 
-        : sprite.parentNode.classList.add('right')
-      if (animate){
-        actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * b,actor,sprite),100)
-        actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * c,actor,sprite),200) 
-      }   
-    }
     const spriteChange = {
-      right: ()=> { 
-        sprite.parentNode.classList.add('right')
-        animateWalk(4,6,5,false)
-      },
-      left: ()=> { 
-        sprite.parentNode.classList.remove('right')
-        animateWalk(4,6,5,false)
-      },
-      up: ()=> animateWalk(2,2,3,true), 
-      down: ()=> animateWalk(0,0,1,true)
+      right: ()=> m = actor.spritePos === m * 9 ? m * 8 : m * 9,
+      left: ()=> m = actor.spritePos === m * 6 ? m * 7 : m * 6,
+      up: ()=> m = actor.spritePos === m * 3 ? m * 5 : m * 3,
+      down: ()=> m = actor.spritePos === m * 0 ? m * 2 : m * 0
     }
     spriteChange[e]()
-    setSpritePos(m,actor,sprite)
+    setSpritePos(m,actor,s)
   }
 
-  const spriteWalk = (e,actor,sprite,spawn=false) =>{
-    // when spawn is true, this function is used by spawn
-
+  const spriteWalk = (e,actor,sprite, s=undefined) =>{
     if (!e || !bear.motion) return
-    if (!spawn) locationTiles[actor.pos].classList.remove('mark')
+    if (!s) locationTiles[actor.pos].classList.remove('mark')
     // const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
     const direction = e
+    
     switch (direction) {
       case 'right': if (noWall(actor.pos + 1)){
-          spawn ? spawnWalk(actor,'left',cellD,spawn) : setX(x - cellD)
+          s ? spawnWalk(actor,'left',cellD,s) : setX(x - cellD)
           actor.pos += 1 } break
       case 'left': if (noWall(actor.pos - 1)){
-          spawn ? spawnWalk(actor,'left',-cellD,spawn) : setX(x + cellD)
+          s ? spawnWalk(actor,'left',-cellD,s) : setX(x + cellD)
           actor.pos -= 1 } break
       case 'up': if (noWall(actor.pos - iWidth)){
-          spawn ? spawnWalk(actor,'top',-cellD,spawn) : setY(y + cellD)
+          s ? spawnWalk(actor,'top',-cellD,s) : setY(y + cellD)
           actor.pos -= iWidth } break
       case 'down': if (noWall(actor.pos + iWidth)){
-          spawn ? spawnWalk(actor,'top',cellD,spawn) : setY(y - cellD)
+          s ? spawnWalk(actor,'top',cellD,s) : setY(y - cellD)
           actor.pos += iWidth } break
       default: console.log('invalid command')
         return
     }
-    turnSprite(direction,actor,sprite,true)
-    if (!spawn) locationTiles[actor.pos].classList.add('mark')
+    turnSprite(direction,actor,sprite)
+    if (!s) locationTiles[actor.pos].classList.add('mark')
 
-    if (!spawn && mapImageTiles[bear.pos].dataset.event) {
+    if (!s && mapImageTiles[bear.pos].dataset.event) {
       const event = mapImageTiles[bear.pos].dataset.event.split('-')[0]
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       events[event](index)
@@ -664,7 +606,7 @@ function init() {
     //* adjust sprite
     setSpritePos(-cellD,bear,sprite)
     sprite.style.height = `${cellD}px`
-    sprite.style.width = `${cellD * 7}px`
+    sprite.style.width = `${cellD * 10}px`
     spriteContainer.style.height = `${cellD}px`
     spriteContainer.style.width = `${cellD}px`
 

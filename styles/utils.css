@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  background-color: rgb(67, 65, 88);
+  color: white;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 80px 0 0 0;
+}
+
+textarea {
+  width: 800px;
+  height: 200px;
+  margin: 20px 0;
+  color: rgb(36, 21, 71);
+}
