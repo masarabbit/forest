@@ -152,7 +152,10 @@ function init() {
         '5_transport-portal3',
         '6_transport-portal3'
       ],
-      map: 'vvvvvbbvvvvvvvvvvvvvvvvvvvvvvvvwwwwbbwwwwwwwwwwwwwwwwwwwwwwvvwbbbbbbbbbbbbbbbbbtbbbbbbbbwvvwbbbbbbbbbbbbtbbbbbbbbbbbtbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbtbbbbbbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbtbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbtbbbtbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbtbbbbbbbbtbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbvwbbbbbbbbbbbbbbbbbbbbbbbtbbbbvwbtbbbbbtbbbbbbbbbbbbtbbbbbwvvwbbbbbbbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv'
+      map: 'vvvvvbbvvvvvvvvvvvvvvvvvvvvvvvvwwwwbbwwwwwwwwwwwwwwwwwwwwwwvvwbbbbbbbbbbbbbbdmmsbbbbbbbbwvvwbbbbbbbbbbbbtbgizybbbbbbtbwvvwbbtbbbbbbbbbbdpucamsbbbbbbwvvwbbbbbbbbbbdmmphrijuabbbbbbwvvwbbbbbbtbbbgzigziiizybbbbbbwvvwbbbbbbbbbbplupuuuuuabbbbbbwvvwbbbbbbbbbbqripfuuufabbdmsbwvvwbbbbbbbbbbbbbqiiriiebbgzybwvvwbtbbbtbbbbbbbbbbbbbbbbplabwvvwbbbbbbbbbbtbbbbbbbbtbbqrebwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbvwbbbbbbbbbbbbbbbbbbbbbbbtbbbbvwbtbbbbbtbbbbbbbbbbbbtbbbbbwvvwbbbbbbbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv',
+      // map: [
+      //   'v','v','v','v','v','b','b','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','w','w','w','w','b','b','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','d','m','m','s','b','b','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','t','b','g','i','z','y','b','b','b','b','b','b','t','b','w','v','v','w','b','b','t','b','b','b','b','b','b','b','b','b','b','d','p','u','c','a','m','s','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','d','m','m','p','h','r','i','j','u','a','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','t','b','b','b','g','z','i','g','z','i','i','i','z','y','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','p','l','u','p','u','u','u','u','u','a','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','q','r','i','p','f','u','u','u','f','a','b','b','d','m','s','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','q','i','i','r','i','i','e','b','b','g','z','y','b','w','v','v','w','b','t','b','b','b','t','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','p','l','a','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','b','b','b','b','t','b','b','q','r','e','b','w','v','v','w','b','b','t','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','v','w','b','t','b','b','b','b','b','t','b','b','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','b','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','w','v','v','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v'
+      // ]
     },
     {
       name: 'two',
@@ -314,9 +317,11 @@ function init() {
     : ''
   }
 
+  const noWallList = ['b','r']
+
   const noWall = pos =>{    
     if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
-    return mapImageTiles[pos].classList.contains('b')
+    return noWallList.filter(w => mapImageTiles[pos].classList.contains(w)).length
   }
 
   const setUpWalls = target =>{
