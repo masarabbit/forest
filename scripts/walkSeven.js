@@ -25,8 +25,23 @@ function init() {
     }).join('')
   }
 
-  const svgWrapper = (content, color) =>{
-    return `<svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${color ? color : 'black'}">${content}</svg>`
+  const decompress = arr =>{
+    const output = []
+    arr.split(',').forEach(x=>{
+      const letter = x.split('').filter(y=>y * 0 !== 0).join('')
+      const repeat = x.split('').filter(y=>y * 0 === 0).join('')
+      for (let i = 0; i < repeat; i++){
+        output.push(letter)
+      }
+    })
+    return output
+  }
+
+  const svgWrapper = (content, color, rotate, flip) =>{
+    let scale = 1
+    if (flip === 'h') scale = '-1, 1'
+    if (flip === 'v') scale = '1, -1'
+    return `<div class="svg_wrap" style="transform: rotate(${rotate}deg) scale(${scale});"><svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${color ? color : 'black'}">${content}</svg></div>`
   }
 
 
@@ -65,6 +80,40 @@ function init() {
   const flowers = () =>{
     return `D 2 1h2v1hTvN"/ D 1 2h1v1hNvN"/ D 4 2h1v1hNvN"/ D 2 3h2v1hTvN"/ D 11 4h2v1hTvN"/ D 10 5h1v1hNvN"/ D 13 5h1v1hNvN"/ D 11 6h2v1hTvN"/ D 4 8h2v1hTvN"/ D 3 9h1v1hNvN"/ D 6 9h1v1hNvN"/ D 4 10h2v1hTvN"/ D 13 12h2v1hTvN"/ D 12 13h1v1hNvN"/ D 15 13h1v1hNvN"/ D 13 14h2v1hTvN"/`
   }
+
+  const buildingCorner = subColor =>{
+    return `D 5 0h11v1hN1vN"/ D 3 1h2v1hTvN"/ <path fill="${subColor ? subColor : 'white'}" d="M 5 1h11v15hN5vN1h1vTh1vNh2vN"/ D 2 2h1v1hNvN"/ D 1 3h1v2hNvT"/ D 0 5h1v11hNvN1"/`
+  }
+
+  const roofCorner = subColor =>{
+    return `D 0 0h1v11h1v2hNv3hNvN6"/ <path fill="${subColor ? subColor : 'white'}" d="M 1 0h15v15hN1vNhTvNhNvThNvN1"/ F 1 13h1v1h1v1h2v1h-4v-3"/ D 2 13h1v1hNvN"/ D 3 14h2v1hTvN"/ D 5 15h11v1hN1vN"/`
+  }
+
+  const plain = subColor =>{
+    return `<path fill="${subColor ? subColor : 'white'}" d="M 0 0h16v16hN6vN6"/`
+  }
+
+  const plainEdge = subColor =>{
+    return `D 0 0h16v1hN6vN"/ <path fill="${subColor ? subColor : 'white'}" d="M 0 1h16v15hN6vN5"/`
+  }
+
+  const svgData = {
+    't': {svg: tree, color: randomGreen},
+    'w': {svg: tree, color: randomGreen},
+    'o': {svg: flowers, color: randomColor},
+    'd': {svg: buildingCorner, subColor: '#94ffd6'},
+    's': {svg: buildingCorner, subColor: '#94ffd6', rotate: 90},
+    'e': {svg: buildingCorner, rotate: 180},
+    'q': {svg: buildingCorner, rotate: 270},
+    'g': {svg: roofCorner, subColor: '#94ffd6'},
+    'y': {svg: roofCorner, subColor: '#94ffd6', flip: 'h'},
+    'u': {svg: plain },
+    'm': {svg: plainEdge, subColor: '#94ffd6' },
+    'a': {svg: plainEdge, subColor: '#94ffd6', rotate: 90 },
+    'i': {svg: plainEdge, subColor: '#94ffd6', rotate: 180 },
+    'p': {svg: plainEdge, subColor: '#94ffd6', rotate: 270 },
+  }
+
 
   const eventPoints = {
     tree1:{
@@ -152,10 +201,7 @@ function init() {
         '5_transport-portal3',
         '6_transport-portal3'
       ],
-      map: 'vvvvvbbvvvvvvvvvvvvvvvvvvvvvvvvwwwwbbwwwwwwwwwwwwwwwwwwwwwwvvwbbbbbbbbbbbbbbdmmsbbbbbbbbwvvwbbbbbbbbbbbbtbgizybbbbbbtbwvvwbbtbbbbbbbbbbdpucamsbbbbbbwvvwbbbbbbbbbbdmmphrijuabbbbbbwvvwbbbbbbtbbbgzigziiizybbbbbbwvvwbbbbbbbbbbplupuuuuuabbbbbbwvvwbbbbbbbbbbqripfuuufabbdmsbwvvwbbbbbbbbbbbbbqiiriiebbgzybwvvwbtbbbtbbbbbbbbbbbbbbbbplabwvvwbbbbbbbbbbtbbbbbbbbtbbqrebwvvwbbtbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbvwbbbbbbbbbbbbbbbbbbbbbbbtbbbbvwbtbbbbbtbbbbbbbbbbbbtbbbbbwvvwbbbbbbbbbbbbbbtbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv',
-      // map: [
-      //   'v','v','v','v','v','b','b','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','w','w','w','w','b','b','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','d','m','m','s','b','b','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','t','b','g','i','z','y','b','b','b','b','b','b','t','b','w','v','v','w','b','b','t','b','b','b','b','b','b','b','b','b','b','d','p','u','c','a','m','s','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','d','m','m','p','h','r','i','j','u','a','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','t','b','b','b','g','z','i','g','z','i','i','i','z','y','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','p','l','u','p','u','u','u','u','u','a','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','q','r','i','p','f','u','u','u','f','a','b','b','d','m','s','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','q','i','i','r','i','i','e','b','b','g','z','y','b','w','v','v','w','b','t','b','b','b','t','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','p','l','a','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','b','b','b','b','t','b','b','q','r','e','b','w','v','v','w','b','b','t','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','v','w','b','t','b','b','b','b','b','t','b','b','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','t','b','b','b','b','b','b','b','b','b','b','b','w','v','v','w','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','w','v','v','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v','v'
-      // ]
+      map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,m2,s1,b8,w1,v2,w1,b12,t1,b1,g1,i1,z1,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,p1,u1,c1,a1,m1,s1,b6,w1,v2,w1,b10,d1,m2,p1,h1,r1,i1,j1,u1,a1,b6,w1,v2,w1,b6,t1,b3,g1,z1,i1,g1,z1,i3,z1,y1,b6,w1,v2,w1,b10,p1,l1,u1,p1,u5,a1,b6,w1,v2,w1,b10,q1,r1,i1,p1,f1,u3,f1,a1,b2,d1,m1,s1,b1,w1,v2,w1,b13,q1,i2,r1,i2,e1,b2,g1,z1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b16,p1,l1,a1,b1,w1,v2,w1,b10,t1,b8,t1,b2,q1,r1,e1,b1,w1,v2,w1,b2,t1,b23,w1,v2,w1,b28,v1,w1,b23,t1,b4,v1,w1,b1,t1,b5,t1,b12,t1,b5,w1,v2,w1,b14,t1,b11,w1,v2,w1,b26,w1,v2,w28,v31',
     },
     {
       name: 'two',
@@ -169,7 +215,7 @@ function init() {
         '1179_transport-portal1',
         '1180_transport-portal1'
       ],
-      map: 'vvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwbbbwwwwwwwwwwwwvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvtvvvvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbtbbbbbbbbbbbbbbbbbbbtbbbwvvvvvtvvwbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvwbbbbbbbbbbbbbbbbbbtbbtbbbbbbbbwwwwwwwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbtbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbtbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbboooooooobbbbbwvvwbbbtbbbbbbbbtbbbbbbbbbboooooooobbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwbbbbbbbtbbbbbbbbbbbbbbbbbbbbbbbbbtbbwvvwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwvvwwwwwwwwwwwwwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbtbbbbtbbbbbbbbbtbbbbwvvvvtvvvvtvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvvvtvvvvvvvwbtbbbbbbbbbbbbbbbbbbbbbbwvvvvvvvvvvvvtvwbbbbbbbbbbbbtbbbtbbtbbbbwvvvvvvvvvvvvvvwbbbbbbbbbbbbbbbbbbbbbbbbwvvvvtvvvvvtvvvwwwwwbbbwwwwwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvbbbvvvvvvvvvvvvvvvvvvv'
+      map: 'v18,b3,v20,w17,b3,w12,v8,w1,b30,w1,v2,t1,v5,w1,b11,t1,b18,w1,v8,w1,b6,t1,b19,t1,b3,w1,v5,t1,v2,w1,b2,t1,b27,w1,v8,w1,b18,t1,b2,t1,b8,w7,v2,w1,b36,w1,v2,w1,b11,t1,b24,w1,v2,w1,b33,t1,b2,w1,v2,w1,b6,t1,b29,w1,v2,w1,b2,t1,b20,o8,b5,w1,v2,w1,b23,o8,b5,w1,v2,w1,b16,t1,b6,o8,b5,w1,v2,w1,b23,o8,b2,t1,b2,w1,v2,w1,b23,o8,b5,w1,v2,w1,b3,t1,b8,t1,b10,o8,b5,w1,v2,w1,b36,w1,v2,w1,b36,w1,v2,w1,b7,t1,b25,t1,b2,w1,v2,w1,b36,w1,v2,w13,b24,w1,v14,w1,b4,t1,b4,t1,b9,t1,b4,w1,v4,t1,v4,t1,v4,w1,b24,w1,v14,w1,b24,w1,v6,t1,v7,w1,b1,t1,b22,w1,v12,t1,v1,w1,b12,t1,b3,t1,b2,t1,b4,w1,v14,w1,b24,w1,v4,t1,v5,t1,v3,w5,b3,w18,v19,b3,v19'
     },
     {
       name: 'three',
@@ -187,7 +233,7 @@ function init() {
         '44_check-tree1',
         '112_check-bunny1'
       ],
-      map: 'vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvwbooobbbbbbooobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbobbbbbbbbbbobwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbbbbbbbbbbbbbbwvvwbooobbbbbbooobwvvwwwwwwbbbwwwwwwwvvvvvvvvbbbvvvvvvvv'
+      map: 'v19,w16,v2,w1,b1,o3,b6,o3,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o3,b6,o3,b1,w1,v2,w6,b3,w7,v8,b3,v8'
     }
   ]
 
@@ -325,11 +371,20 @@ function init() {
   }
 
   const setUpWalls = target =>{
+    const decompressedMap = decompress(mapData[mapIndex].map)
     target.forEach((tile,i)=>{
-      tile.classList.add(mapData[mapIndex].map[i])
-      if (mapData[mapIndex].map[i] === 't' ||
-          mapData[mapIndex].map[i] === 'w') tile.innerHTML = svgWrapper(decode(tree()),randomGreen())
-      if (mapData[mapIndex].map[i] === 'o') tile.innerHTML = svgWrapper(decode(flowers()),randomColor()) 
+      const letterCode = decompressedMap[i]
+      tile.classList.add(letterCode)
+
+      if (svgData[letterCode])  {
+        const { svg, color, subColor, rotate, flip } = svgData[letterCode]
+        tile.innerHTML = svgWrapper(
+          decode(subColor ? svg(subColor) : svg()),
+          color ? color() : '',
+          rotate ? rotate : 0,
+          flip ? flip : null
+        )
+      }
     })
   }
   

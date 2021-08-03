@@ -553,3 +553,9 @@ input:checked + .slider:before {
 .map_image_tile.z {
   background-image: url(/assets/z.png);
 }
+
+.svg_wrap {
+  transform-origin: center;
+  height: 100%;
+  width: 100%;
+}

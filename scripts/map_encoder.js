@@ -4,8 +4,9 @@ function init() {
   const original = document.querySelector('.original')
   const output= document.querySelector('.output')
   const compress= document.querySelector('.compress')
+  const decompress= document.querySelector('.decompress')
 
-  const trigger = document.querySelector('button')
+  const trigger = document.querySelectorAll('button')
 
   original.addEventListener('change',()=>{
     output.innerText = original.value.split('')
@@ -15,7 +16,7 @@ function init() {
     original.innerText = output.value.split(',').join('')
   })
 
-  trigger.addEventListener('click',()=>{
+  trigger[0].addEventListener('click',()=>{
     const originalArray = original.value.split('')
     let current = ''
     const record = []
@@ -35,7 +36,19 @@ function init() {
 
     compress.value = record.map(arr=>arr[0] + arr.length)
   })
-
+  
+  trigger[1].addEventListener('click',()=>{
+    const output = []
+    compress.value.split(',').forEach(v=>{
+      const letter = v[0]
+      const repeat = v.slice(1)
+      for (let i = 0; i < repeat; i++){
+        output.push(letter)
+      }
+    })
+    console.log(output)
+    decompress.value = output
+  })
 
 }
 
