@@ -53,32 +53,32 @@ function init() {
       </svg>`,
       motion: 'udlr',
       speed: 5000
-      },
+    },
     bunny: {
-      sprite: `D 4 0h2v1hTvN"/D 10 0h2v1hTvN"/D 20 0h2v1hTvN"/D 26 0h2v1hTvN"/D 36 0h2v1hTvN"/D 42 0h2v1hTvN"/D 52 0h2v1hTvN"/D 58 0h2v1hTvN"/D 70 0h2v1hTvN"/D 73 0h2v1hTvN"/D 86 0h2v1hTvN"/D 89 0h2v1hTvN"/D 102 0h2v1hTvN"/D 105 0h2v1hTvN"/D 3 1h1v4hNv-4"/>F 4 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv2hTvNhNvNhTvNhNv2hTvNhNv-8h1v-4"/D 6 1h1v2hNvT"/D 9 1h1v2hNvT"/D 12 1h1v4hNv-4"/D 19 1h1v4hNv-4"/>F 20 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv1hTvNh1vNh1v-3hTv2h1v1hNv1h-3vNhNv2hTvNhNv-8h1v-4"/D 22 1h1v2hNvT"/D 25 1h1v2hNvT"/D 28 1h1v4hNv-4"/D 35 1h1v4hNv-4"/>F 36 1h2v2h1v1h2vNh1vTh2v4h1v9hNv1hTvNhNvNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 38 1h1v2hNvT"/D 41 1h1v2hNvT"/D 44 1h1v4hNv-4"/D 51 1h1v4hNv-4"/>F 52 1h2v2h1v1h2vNh1vTh2v4h1v8hNv1h-3vNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 54 1h1v2hNvT"/D 57 1h1v2hNvT"/D 60 1h1v4hNv-4"/D 69 1h1v3hNv-3"/>F 70 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1h-3vNhNvNhNvNh1vNhNv1hNv1h1v1h1v2hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 72 1h1v3hNv-3"/D 75 1h1v3hNv-3"/D 85 1h1v3hNv-3"/>F 86 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvNhNv1hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 88 1h1v3hNv-3"/D 91 1h1v3hNv-3"/D 101 1h1v3hNv-3"/>F 102 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvThNvNhNvNh1vNhNv1hNv1h1v1h1v1h-3v-4hNvNh1vNhNvTh1vNh1v-3"/D 104 1h1v3hNv-3"/D 107 1h1v3hNv-3"/>F 5 3h1v1hNvN"/D 7 3h2v1hTvN"/>F 21 3h1v1hNvN"/D 23 3h2v1hTvN"/D 39 3h2v1hTvN"/D 55 3h2v1hTvN"/D 68 4h1v1hNvN"/D 76 4h1v1hNvN"/D 84 4h1v1hNvN"/D 92 4h1v1hNvN"/D 100 4h1v1hNvN"/D 108 4h1v1hNvN"/D 2 5h1v3hNv-3"/D 5 5h1v2hNvT"/D 10 5h1v2hNvT"/>F 11 5h1v2hNvT"/D 13 5h1v3hNv-3"/D 18 5h1v3hNv-3"/D 21 5h1v2hNvT"/D 26 5h1v2hNvT"/>F 27 5h1v2hNvT"/D 29 5h1v3hNv-3"/D 34 5h1v3hNv-3"/D 45 5h1v3hNv-3"/D 50 5h1v3hNv-3"/D 61 5h1v3hNv-3"/D 67 5h1v2h1v1hTv-3"/D 70 5h1v2hNvT"/D 77 5h1v3hNv-3"/D 83 5h1v2h1v1hTv-3"/D 86 5h1v2hNvT"/D 93 5h1v3hNv-3"/D 99 5h1v2h1v1hTv-3"/D 102 5h1v2hNvT"/D 109 5h1v3hNv-3"/>F 4 6h1v1hNvN"/>F 20 6h1v1hNvN"/D 7 7h2v1hTvN"/D 23 7h2v1hTvN"/>F 6 8h1v1hNvN"/>F 22 8h1v1hNvN"/D 76 8h1v2hNvT"/D 92 8h1v2hNvT"/D 108 8h1v2hNvT"/D 2 9h1v4hNv-4"/D 4 9h1v1hNvN"/>F 5 9h1v1hNvN"/>F 10 9h1v1hNvN"/D 11 9h1v1hNvN"/D 13 9h1v5hNv-5"/D 18 9h1v4hNv-4"/D 20 9h1v1hNvN"/>F 21 9h1v1hNvN"/>F 26 9h1v1hNvN"/D 27 9h1v1hNvN"/D 29 9h1v4hNv-4"/D 34 9h1v4hNv-4"/D 45 9h1v5hNv-5"/D 50 9h1v4hNv-4"/D 61 9h1v4hNv-4"/D 68 9h1v4hNv-4"/D 71 9h1v1hNvN"/D 84 9h1v4hNv-4"/D 87 9h1v1hNvN"/D 100 9h1v4hNv-4"/D 103 9h1v1hNvN"/D 5 10h1v1hNvN"/D 10 10h1v1hNvN"/>F 11 10h1v1hNvN"/D 21 10h1v1hNvN"/D 26 10h1v1hNvN"/>F 27 10h1v1hNvN"/D 39 10h2v1hTvN"/D 55 10h2v1hTvN"/D 70 10h1v1hNvN"/D 77 10h1v2hNvT"/D 86 10h1v1hNvN"/D 93 10h1v2hNvT"/D 102 10h1v1hNvN"/D 109 10h1v2hNvT"/D 4 11h1v1hNvN"/D 11 11h1v1hNvN"/D 20 11h1v1hNvN"/D 27 11h1v1hNvN"/D 38 11h1v2hNvT"/>F 39 11h2v2hTvT"/D 41 11h1v2hNvT"/D 54 11h1v2hNvT"/>F 55 11h2v2hTvT"/D 57 11h1v2hNvT"/D 71 11h1v1hNvN"/D 87 11h1v1hNvN"/D 103 11h1v1hNvN"/>F 6 12h1v1hNvN"/>F 10 12h1v1hNvN"/>F 22 12h1v1hNvN"/>F 26 12h1v1hNvN"/D 72 12h1v1h3v1h-4vT"/D 76 12h1v1hNvN"/D 92 12h1v1hNvN"/D 104 12h1v2h-4vNh3vN"/D 108 12h1v1hNvN"/D 3 13h1v1hNvN"/D 6 13h3v1h-3vN"/>F 12 13h1v1hNvN"/D 19 13h1v1hNvN"/D 22 13h4v1h-4vN"/D 28 13h1v1hNvN"/D 35 13h1v1hNvN"/D 39 13h2v1hTvN"/D 51 13h1v1hNvN"/D 55 13h2v1hTvN"/D 60 13h1v1hNvN"/D 69 13h1v1hNvN"/D 85 13h1v1hNvN"/D 88 13h1v1hNvN"/D 91 13h1v1hNvN"/D 107 13h1v1hNvN"/D 4 14h2v1hTvN"/D 9 14h1v1hNvN"/D 12 14h1v1hNvN"/D 20 14h2v1hTvN"/D 26 14h2v1hTvN"/D 36 14h2v1hTvN"/D 41 14h1v1hNvN"/D 44 14h1v1hNvN"/D 52 14h2v1hTvN"/D 58 14h2v1hTvN"/D 70 14h2v1hTvN"/D 86 14h2v1hTvN"/D 89 14h2v1hTvN"/D 105 14h2v1hTvN"/D 10 15h2v1hTvN"/D 42 15h2v1hTvN"/>`,
+      sprite: 'D 4 0h2v1hTvN"/D 10 0h2v1hTvN"/D 20 0h2v1hTvN"/D 26 0h2v1hTvN"/D 36 0h2v1hTvN"/D 42 0h2v1hTvN"/D 52 0h2v1hTvN"/D 58 0h2v1hTvN"/D 70 0h2v1hTvN"/D 73 0h2v1hTvN"/D 86 0h2v1hTvN"/D 89 0h2v1hTvN"/D 102 0h2v1hTvN"/D 105 0h2v1hTvN"/D 3 1h1v4hNv-4"/>F 4 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv2hTvNhNvNhTvNhNv2hTvNhNv-8h1v-4"/D 6 1h1v2hNvT"/D 9 1h1v2hNvT"/D 12 1h1v4hNv-4"/D 19 1h1v4hNv-4"/>F 20 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv1hTvNh1vNh1v-3hTv2h1v1hNv1h-3vNhNv2hTvNhNv-8h1v-4"/D 22 1h1v2hNvT"/D 25 1h1v2hNvT"/D 28 1h1v4hNv-4"/D 35 1h1v4hNv-4"/>F 36 1h2v2h1v1h2vNh1vTh2v4h1v9hNv1hTvNhNvNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 38 1h1v2hNvT"/D 41 1h1v2hNvT"/D 44 1h1v4hNv-4"/D 51 1h1v4hNv-4"/>F 52 1h2v2h1v1h2vNh1vTh2v4h1v8hNv1h-3vNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 54 1h1v2hNvT"/D 57 1h1v2hNvT"/D 60 1h1v4hNv-4"/D 69 1h1v3hNv-3"/>F 70 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1h-3vNhNvNhNvNh1vNhNv1hNv1h1v1h1v2hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 72 1h1v3hNv-3"/D 75 1h1v3hNv-3"/D 85 1h1v3hNv-3"/>F 86 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvNhNv1hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 88 1h1v3hNv-3"/D 91 1h1v3hNv-3"/D 101 1h1v3hNv-3"/>F 102 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvThNvNhNvNh1vNhNv1hNv1h1v1h1v1h-3v-4hNvNh1vNhNvTh1vNh1v-3"/D 104 1h1v3hNv-3"/D 107 1h1v3hNv-3"/>F 5 3h1v1hNvN"/D 7 3h2v1hTvN"/>F 21 3h1v1hNvN"/D 23 3h2v1hTvN"/D 39 3h2v1hTvN"/D 55 3h2v1hTvN"/D 68 4h1v1hNvN"/D 76 4h1v1hNvN"/D 84 4h1v1hNvN"/D 92 4h1v1hNvN"/D 100 4h1v1hNvN"/D 108 4h1v1hNvN"/D 2 5h1v3hNv-3"/D 5 5h1v2hNvT"/D 10 5h1v2hNvT"/>F 11 5h1v2hNvT"/D 13 5h1v3hNv-3"/D 18 5h1v3hNv-3"/D 21 5h1v2hNvT"/D 26 5h1v2hNvT"/>F 27 5h1v2hNvT"/D 29 5h1v3hNv-3"/D 34 5h1v3hNv-3"/D 45 5h1v3hNv-3"/D 50 5h1v3hNv-3"/D 61 5h1v3hNv-3"/D 67 5h1v2h1v1hTv-3"/D 70 5h1v2hNvT"/D 77 5h1v3hNv-3"/D 83 5h1v2h1v1hTv-3"/D 86 5h1v2hNvT"/D 93 5h1v3hNv-3"/D 99 5h1v2h1v1hTv-3"/D 102 5h1v2hNvT"/D 109 5h1v3hNv-3"/>F 4 6h1v1hNvN"/>F 20 6h1v1hNvN"/D 7 7h2v1hTvN"/D 23 7h2v1hTvN"/>F 6 8h1v1hNvN"/>F 22 8h1v1hNvN"/D 76 8h1v2hNvT"/D 92 8h1v2hNvT"/D 108 8h1v2hNvT"/D 2 9h1v4hNv-4"/D 4 9h1v1hNvN"/>F 5 9h1v1hNvN"/>F 10 9h1v1hNvN"/D 11 9h1v1hNvN"/D 13 9h1v5hNv-5"/D 18 9h1v4hNv-4"/D 20 9h1v1hNvN"/>F 21 9h1v1hNvN"/>F 26 9h1v1hNvN"/D 27 9h1v1hNvN"/D 29 9h1v4hNv-4"/D 34 9h1v4hNv-4"/D 45 9h1v5hNv-5"/D 50 9h1v4hNv-4"/D 61 9h1v4hNv-4"/D 68 9h1v4hNv-4"/D 71 9h1v1hNvN"/D 84 9h1v4hNv-4"/D 87 9h1v1hNvN"/D 100 9h1v4hNv-4"/D 103 9h1v1hNvN"/D 5 10h1v1hNvN"/D 10 10h1v1hNvN"/>F 11 10h1v1hNvN"/D 21 10h1v1hNvN"/D 26 10h1v1hNvN"/>F 27 10h1v1hNvN"/D 39 10h2v1hTvN"/D 55 10h2v1hTvN"/D 70 10h1v1hNvN"/D 77 10h1v2hNvT"/D 86 10h1v1hNvN"/D 93 10h1v2hNvT"/D 102 10h1v1hNvN"/D 109 10h1v2hNvT"/D 4 11h1v1hNvN"/D 11 11h1v1hNvN"/D 20 11h1v1hNvN"/D 27 11h1v1hNvN"/D 38 11h1v2hNvT"/>F 39 11h2v2hTvT"/D 41 11h1v2hNvT"/D 54 11h1v2hNvT"/>F 55 11h2v2hTvT"/D 57 11h1v2hNvT"/D 71 11h1v1hNvN"/D 87 11h1v1hNvN"/D 103 11h1v1hNvN"/>F 6 12h1v1hNvN"/>F 10 12h1v1hNvN"/>F 22 12h1v1hNvN"/>F 26 12h1v1hNvN"/D 72 12h1v1h3v1h-4vT"/D 76 12h1v1hNvN"/D 92 12h1v1hNvN"/D 104 12h1v2h-4vNh3vN"/D 108 12h1v1hNvN"/D 3 13h1v1hNvN"/D 6 13h3v1h-3vN"/>F 12 13h1v1hNvN"/D 19 13h1v1hNvN"/D 22 13h4v1h-4vN"/D 28 13h1v1hNvN"/D 35 13h1v1hNvN"/D 39 13h2v1hTvN"/D 51 13h1v1hNvN"/D 55 13h2v1hTvN"/D 60 13h1v1hNvN"/D 69 13h1v1hNvN"/D 85 13h1v1hNvN"/D 88 13h1v1hNvN"/D 91 13h1v1hNvN"/D 107 13h1v1hNvN"/D 4 14h2v1hTvN"/D 9 14h1v1hNvN"/D 12 14h1v1hNvN"/D 20 14h2v1hTvN"/D 26 14h2v1hTvN"/D 36 14h2v1hTvN"/D 41 14h1v1hNvN"/D 44 14h1v1hNvN"/D 52 14h2v1hTvN"/D 58 14h2v1hTvN"/D 70 14h2v1hTvN"/D 86 14h2v1hTvN"/D 89 14h2v1hTvN"/D 105 14h2v1hTvN"/D 10 15h2v1hTvN"/D 42 15h2v1hTvN"/>',
       speed: 2000
     }     
-    }
+  }
 
   const randomColor = () =>{
-    const r=()=> Math.ceil(Math.random() * 255)
+    const r = ()=> Math.ceil(Math.random() * 255)
     return `rgb(${r()},${r()},${r()})`
   }
 
-  const randomGreen= () =>{
-    const r=()=> Math.ceil(Math.random() * 80)
-    const g=()=> Math.ceil(Math.random() * 155) + 100
-    const b=()=> Math.ceil(Math.random() * 100)
+  const randomGreen = () =>{
+    const r = ()=> Math.ceil(Math.random() * 80)
+    const g = ()=> Math.ceil(Math.random() * 155) + 100
+    const b = ()=> Math.ceil(Math.random() * 100)
     return `rgb(${r()},${g()},${b()})`
   }
 
 
   const tree = () =>{
-    return `D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/`
+    return 'D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/'
   }
 
   const flowers = () =>{
-    return `D 2 1h2v1hTvN"/ D 1 2h1v1hNvN"/ D 4 2h1v1hNvN"/ D 2 3h2v1hTvN"/ D 11 4h2v1hTvN"/ D 10 5h1v1hNvN"/ D 13 5h1v1hNvN"/ D 11 6h2v1hTvN"/ D 4 8h2v1hTvN"/ D 3 9h1v1hNvN"/ D 6 9h1v1hNvN"/ D 4 10h2v1hTvN"/ D 13 12h2v1hTvN"/ D 12 13h1v1hNvN"/ D 15 13h1v1hNvN"/ D 13 14h2v1hTvN"/`
+    return 'D 2 1h2v1hTvN"/ D 1 2h1v1hNvN"/ D 4 2h1v1hNvN"/ D 2 3h2v1hTvN"/ D 11 4h2v1hTvN"/ D 10 5h1v1hNvN"/ D 13 5h1v1hNvN"/ D 11 6h2v1hTvN"/ D 4 8h2v1hTvN"/ D 3 9h1v1hNvN"/ D 6 9h1v1hNvN"/ D 4 10h2v1hTvN"/ D 13 12h2v1hTvN"/ D 12 13h1v1hNvN"/ D 15 13h1v1hNvN"/ D 13 14h2v1hTvN"/'
   }
 
   const buildingCorner = subColor =>{
@@ -98,27 +98,27 @@ function init() {
   }
 
   const door = () =>{
-    return `F 0 0h16v15hNvN0hNvThTvNhTvNh-4v1hTv1hTv2hNv10hNvN5"/ D 6 1h4v1h2v1h2v2h1v10h1v1hN6vNh1vN0h1vTh2vNh2vN"/`
+    return 'F 0 0h16v15hNvN0hNvThTvNhTvNh-4v1hTv1hTv2hNv10hNvN5"/ D 6 1h4v1h2v1h2v2h1v10h1v1hN6vNh1vN0h1vTh2vNh2vN"/'
   }
 
   const roundWindow = () =>{
-    return `F 0 0h16v16hN6vN6"/ D 6 2h4v1h2v1h1v2h1v4hNv2hNv1hTv1h-4vNhTvNhNvThNv-4h1vTh1vNh2vN"/`
+    return 'F 0 0h16v16hN6vN6"/ D 6 2h4v1h2v1h1v2h1v4hNv2hNv1hTv1h-4vNhTvNhNvThNv-4h1vTh1vNh2vN"/'
   }
 
   const squareWindow = () =>{
-    return `F 0 0h16v16hN6vN6"/ D 5 2h6v1h1v10hNv1h-6vNhNvN0h1vN"/`
+    return 'F 0 0h16v16hN6vN6"/ D 5 2h6v1h1v10hNv1h-6vNhNvN0h1vN"/'
   }
 
   const sideSquareWindow = () =>{
-    return `D 0 0h1v16hNvN6"/ F 1 0h15v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-8vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/`
+    return 'D 0 0h1v16hNvN6"/ F 1 0h15v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-8vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/'
   }
 
   const noSideWindow = () =>{
-    return `F 0 0h16v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-9vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/`
+    return 'F 0 0h16v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-9vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/'
   }
 
   const sideSquareWindowAlt = () =>{
-    return `D 0 0h1v16hNvN6"/ F 1 0h15v5hNvNh-4v1hNv10h1v1hN0vN6"/ D 11 4h4v1h1v10hNv1h-4vNhNvN0h1vN"/ F 15 15h1v1hNvN"/`
+    return 'D 0 0h1v16hNvN6"/ F 1 0h15v5hNvNh-4v1hNv10h1v1hN0vN6"/ D 11 4h4v1h1v10hNv1h-4vNhNvN0h1vN"/ F 15 15h1v1hNvN"/'
   }
 
   const roofCurve = subColor =>{
@@ -133,65 +133,65 @@ function init() {
   const main = '#7d551c'
 
   const svgData = {
-    't': {svg: tree, color: randomGreen},
-    'w': {svg: tree, color: randomGreen},
-    'o': {svg: flowers, color: randomColor},
-    'd': {svg: buildingCorner, color: main, subColor: sub },
-    's': {svg: buildingCorner, color: main, subColor: sub, rotate: 90},
-    'bt': {svg: buildingCorner, color: main },
-    'br': {svg: buildingCorner, color: main, rotate: 90},
-    'bb': {svg: buildingCorner, color: main, rotate: 180},
-    'bl': {svg: buildingCorner, color: main, rotate: 270},
-    'rbr': {svg: roofTopBottomCorner, color: main, subColor: sub },
-    'rbl': {svg: roofTopBottomCorner, color: main, subColor: sub, flip: 'h'},
-    'g': {svg: roofCorner, color: main, subColor: sub},
-    'y': {svg: roofCorner, color: main, subColor: sub, flip: 'h'},
-    'p': {svg: plain },
-    'rp': {svg: plain, subColor: sub },
-    'do': {svg: door, color: main },
-    'wi': {svg: roundWindow, color: main},
-    'sw': {svg: squareWindow, color: main },
-    'swl': {svg: sideSquareWindow, color: main },
-    'swr': {svg: sideSquareWindow, color: main, flip: 'h'},
-    'nwl': {svg: noSideWindow, color: main },
-    'nwr': {svg: noSideWindow, color: main, flip: 'h'},
-    'swal': {svg: sideSquareWindowAlt, color: main },
-    'swar': {svg: sideSquareWindowAlt, color: main, flip: 'h'},
-    'at': {svg: plainEdge, color: main  },
-    'ar': {svg: plainEdge, color: main, rotate: 90 },
-    'ab': {svg: plainEdge, color: main, rotate: 180 },
-    'al': {svg: plainEdge, color: main, rotate: 270 },
-    'rc': {svg: roofCurve, color: main, subColor: sub},
-    'pt': {svg: plainEdge, color: main, subColor: sub },
-    'pr': {svg: plainEdge, color: main, subColor: sub, rotate: 90 },
-    'pb': {svg: plainEdge, color: main, subColor: sub, rotate: 180 },
-    'pu': {svg: plainEdge, color: main, subColor: sub, rotate: 270 },
+    't': { svg: tree, color: randomGreen },
+    'w': { svg: tree, color: randomGreen },
+    'o': { svg: flowers, color: randomColor },
+    'd': { svg: buildingCorner, color: main, subColor: sub },
+    's': { svg: buildingCorner, color: main, subColor: sub, rotate: 90 },
+    'bt': { svg: buildingCorner, color: main },
+    'br': { svg: buildingCorner, color: main, rotate: 90 },
+    'bb': { svg: buildingCorner, color: main, rotate: 180 },
+    'bl': { svg: buildingCorner, color: main, rotate: 270 },
+    'rbr': { svg: roofTopBottomCorner, color: main, subColor: sub },
+    'rbl': { svg: roofTopBottomCorner, color: main, subColor: sub, flip: 'h' },
+    'g': { svg: roofCorner, color: main, subColor: sub },
+    'y': { svg: roofCorner, color: main, subColor: sub, flip: 'h' },
+    'p': { svg: plain },
+    'rp': { svg: plain, subColor: sub },
+    'do': { svg: door, color: main },
+    'wi': { svg: roundWindow, color: main },
+    'sw': { svg: squareWindow, color: main },
+    'swl': { svg: sideSquareWindow, color: main },
+    'swr': { svg: sideSquareWindow, color: main, flip: 'h' },
+    'nwl': { svg: noSideWindow, color: main },
+    'nwr': { svg: noSideWindow, color: main, flip: 'h' },
+    'swal': { svg: sideSquareWindowAlt, color: main },
+    'swar': { svg: sideSquareWindowAlt, color: main, flip: 'h' },
+    'at': { svg: plainEdge, color: main  },
+    'ar': { svg: plainEdge, color: main, rotate: 90 },
+    'ab': { svg: plainEdge, color: main, rotate: 180 },
+    'al': { svg: plainEdge, color: main, rotate: 270 },
+    'rc': { svg: roofCurve, color: main, subColor: sub },
+    'pt': { svg: plainEdge, color: main, subColor: sub },
+    'pr': { svg: plainEdge, color: main, subColor: sub, rotate: 90 },
+    'pb': { svg: plainEdge, color: main, subColor: sub, rotate: 180 },
+    'pu': { svg: plainEdge, color: main, subColor: sub, rotate: 270 },
   }
 
 
   const eventPoints = {
-    tree1:{
+    tree1: {
       text: [
         'hello! I\'m a tree!',
         'yeah!'
-    ],
+      ],
       art: 'http://masahito.co.uk/img/icecream_bunny.png',
       // item: null,
       direction: 'up'
     },
-    bunny1:{
+    bunny1: {
       text: ['hello! Bunny!'],
       // item: null,
       direction: 'left'
     },
-    hello:{ text: ['hello!']},
-    tomato:{
+    hello: { text: ['hello!'] },
+    tomato: {
       text: [
         'hello!',
         'yeah!'
       ]
     },
-    apple:{
+    apple: {
       text: [
         'how are you?#q1',
         'yeah!/really?#yesNo',
@@ -215,19 +215,19 @@ function init() {
       map: 1,
       cell: 313,
     },
-    portal1:{
+    portal1: {
       map: 1,
       name: 'untitled',
       cell: 35,
       direction: 'down',
     },
-    portal2:{
+    portal2: {
       map: 2,
       name: 'untitled',
       cell: 1139,
       direction: 'up'
     },
-    portal3:{
+    portal3: {
       map: 3,
       name: 'untitled',
       cell: 224,
@@ -327,7 +327,7 @@ function init() {
   let iHeight
   let iWidth
   let start
-  let cellD = 32
+  const cellD = 32
   let minicellD 
   let x 
   let y 
@@ -410,11 +410,11 @@ function init() {
     target.style.width = `${w * c}px`
     target.style.height = `${h * c}px` 
     t 
-    ? t.forEach(tile=>{
-      tile.style.width = `${c}px`
-      tile.style.height = `${c}px`
-    })
-    : ''
+      ? t.forEach(tile=>{
+        tile.style.width = `${c}px`
+        tile.style.height = `${c}px`
+      })
+      : ''
   }
 
   const noWallList = ['b','do'] //! maybe switch this depending on the map?
@@ -447,7 +447,7 @@ function init() {
   
   const spawnWalk = (actor,para,m,spawn) =>{
     actor[para] += m
-    spawn.style[para]= `${actor[para]}px`
+    spawn.style[para] = `${actor[para]}px`
   }
   
   const spawnMotion = (spawn,i) =>{
@@ -527,7 +527,7 @@ function init() {
     sprites = document.querySelectorAll('.sprite')
     sprites.forEach((sprite,i)=>{
       if (i === sprites.length - 1) return
-      sprites[i].style.animationDelay= `${i * 0.1}s`
+      sprites[i].style.animationDelay = `${i * 0.1}s`
       turnSprite(directionKey[spawnData[i].spritePos],spawnData[i],sprite,false)
     })
   }
@@ -595,7 +595,7 @@ function init() {
     bear.prevChoices.length = 0
     bear.motion = true
     bear.pause = false
-    texts.forEach(t=>t.innerText='')
+    texts.forEach(t=>t.innerText = '')
     transitionCover.innerHTML = ''
   }
 
@@ -627,9 +627,9 @@ function init() {
   }
 
 
-  function check(count,prev=false){
+  function check(count,prev = false){
     if (mapImageTiles[bear.pos].dataset.event) { //* checking static object
-      index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
+      const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       const eventPoint = eventPoints[index]
       if (bear.facingDirection === eventPoint.direction) displayText(count,eventPoint,prev)
       return
@@ -680,7 +680,7 @@ function init() {
     setSpritePos(m,actor,sprite)
   }
 
-  const spriteWalk = (e,actor,sprite,spawn=false) =>{
+  const spriteWalk = (e,actor,sprite,spawn = false) =>{
     // when spawn is true, this function is used by spawn
 
     if (!e || !bear.motion) return
@@ -689,17 +689,21 @@ function init() {
     const direction = e
     switch (direction) {
       case 'right': if (noWall(actor.pos + 1)){
-          spawn ? spawnWalk(actor,'left',cellD,spawn) : setX(x - cellD)
-          actor.pos += 1 } break
+        spawn ? spawnWalk(actor,'left',cellD,spawn) : setX(x - cellD)
+        actor.pos += 1 
+      } break
       case 'left': if (noWall(actor.pos - 1)){
-          spawn ? spawnWalk(actor,'left',-cellD,spawn) : setX(x + cellD)
-          actor.pos -= 1 } break
+        spawn ? spawnWalk(actor,'left',-cellD,spawn) : setX(x + cellD)
+        actor.pos -= 1 
+      } break
       case 'up': if (noWall(actor.pos - iWidth)){
-          spawn ? spawnWalk(actor,'top',-cellD,spawn) : setY(y + cellD)
-          actor.pos -= iWidth } break
+        spawn ? spawnWalk(actor,'top',-cellD,spawn) : setY(y + cellD)
+        actor.pos -= iWidth 
+      } break
       case 'down': if (noWall(actor.pos + iWidth)){
-          spawn ? spawnWalk(actor,'top',cellD,spawn) : setY(y - cellD)
-          actor.pos += iWidth } break
+        spawn ? spawnWalk(actor,'top',cellD,spawn) : setY(y - cellD)
+        actor.pos += iWidth 
+      } break
       default: console.log('invalid command')
         return
     }
@@ -740,8 +744,8 @@ function init() {
     if (bear.pause) {
       bear.options.forEach(option=>option.classList.remove('selected'))
       switch (key) {
-        case 'up': if(bear.choice > 0) bear.choice--; break
-        case 'down': if(bear.choice < bear.options.length - 1) bear.choice++; break
+        case 'up': if (bear.choice > 0) bear.choice--; break
+        case 'down': if (bear.choice < bear.options.length - 1) bear.choice++; break
         case ' ': select(); break   
         case 'enter': select(); break   
         case 'right': select(); break 
@@ -834,17 +838,17 @@ function init() {
 window.addEventListener('DOMContentLoaded', init)
 
 
-    //*indicator
-    // const dataX = mapImageTiles[bear.pos].dataset.x
-    // const dataY = mapImageTiles[bear.pos].dataset.y
-    // indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
+//*indicator
+// const dataX = mapImageTiles[bear.pos].dataset.x
+// const dataY = mapImageTiles[bear.pos].dataset.y
+// indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
 
-    // console.log(
-    //   'cellD',cellD,
-    //   'dataX',dataX,
-    //   'dataY',dataY,
-    //   'x',x,
-    //   'y',y,
-    //   'los',bear.pos
-    //   )
+// console.log(
+//   'cellD',cellD,
+//   'dataX',dataX,
+//   'dataY',dataY,
+//   'x',x,
+//   'y',y,
+//   'los',bear.pos
+//   )
   
