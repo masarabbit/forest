@@ -493,7 +493,7 @@ input:checked + .slider:before {
 .map_image_tile {
   background-repeat: no-repeat, repeat;
   background-size: cover; 
-  background-color: rgb(138, 255, 134);
+  background-color: #afff7a;
 }
 
 
