@@ -167,12 +167,12 @@ a:hover {
 .map_image_tile.w,
 .map_image_tile.b,
 .map_image_tile.t {
-  background-color: rgb(138, 255, 134);
+  background-color: #afff7a;
   fill: black;
 }
 
 .map_image_tile.o {
-  background-color: rgb(170, 253, 167);
+  background-color: #afff7a;
 }
 
 .map_image_tile.v { background-color: transparent; }
@@ -205,7 +205,8 @@ a:hover {
   color: transparent;
 }
 
-.location_indicator_tile img{
+.location_indicator_tile img,
+.location_indicator_tile.b svg{
   /* width: 100%;
   height: 100%; */
   opacity: 0;
@@ -496,7 +497,7 @@ input:checked + .slider:before {
 }
 
 
-.map_image_tile.a {
+/* .map_image_tile.a {
   background-image: url(/assets/a.png);
 }
 .map_image_tile.c {
@@ -552,10 +553,41 @@ input:checked + .slider:before {
 }
 .map_image_tile.z {
   background-image: url(/assets/z.png);
-}
+} */
 
 .svg_wrap {
   transform-origin: center;
   height: 100%;
   width: 100%;
+  pointer-events: none;
+  /* border: green 1px solid; */
+}
+
+
+.svg_output {
+  margin: 100px 0 0 0;
+}
+
+.svg_anim_wrap {
+  transform-origin: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* border: blue 1px solid; */
+  animation: blink infinite 1.5s;
+  margin-right: -100%;
+  z-index: 50;
+}
+
+/* .palette_cell .svg_anim_wrap {
+  margin-right: 0;
+  margin-bottom: -100%;
+  position: relative;
+} */
+
+@keyframes blink {
+  0% {opacity: 0;}
+  49% {opacity: 0;}
+  50% {opacity: 1;}
+  100% {opaccity: 1;}
 }

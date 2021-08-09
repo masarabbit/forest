@@ -37,11 +37,16 @@ function init() {
     return output
   }
 
-  const svgWrapper = (content, color, rotate, flip) =>{
+
+  const svgWrapper = (content, color, rotate, flip, wrapper ) =>{
     let scale = 1
     if (flip === 'h') scale = '-1, 1'
     if (flip === 'v') scale = '1, -1'
-    return `<div class="svg_wrap" style="transform: rotate(${rotate}deg) scale(${scale});"><svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${color ? color : 'black'}">${content}</svg></div>`
+    return `
+      <div class="${wrapper}" style="transform: rotate(${rotate}deg) scale(${scale});">
+        <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${color ? color : 'black'}">${content}</svg>
+      </div>
+      `
   }
 
 
@@ -128,6 +133,33 @@ function init() {
   const roofTopBottomCorner = subColor =>{
     return `D 0 0h1v11hNvN1"/ F 1 0h15v15hN1vNhTvNhNvThNvN1"/ <path fill="${subColor ? subColor : 'white'}" d="M 0 11h1v2h1v1h1v1h2v1h-5v-5"/ D 1 11h1v2hNvT"/ D 2 13h1v1hNvN"/ D 3 14h2v1hTvN"/ D 5 15h11v1hN1vN"/`
   }
+  const river = () =>{
+    const main = '#adfffe'
+    const sub = '#50fbf9'
+
+    return `<path fill="${main}" d="M 0 0h2v7h2v-7h12v16hTv-7hTv7hN2vN6"/ <path fill="#50fbf9" d="M 2 0h2v7hTv-7"/ <path fill="${sub}" d="M 7 4h2v8hTv-8"/ <path fill="${sub}" d="M 12 9h2v7hTv-7"/`
+  }
+
+  const riverAnim = () =>{
+    const main = '#adfffe'
+    const sub = '#50fbf9'
+
+    return `<path fill="${main}" d="M 0 0h7v4h2v-4h7v16h-7v-5hTv5h-7vN6"/ <path fill="#50fbf9" d="M 7 0h2v4hTv-4"/ <path fill="${sub}" d="M 12 3h2v9hTv-9"/ <path fill="${sub}" d="M 2 4h2v9hTv-9"/ <path fill="${sub}" d="M 7 11h2v5hTv-5"/`
+  }
+
+  const riverCurve = () =>{
+    const main = '#adfffe'
+    const sub = '#50fbf9'
+    
+    return `<path fill="${main}" d="M 8 0h8v6hNv1hTv1hTv2hNv1hNv3h2v-3h1vNh1vNh2vNh1v8hN2v-6h1vNh1vTh1vNh2vNh1vThNv1hTv1hNv1hNv1hNv2hNv1hNv6hTv-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 9 3h1v2hNv1hTv1hNv2hNv1hNv6hTv-6h1vNh1vTh1vNh1vNh1vNh2vN"/ <path fill="${sub}" d="M 15 6h1v2hNv1hTv1hNv1hNv3hTv-3h1vNh1vTh2vNh2vN"/`
+  }
+
+  const riverCurveAnim = () =>{
+    const main = '#adfffe'
+    const sub = '#50fbf9'
+
+    return `<path fill="${main}" d="M 8 0h4v1hNv1hTv1hNv1hNv1hNv1hNv1hNv2h2vTh1vNh2vNh1vNh1vNh1vNh2vNh1vNh1v16h-6v-4h1vNh1vNh1vNh1vThNv1hNv1hNv1hNv1hNv1hNv4h-8v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 12 0h3v1hNv1hTv1hNv1hNv1hNv1hTv1hNv2hTvTh1vNh1vNh1vNh1vNh1vNh2vNh1vN"/ <path fill="${sub}" d="M 13 7h1v2hNv1hNv1hNv1hNv4hTv-4h1vNh1vNh1vNh1vNh1vN"/`
+  }
 
   const sub = '#e2cc9c'
   const main = '#7d551c'
@@ -166,8 +198,14 @@ function init() {
     'pr': { svg: plainEdge, color: main, subColor: sub, rotate: 90 },
     'pb': { svg: plainEdge, color: main, subColor: sub, rotate: 180 },
     'pu': { svg: plainEdge, color: main, subColor: sub, rotate: 270 },
+    'b': { svg: plain, subColor: '#afff7a' },
+    'r': { svg: river, animation: riverAnim },
+    'rh': { svg: river, rotate: 90, animation: riverAnim },
+    'ra': { svg: riverCurve, animation: riverCurveAnim },
+    'rb': { svg: riverCurve, rotate: 90, animation: riverCurveAnim },
+    'rd': { svg: riverCurve, rotate: 180, animation: riverCurveAnim },
+    're': { svg: riverCurve, rotate: 270, animation: riverCurveAnim }
   }
-
 
   const eventPoints = {
     tree1: {
@@ -255,7 +293,7 @@ function init() {
         '5_transport-portal3',
         '6_transport-portal3'
       ],
-      map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nwr1,swr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rbr1,do1,ab1,rbl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,swl1,p1,nwr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b16,swl1,p1,swr1,b1,w1,v2,w1,b10,t1,b8,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b23,w1,v2,w1,b28,v1,w1,b23,t1,b4,v1,w1,b1,t1,b5,t1,b12,t1,b5,w1,v2,w1,b14,t1,b11,w1,v2,w1,b26,w1,v2,w28,v31',
+      map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nwr1,swr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rbr1,do1,ab1,rbl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,swl1,p1,nwr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b16,swl1,p1,swr1,b1,w1,v2,w1,b10,t1,b8,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
     },
     {
       name: 'two',
@@ -424,24 +462,62 @@ function init() {
     return noWallList.filter(w => mapImageTiles[pos].classList.contains(w)).length
   }
 
+  const populateWithSvg = (key,target) =>{
+    if (svgData[key]){
+      const { svg, color, subColor, rotate, flip, animation } = svgData[key]
+      let colorAction = ''
+      colorAction = typeof(color) === 'function' ? color() : color
+
+      const svgContent = `
+      ${animation ? 
+    `
+        ${svgWrapper(
+    decode(subColor ? animation(subColor) : animation()),
+    color ? colorAction : '',
+    rotate ? rotate : 0,
+    flip ? flip : null,
+    'svg_anim_wrap' 
+  )}
+  `
+    : ''
+}
+          ${svgWrapper(
+    decode(subColor ? svg(subColor) : svg()),
+    color ? colorAction : '',
+    rotate ? rotate : 0,
+    flip ? flip : null,
+    'svg_wrap' 
+  )}  
+      `
+
+      target.innerHTML = svgContent
+    } 
+  }
+
   const setUpWalls = target =>{
     const decompressedMap = decompress(mapData[mapIndex].map)
     target.forEach((tile,i)=>{
       const letterCode = decompressedMap[i]
       tile.classList.add(letterCode)
 
+      // if (svgData[letterCode])  {
+      //   const { svg, color, subColor, rotate, flip } = svgData[letterCode]
+      //   let colorAction = ''
+      //   colorAction = typeof(color) === 'function' ? color() : color
+      //   tile.innerHTML = 
+      //     svgWrapper(
+      //       decode(subColor ? svg(subColor) : svg()),
+      //       color ? colorAction : '',
+      //       rotate ? rotate : 0,
+      //       flip ? flip : null 
+      //     )
+      // }
+
       if (svgData[letterCode])  {
-        const { svg, color, subColor, rotate, flip } = svgData[letterCode]
-        let colorAction = ''
-        colorAction = typeof(color) === 'function' ? color() : color
-        tile.innerHTML = 
-          svgWrapper(
-            decode(subColor ? svg(subColor) : svg()),
-            color ? colorAction : '',
-            rotate ? rotate : 0,
-            flip ? flip : null 
-          )
+        populateWithSvg(letterCode,tile) 
       }
+
+
     })
   }
   
