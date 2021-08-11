@@ -161,6 +161,12 @@ function init() {
     return `<path fill="${main}" d="M 8 0h4v1hNv1hTv1hNv1hNv1hNv1hNv1hNv2h2vTh1vNh2vNh1vNh1vNh1vNh2vNh1vNh1v16h-6v-4h1vNh1vNh1vNh1vThNv1hNv1hNv1hNv1hNv1hNv4h-8v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 12 0h3v1hNv1hTv1hNv1hNv1hNv1hTv1hNv2hTvTh1vNh1vNh1vNh1vNh1vNh2vNh1vN"/ <path fill="${sub}" d="M 13 7h1v2hNv1hNv1hNv1hNv4hTv-4h1vNh1vNh1vNh1vNh1vN"/`
   }
 
+  const ladder = subColor =>{
+    // return `<path fill="${subColor || 'white'}" d="M 0 0h16v16hN6vN6"/ D 4 1h8v1h-8vN"/ D 4 5h8v1h-8vN"/ D 4 9h8v1h-8vN"/ D 4 13h8v1h-8vN"/`
+    return `<path fill="${subColor || 'white'}" d="M 0 0h16v16hN6vN6"/ D 3 1h1v1hNvN"/ D 12 1h1v1hNvN"/ D 4 2h8v1h-8vN"/ D 3 5h1v1hNvN"/ D 12 5h1v1hNvN"/ D 4 6h8v1h-8vN"/ D 3 9h1v1hNvN"/ D 12 9h1v1hNvN"/ D 4 10h8v1h-8vN"/ D 3 13h1v1hNvN"/ D 12 13h1v1hNvN"/ D 4 14h8v1h-8vN"/`
+  }
+
+
   const sub = '#e2cc9c'
   const main = '#7d551c'
 
@@ -176,6 +182,8 @@ function init() {
     'bl': { svg: buildingCorner, color: main, rotate: 270 },
     'rbr': { svg: roofTopBottomCorner, color: main, subColor: sub },
     'rbl': { svg: roofTopBottomCorner, color: main, subColor: sub, flip: 'h' },
+    'rtr': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub },
+    'rtl': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub, flip: 'h' },
     'g': { svg: roofCorner, color: main, subColor: sub },
     'y': { svg: roofCorner, color: main, subColor: sub, flip: 'h' },
     'p': { svg: plain },
@@ -204,7 +212,8 @@ function init() {
     'ra': { svg: riverCurve, animation: riverCurveAnim },
     'rb': { svg: riverCurve, rotate: 90, animation: riverCurveAnim },
     'rd': { svg: riverCurve, rotate: 180, animation: riverCurveAnim },
-    're': { svg: riverCurve, rotate: 270, animation: riverCurveAnim }
+    're': { svg: riverCurve, rotate: 270, animation: riverCurveAnim },
+    'la': {svg: ladder, color: main, subColor: sub}
   }
 
   const eventPoints = {
@@ -271,6 +280,44 @@ function init() {
       cell: 224,
       direction: 'up'
     },
+    portal4: {
+      map: 4,
+      name: 'untitled',
+      cell: 81,
+      direction: 'right'
+    },
+    portal5: {
+      map: 1,
+      name: 'untitled',
+      cell: 418,
+      direction: 'left'
+    },
+    portal6: {
+      map: 5,
+      name: 'home',
+      cell: 79,
+      direction: 'up',
+      noWall: ['bt','at','rtr','ar','bb','ab','bl','p','la']
+    },
+    portal7: {
+      map: 5,
+      name: 'home',
+      cell: 62,
+      direction: 'up',
+      noWall: ['bt','at','rtr','ar','bb','ab','bl','p','la']
+    },
+    portal8: {
+      map: 1,
+      name: 'home',
+      cell: 283,
+      direction: 'down',
+    },
+    portal9: {
+      map: 1,
+      name: 'home',
+      cell: 318,
+      direction: 'down',
+    },
   }
 
   const events = {
@@ -291,7 +338,11 @@ function init() {
       ],
       events: [
         '5_transport-portal3',
-        '6_transport-portal3'
+        '6_transport-portal3',
+        '419_transport-portal4',
+        '449_transport-portal4',
+        '253_transport-portal7',
+        '288_transport-portal6'
       ],
       map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nwr1,swr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rbr1,do1,ab1,rbl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,swl1,p1,nwr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b16,swl1,p1,swr1,b1,w1,v2,w1,b10,t1,b8,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
     },
@@ -326,6 +377,38 @@ function init() {
         '112_check-bunny1'
       ],
       map: 'v19,w16,v2,w1,b1,o3,b6,o3,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o3,b6,o3,b1,w1,v2,w6,b3,w7,v8,b3,v8'
+    },
+    {
+      name: 'four',
+      iWidth: 20,
+      iHeight: 10,
+      // characters: [
+      //   '135_bunny_9_hello',
+      //   '101_bunny_6_hello',
+      //   '165_bunny_3_hello'
+      // ],
+      events: [
+        '80_transport-portal5',
+        '100_transport-portal5',
+        // '243_transport-portal1',
+        // '44_check-tree1',
+      ],
+      map: 'v21,w14,v6,w1,b12,w1,v6,w1,b2,o3,b7,w5,v1,b18,w1,v1,b18,w1,v2,w1,b12,o3,b1,w1,v2,w1,b16,w1,v2,w18,v21'
+    },
+    {
+      name: 'house_one',
+      iWidth: 12,
+      iHeight: 9,
+      // characters: [
+      //   '135_bunny_9_hello',
+      //   '101_bunny_6_hello',
+      //   '165_bunny_3_hello'
+      // ],
+      events: [
+        '74_transport-portal8',
+        '91_transport-portal9',
+      ],
+      map: 'v4,rp1,la1,rp5,v5,rp1,la1,rp5,v2,rp4,la1,rp5,v2,rp3,rtl1,at5,rtr1,v2,rtl1,at2,p6,ar1,v2,bl1,p1,ab1,p6,ar1,v3,p1,v1,bl1,ab2,p1,ab2,bb1,v8,p1,v16'
     }
   ]
 
@@ -416,10 +499,12 @@ function init() {
     locationTiles = document.querySelectorAll('.location_indicator_tile')
     mapImage.innerHTML = mapMap(iWidth,iHeight,'map_image_tile')
     mapImageTiles = document.querySelectorAll('.map_image_tile')
-
-    mapData[mapIndex].events.forEach(cell=>{
+    
+    if(mapData[mapIndex].events) mapData[mapIndex].events.forEach(cell=>{
       mapImageTiles[+cell.split('_')[0]].setAttribute('data-event',cell.split('_')[1])
     })
+
+    
   }
 
   //! center of the map
@@ -455,7 +540,7 @@ function init() {
       : ''
   }
 
-  const noWallList = ['b','do'] //! maybe switch this depending on the map?
+  let noWallList = ['b','do'] //! maybe switch this depending on the map?
 
   const noWall = pos =>{    
     if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
@@ -562,6 +647,8 @@ function init() {
   const spawnCharacter = () =>{
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
     spawnData.length = 0
+
+    if(!mapData[mapIndex].characters) return
 
     mapData[mapIndex].characters.forEach((c,i)=>{
       const pos = +c.split('_')[0]
@@ -716,6 +803,7 @@ function init() {
   function transport(index){
     transition()
     const entryPoint = entryPoints[index]
+    noWallList = entryPoints[index].noWall || ['b','do']
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
@@ -791,6 +879,10 @@ function init() {
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       events[event](index)
     } 
+
+    const dataX = mapImageTiles[bear.pos].dataset.x
+    const dataY = mapImageTiles[bear.pos].dataset.y
+    indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
   }
 
   const select = () =>{
@@ -915,9 +1007,7 @@ window.addEventListener('DOMContentLoaded', init)
 
 
 //*indicator
-// const dataX = mapImageTiles[bear.pos].dataset.x
-// const dataY = mapImageTiles[bear.pos].dataset.y
-// indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
+
 
 // console.log(
 //   'cellD',cellD,

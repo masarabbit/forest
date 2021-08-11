@@ -60,6 +60,7 @@ body {
   color: transparent;
   transition:0.5s;
   cursor: pointer;
+  /* color: rgba(9, 66, 7, 0.281); */
   /* border: rgb(15, 253, 154) 1px solid; */
 }
 
@@ -153,8 +154,8 @@ a:hover {
   width: 40px;
   height: 40px;
   font-size: 10px;
-  /* color: rgb(1, 92, 24); */
-  color: transparent;
+  color: rgb(1, 92, 24);
+  /* color: transparent; */
   transition:0.5s;
   cursor: pointer;
   /* background-color: rgb(180, 255, 245); */
