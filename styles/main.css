@@ -154,8 +154,8 @@ a:hover {
   width: 40px;
   height: 40px;
   font-size: 10px;
-  color: rgb(1, 92, 24);
-  /* color: transparent; */
+  /* color: rgb(1, 92, 24); */
+  color: transparent;
   transition:0.5s;
   cursor: pointer;
   /* background-color: rgb(180, 255, 245); */
@@ -168,12 +168,12 @@ a:hover {
 .map_image_tile.w,
 .map_image_tile.b,
 .map_image_tile.t {
-  background-color: #afff7a;
+  background-color: #a2fcf0;
   fill: black;
 }
 
 .map_image_tile.o {
-  background-color: #afff7a;
+  background-color: #a2fcf0;
 }
 
 .map_image_tile.v { background-color: transparent; }
@@ -494,7 +494,7 @@ input:checked + .slider:before {
 .map_image_tile {
   background-repeat: no-repeat, repeat;
   background-size: cover; 
-  background-color: #afff7a;
+  background-color: #a2fcf0;
 }
 
 
