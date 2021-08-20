@@ -890,10 +890,14 @@ function init() {
       default: console.log('invalid command')
         return
     }
-    console.log(mapImageTiles[bear.pos].classList)
-    mapImageTiles[bear.pos].classList.contains('la') || (mapImageTiles[bear.pos - iWidth].classList.contains('la') && direction === 'down')
+    
+    //* prevents bear from turning away from ladder
+    mapImageTiles[bear.pos].classList.contains('la') || 
+    (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
+    && direction === 'down')
       ? turnSprite('up',actor,sprite,true)
       : turnSprite(direction,actor,sprite,true)
+      
     if (!spawn) locationTiles[actor.pos].classList.add('mark')
 
     if (!spawn && mapImageTiles[bear.pos].dataset.event) {
