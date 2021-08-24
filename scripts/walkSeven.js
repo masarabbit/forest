@@ -129,10 +129,6 @@ function init() {
     return 'F 0 0h16v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-9vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/`'
   }
 
-  const sideSquareWindowAlt = () =>{
-    return 'D 0 0h1v16hNvN6"/ F 1 0h15v5hNvNh-4v1hNv10h1v1hN0vN6"/ D 11 4h4v1h1v10hNv1h-4vNhNvN0h1vN"/ F 15 15h1v1hNvN"/'
-  }
-
   const roofCurve = subColor =>{
     return `<path fill="${subColor || 'white'}" d="M 0 0h16v15hTvNhNvNhNvNhTvNh-4v1hTv1hNv1hNv1hTvN5"/ D 6 11h4v1h-4vN"/ D 4 12h2v1hTvN"/ F 6 12h4v1h2v1h1v1h1v1hN2vNh1vNh1vNh2vN"/ D 10 12h2v1hTvN"/ D 3 13h1v1hNvN"/ D 12 13h1v1hNvN"/ D 2 14h1v1hNvN"/ D 13 14h1v1hNvN"/ D 0 15h2v1hTvN"/ D 14 15h2v1hTvN"/`
   }
@@ -196,10 +192,10 @@ function init() {
     'bl': { svg: buildingCorner, color: main, rotate: 270 },
     'bx': { svg: roofTopBottomCorner, color: main, subColor: '#0d8799' },
     'by': { svg: roofTopBottomCorner, color: main, subColor: '#0d8799', flip: 'h' },
-    'rbr': { svg: roofTopBottomCorner, color: main, subColor: sub },
-    'rbl': { svg: roofTopBottomCorner, color: main, subColor: sub, flip: 'h' },
-    'rtr': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub },
-    'rtl': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub, flip: 'h' },
+    'rr': { svg: roofTopBottomCorner, color: main, subColor: sub },
+    'rl': { svg: roofTopBottomCorner, color: main, subColor: sub, flip: 'h' },
+    'rt': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub },
+    'ry': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub, flip: 'h' },
     'g': { svg: roofCorner, color: main, subColor: sub },
     'y': { svg: roofCorner, color: main, subColor: sub, flip: 'h' },
     'p': { svg: plain },
@@ -207,12 +203,10 @@ function init() {
     'do': { svg: door, color: main },
     'wi': { svg: roundWindow, color: main },
     'sw': { svg: squareWindow, color: main },
-    'swl': { svg: sideSquareWindow, color: main },
-    'swr': { svg: sideSquareWindow, color: main, flip: 'h' },
-    'nwl': { svg: noSideWindow, color: main },
-    'nwr': { svg: noSideWindow, color: main, flip: 'h' },
-    'swal': { svg: sideSquareWindowAlt, color: main },
-    'swar': { svg: sideSquareWindowAlt, color: main, flip: 'h' },
+    'sl': { svg: sideSquareWindow, color: main },
+    'sr': { svg: sideSquareWindow, color: main, flip: 'h' },
+    'nw': { svg: noSideWindow, color: main },
+    'nr': { svg: noSideWindow, color: main, flip: 'h' },
     'at': { svg: plainEdge, color: main  },
     'ar': { svg: plainEdge, color: main, rotate: 90 },
     'ab': { svg: plainEdge, color: main, rotate: 180 },
@@ -223,15 +217,15 @@ function init() {
     'pb': { svg: plainEdge, color: main, subColor: sub, rotate: 180 },
     'pu': { svg: plainEdge, color: main, subColor: sub, rotate: 270 },
     'b': { svg: plain, subColor: '#a2fcf0' },
-    'bd': {svg: plain, subColor: '#0d8799'},
+    'bd': { svg: plain, subColor: '#0d8799' },
     'r': { svg: river, animation: riverAnim },
     'rh': { svg: river, rotate: 90, animation: riverAnim },
     'ra': { svg: riverCurve, animation: riverCurveAnim },
     'rb': { svg: riverCurve, rotate: 90, animation: riverCurveAnim },
     'rd': { svg: riverCurve, rotate: 180, animation: riverCurveAnim },
     're': { svg: riverCurve, rotate: 270, animation: riverCurveAnim },
-    'la': {svg: ladder, color: main, subColor: sub},
-    'c': {svg: checkered, color: '#a2e8fc'}
+    'la': { svg: ladder, color: main, subColor: sub },
+    'c': { svg: checkered, color: '#a2e8fc' }
   }
 
   const eventPoints = {
@@ -362,7 +356,7 @@ function init() {
         '253_transport-portal7',
         '288_transport-portal6'
       ],
-      map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nwr1,swr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rbr1,do1,ab1,rbl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,swl1,p1,nwr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,swl1,p1,swr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
+      map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nr1,sr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,sl1,p1,nr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,sl1,p1,sr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
     },
     {
       name: 'two',
@@ -407,7 +401,7 @@ function init() {
       // ],
       events: [
         '80_transport-portal5',
-        '100_transport-portal5',
+        '100_transport-portal5'
         // '243_transport-portal1',
         // '44_check-tree1',
       ],
@@ -424,9 +418,9 @@ function init() {
       // ],
       events: [
         '74_transport-portal8',
-        '91_transport-portal9',
+        '91_transport-portal9'
       ],
-      map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,rtl1,at5,rtr1,bd2,rtl1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd5,bx1,ab2,p1,ab2,by1,bd25'
+      map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,ry1,at5,rt1,bd2,ry1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd5,bx1,ab2,p1,ab2,by1,bd25'
     }
   ]
 
@@ -518,7 +512,7 @@ function init() {
     mapImage.innerHTML = mapMap(iWidth,iHeight,'map_image_tile')
     mapImageTiles = document.querySelectorAll('.map_image_tile')
     
-    if(mapData[mapIndex].events) mapData[mapIndex].events.forEach(cell=>{
+    if (mapData[mapIndex].events) mapData[mapIndex].events.forEach(cell=>{
       mapImageTiles[+cell.split('_')[0]].setAttribute('data-event',cell.split('_')[1])
     })
 
@@ -666,7 +660,7 @@ function init() {
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
     spawnData.length = 0
 
-    if(!mapData[mapIndex].characters) return
+    if (!mapData[mapIndex].characters) return
 
     mapData[mapIndex].characters.forEach((c,i)=>{
       const pos = +c.split('_')[0]
