@@ -624,7 +624,9 @@ function init() {
   }
   
   const spawnMotion = (spawn,i) =>{
+    console.log('test one')
     if (spawnData[i].pause || !windowActive) return
+    console.log('test two')
     const motionOption = [
       ()=>spriteWalk('down',spawnData[i],sprites[i],spawn),
       ()=>spriteWalk('right',spawnData[i],sprites[i],spawn),
@@ -813,8 +815,13 @@ function init() {
     talk(prev)
   }
 
+
   function transport(index){
     transition()
+    mapImage.classList.add('transition')
+    setTimeout(()=>{
+      mapImage.classList.remove('transition')
+    },400)
     const entryPoint = entryPoints[index]
     noWallList = entryPoints[index].noWall || ['b','do']
     setLocation(entryPoint.map)
@@ -824,6 +831,7 @@ function init() {
     setUpWalls(locationTiles)
     turnSprite(entryPoint.direction,bear,sprite,false)
     spawnCharacter()
+    
   }
   
 
