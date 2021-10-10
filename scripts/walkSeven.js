@@ -6,8 +6,22 @@
 
 //! design other avatars and map
 
-//! home needs to have separate tile to prevent bear penetrating wall
 
+//todo refactor portal to be like '5_transport-map1#portal3', so that map name is mentioned, object like below, and put it inside mapData.
+// portal: {
+//   portal1: {
+//     map: 1,
+//     name: 'untitled',
+//     cell: 35,
+//     direction: 'down',
+//   },
+//   portal2: {
+//     map: 2,
+//     name: 'untitled',
+//     cell: 1139,
+//     direction: 'up'
+//   },
+// }
 
 function init() {
   
@@ -175,6 +189,17 @@ function init() {
     return `<path fill="${subColor || 'white'}" d="M 0 0h16v16hN6vN6"/ D 3 1h1v1hNvN"/ D 12 1h1v1hNvN"/ D 4 2h8v1h-8vN"/ D 3 5h1v1hNvN"/ D 12 5h1v1hNvN"/ D 4 6h8v1h-8vN"/ D 3 9h1v1hNvN"/ D 12 9h1v1hNvN"/ D 4 10h8v1h-8vN"/ D 3 13h1v1hNvN"/ D 12 13h1v1hNvN"/ D 4 14h8v1h-8vN"/`
   }
 
+  const ladderHole = subColor =>{
+    return `D 0 0h16v1hNv10hNv2hTv1hTv1h-4vNhTvNhTvThNvN0hNvN"/ F 0 1h1v10h1v2h2v1h2v1h4vNh2vNh2vTh1vN0h1v15hN6vN5"/ <path fill="${subColor}" d="M 3 1h1v1hNvN"/ <path fill="${subColor}" d="M 12 1h1v1hNvN"/ <path fill="${subColor}" d="M 4 2h8v1h-8vN"/ <path fill="${subColor}" d="M 3 5h1v1hNvN"/ <path fill="${subColor}" d="M 12 5h1v1hNvN"/ <path fill="${subColor}" d="M 4 6h8v1h-8vN"/ <path fill="${subColor}" d="M 3 9h1v1hNvN"/ <path fill="${subColor}" d="M 12 9h1v1hNvN"/ <path fill="${subColor}" d="M 4 10h8v1h-8vN"/`
+  } 
+
+  const exit = subColor =>{
+    // return `
+    // <path fill="${main}" d="M 0 0h16v1hNv1hNv1hNv1hNv1hTv1h-4vNhTvNhNvNhNvNhNvNhNvN"/ <path fill="${subColor}" d="M 0 1h1v1h1v1h1v1h1v1h2v1h4vNh2vNh1vNh1vNh1vNh1v15hN6vN5"/
+    // `
+    return `<path fill="${subColor}" d="M 0 0h16v4hTv2hTvThTv2hTvThTv2hTvThTv2hTv-6"/ D 2 4h2v2hTvT"/ D 6 4h2v2hTvT"/ D 10 4h2v2hTvT"/ D 14 4h2v2hTvT"/ D 0 6h2v2h2vTh2v2h2vTh2v2h2vTh2v2h2v8hN6vN0"/ <path fill="${subColor}" d="M 2 6h2v2hTvT"/ <path fill="${subColor}" d="M 6 6h2v2hTvT"/ <path fill="${subColor}" d="M 10 6h2v2hTvT"/ <path fill="${subColor}" d="M 14 6h2v2hTvT"/`
+  }
+
   // const sub = '#e2cc9c'
   const sub = '#f9ede5'
   // const main = '#7d551c'
@@ -225,7 +250,9 @@ function init() {
     'rd': { svg: riverCurve, rotate: 180, animation: riverCurveAnim },
     're': { svg: riverCurve, rotate: 270, animation: riverCurveAnim },
     'la': { svg: ladder, color: main, subColor: sub },
-    'c': { svg: checkered, color: '#a2e8fc' }
+    'c': { svg: checkered, color: '#a2e8fc' },
+    'e': { svg: exit, color: '#0d8799', subColor: '#fff' },
+    'lh': { svg: ladderHole, color: '#bba293', subColor: sub }
   }
 
   const eventPoints = {
@@ -268,7 +295,7 @@ function init() {
     }
   }
 
-
+  
   const entryPoints = {
     start: {
       map: 1,
@@ -309,14 +336,14 @@ function init() {
       name: 'home',
       cell: 79,
       direction: 'up',
-      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','bd']
+      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
     },
     portal7: {
       map: 5,
       name: 'home',
       cell: 62,
       direction: 'up',
-      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','bd']
+      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
     },
     portal8: {
       map: 1,
@@ -330,6 +357,34 @@ function init() {
       cell: 318,
       direction: 'down',
     },
+    portal10: {
+      map: 6,
+      name: 'home_1',
+      cell: 21,
+      direction: 'right',
+      noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
+    },
+    portal11: {
+      map: 5,
+      name: 'home',
+      cell: 5,
+      direction: 'up',
+      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
+    },
+    portal12: {
+      map: 1,
+      name: 'map1',
+      cell: 197,
+      direction: 'down',
+      noWall: ['d','pt','s','pu','rp','pr','g','pb','y','do']
+    },
+    portal13: {
+      map: 6,
+      name: 'home_1',
+      cell: 26,
+      direction: 'up',
+      noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
+    }
   }
 
   const events = {
@@ -354,7 +409,8 @@ function init() {
         '419_transport-portal4',
         '449_transport-portal4',
         '253_transport-portal7',
-        '288_transport-portal6'
+        '288_transport-portal6',
+        '167_transport-portal13'
       ],
       map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nr1,sr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,sl1,p1,nr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,sl1,p1,sr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
     },
@@ -408,7 +464,7 @@ function init() {
       map: 'v21,w14,v6,w1,b12,w1,v6,w1,b2,o3,b7,w5,v1,b18,w1,v1,b18,w1,v2,w1,b12,o3,b1,w1,v2,w1,b16,w1,v2,w18,v21'
     },
     {
-      name: 'house_one',
+      name: 'house_one_0',
       iWidth: 12,
       iHeight: 9,
       // characters: [
@@ -418,9 +474,20 @@ function init() {
       // ],
       events: [
         '74_transport-portal8',
-        '91_transport-portal9'
+        '91_transport-portal9',
+        '5_transport-portal10'
       ],
-      map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,ry1,at5,rt1,bd2,ry1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd5,bx1,ab2,p1,ab2,by1,bd25'
+      map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,ry1,at5,rt1,bd2,ry1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd3,e1,bd1,bx1,ab2,p1,ab2,by1,bd8,e1,bd16'
+    },
+    {
+      name: 'house_one_1',
+      iWidth: 6,
+      iHeight: 6,
+      events: [
+        '20_transport-portal11',
+        '32_transport-portal12'
+      ],
+      map: 'bd7,rp4,bd2,rp1,la1,rp2,bd2,ry1,lh1,at1,rt1,bd2,bx1,p1,ab1,by1,bd3,e1,bd3'
     }
   ]
 
@@ -553,9 +620,13 @@ function init() {
   }
 
   let noWallList = ['b','do'] //! maybe switch this depending on the map?
+  const noLeftEdgeList = ['pu','g']
 
   const noWall = pos =>{    
     if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
+
+    // prevents sprite walking beyond edge
+    if (noLeftEdgeList.filter(w => mapImageTiles[pos + 1].classList.contains(w)).length) return false
     return noWallList.filter(w => mapImageTiles[pos].classList.contains(w)).length
   }
 
@@ -817,7 +888,9 @@ function init() {
 
 
   function transport(index){
+    // setTimeout(()=>{
     transition()
+    // },200)
     mapImage.classList.add('transition')
     setTimeout(()=>{
       mapImage.classList.remove('transition')
@@ -829,7 +902,10 @@ function init() {
     setWidthAndHeightAndResize()
     setUpWalls(mapImageTiles)
     setUpWalls(locationTiles)
-    turnSprite(entryPoint.direction,bear,sprite,false)
+    turnSprite(bear.facingDirection,bear,sprite,false)
+    setTimeout(()=>{
+      turnSprite(entryPoint.direction,bear,sprite,false)
+    },150)
     spawnCharacter()
     
   }
@@ -905,7 +981,9 @@ function init() {
     if (!spawn && mapImageTiles[bear.pos].dataset.event) {
       const event = mapImageTiles[bear.pos].dataset.event.split('-')[0]
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
-      events[event](index)
+      setTimeout(()=>{
+        events[event](index)
+      },200)
     } 
 
     const dataX = mapImageTiles[bear.pos].dataset.x

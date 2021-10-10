@@ -58,9 +58,10 @@ body {
   height: 40px;
   font-size: 10px;
   color: transparent;
+  /* color: rgba(9, 66, 7, 0.281); */
   /* transition:0.5s; */
   cursor: pointer;
-  /* color: rgba(9, 66, 7, 0.281); */
+
   /* border: rgb(15, 253, 154) 1px solid; */
 }
 
@@ -595,5 +596,5 @@ input:checked + .slider:before {
   0% {opacity: 0;}
   49% {opacity: 0;}
   50% {opacity: 1;}
-  100% {opaccity: 1;}
+  100% {opacity: 1;}
 }
