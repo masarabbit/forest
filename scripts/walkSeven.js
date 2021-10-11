@@ -626,7 +626,7 @@ function init() {
     if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
 
     // prevents sprite walking beyond edge
-    if (noLeftEdgeList.filter(w => mapImageTiles[pos + 1].classList.contains(w)).length) return false
+    if (bear.facingDirection === 'left' && noLeftEdgeList.filter(w => mapImageTiles[pos + 1].classList.contains(w)).length) return false
     return noWallList.filter(w => mapImageTiles[pos].classList.contains(w)).length
   }
 
@@ -947,7 +947,16 @@ function init() {
     if (!e || !bear.motion) return
     if (!spawn) locationTiles[actor.pos].classList.remove('mark')
     // const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
+
     const direction = e
+
+    //* prevents bear from turning away from ladder
+    mapImageTiles[bear.pos].classList.contains('la') || 
+    (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
+    && direction === 'down')
+      ? turnSprite('up',actor,sprite,true)
+      : turnSprite(direction,actor,sprite,true)
+      
     switch (direction) {
       case 'right': if (noWall(actor.pos + 1)){
         spawn ? spawnWalk(actor,'left',cellD,spawn) : setX(x - cellD)
@@ -969,12 +978,12 @@ function init() {
         return
     }
     
-    //* prevents bear from turning away from ladder
-    mapImageTiles[bear.pos].classList.contains('la') || 
-    (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
-    && direction === 'down')
-      ? turnSprite('up',actor,sprite,true)
-      : turnSprite(direction,actor,sprite,true)
+    // //* prevents bear from turning away from ladder
+    // mapImageTiles[bear.pos].classList.contains('la') || 
+    // (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
+    // && direction === 'down')
+    //   ? turnSprite('up',actor,sprite,true)
+    //   : turnSprite(direction,actor,sprite,true)
       
     if (!spawn) locationTiles[actor.pos].classList.add('mark')
 
