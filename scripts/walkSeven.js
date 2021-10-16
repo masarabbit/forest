@@ -3,25 +3,9 @@
 //*maybe design maps first.
 //! temporal solution for image display added, but 
 //! add ways to decorate map further
-
 //! design other avatars and map
 
 
-//todo refactor portal to be like '5_transport-map1#portal3', so that map name is mentioned, object like below, and put it inside mapData.
-// portal: {
-//   portal1: {
-//     map: 1,
-//     name: 'untitled',
-//     cell: 35,
-//     direction: 'down',
-//   },
-//   portal2: {
-//     map: 2,
-//     name: 'untitled',
-//     cell: 1139,
-//     direction: 'up'
-//   },
-// }
 
 function init() {
   
@@ -53,7 +37,6 @@ function init() {
     return output
   }
 
-
   const svgWrapper = (content, color, rotate, flip, wrapper ) =>{
     let scale = 1
     if (flip === 'h') scale = '-1, 1'
@@ -64,7 +47,6 @@ function init() {
       </div>
       `
   }
-
 
   const avatars = {
     avatar: {
@@ -85,12 +67,12 @@ function init() {
     return `rgb(${r()},${r()},${r()})`
   }
 
-  const randomGreen = () =>{
-    const r = ()=> Math.ceil(Math.random() * 80)
-    const g = ()=> Math.ceil(Math.random() * 155) + 100
-    const b = ()=> Math.ceil(Math.random() * 100)
-    return `rgb(${r()},${g()},${b()})`
-  }
+  // const randomGreen = () =>{
+  //   const r = ()=> Math.ceil(Math.random() * 80)
+  //   const g = ()=> Math.ceil(Math.random() * 155) + 100
+  //   const b = ()=> Math.ceil(Math.random() * 100)
+  //   return `rgb(${r()},${g()},${b()})`
+  // }
 
   const tree = () =>{
     return 'D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/'
@@ -133,9 +115,6 @@ function init() {
   }
 
   const sideSquareWindow = () =>{
-    // return `D 0 0h1v16hNvN6"/ F 1 0h15v16hN5vN6"/ D 7 2h6v1h1v10hNv1h-6vNhNvN0h1vN"/`
-    // return `D 0 0h1v16hNvN6"/ F 1 0h15v16hN5vN6"/ D 9 3h5v1h1v10hNv1h-5vNhNvN0h1vN"/`
-    // return `D 0 0h1v16hNvN6"/ F 1 0h15v16hN5vN6"/ D 10 4h4v1h1v9hNv1h-4vNhNv-9h1vN"/`
     return 'D 0 0h1v16hNvN6"/ F 1 0h15v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-8vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/'
   }
 
@@ -168,9 +147,6 @@ function init() {
   const riverCurve = () =>{
     const main = '#58d3d8'
     const sub = '#a2fcf0'
-    
-    // return `<path fill="${main}" d="M 8 0h8v6hNv1hTv1hTv2hNv1hNv3h2v-3h1vNh1vNh2vNh1v8hN2v-6h1vNh1vTh1vNh2vNh1vThNv1hTv1hNv1hNv1hNv2hNv1hNv6hTv-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 9 3h1v2hNv1hTv1hNv2hNv1hNv6hTv-6h1vNh1vTh1vNh1vNh1vNh2vN"/ <path fill="${sub}" d="M 15 6h1v2hNv1hTv1hNv1hNv3hTv-3h1vNh1vTh2vNh2vN"/`
-    // return `<path fill="${main}" d="M 8 0h8v12hTv1hTv3h-3v-4h1vTh1vNh2vThTv1hNv1hNv1hNv2hNv4h-7v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 10 2h5v2h-5v1hTv1hNv1hTvTh2vNh1vNh2vN"/ <path fill="${sub}" d="M 11 7h2v2hTv1hNv2hNv4hTv-4h1vTh1vNh1vNh1vN"/ <path fill="${sub}" d="M 14 12h2v2hTv2hTv-3h2vN"/ <path fill="${main}" d="M 14 14h2v2hTvT"/`
 
     return `<path fill="${main}" d="M 8 0h8v16h-7v-4h1vTh1vNh2vThTv1hNv1hNv1hNv2hNv4h-7v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 10 2h5v2h-5v1hTv1hNv1hTvTh2vNh1vNh2vN"/ <path fill="${sub}" d="M 11 7h2v2hTv1hNv2hNv4hTv-4h1vTh1vNh1vNh1vN"/`
   }
@@ -179,13 +155,11 @@ function init() {
     const main = '#58d3d8'
     const sub = '#a2fcf0'
 
-    // return `<path fill="${main}" d="M 8 0h4v1hNv1hTv1hNv1hNv1hNv1hNv1hNv2h2vTh1vNh2vNh1vNh1vNh1vNh2vNh1vNh1v16h-6v-4h1vNh1vNh1vNh1vThNv1hNv1hNv1hNv1hNv1hNv4h-8v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 12 0h3v1hNv1hTv1hNv1hNv1hNv1hTv1hNv2hTvTh1vNh1vNh1vNh1vNh1vNh2vNh1vN"/ <path fill="${sub}" d="M 13 7h1v2hNv1hNv1hNv1hNv4hTv-4h1vNh1vNh1vNh1vNh1vN"/`
     return `<path fill="${main}" d="M 8 0h8v2h-3v1h-4v2h4vNh3v8hTv1hTv3h-8v-5h1vThTv2hNv5hTv-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 13 2h3v2h-3v1h-4vTh4vN"/ <path fill="${sub}" d="M 10 7h3v2h-3v1hNv1hTvTh1vNh2vN"/ <path fill="${sub}" d="M 3 9h2v2hNv5hTv-5h1vT"/ <path fill="${sub}" d="M 14 12h2v2hTv2hTv-3h2vN"/ <path fill="${main}" d="M 14 14h2v2hTvT"/`
     
   }
 
   const ladder = subColor =>{
-    // return `<path fill="${subColor || 'white'}" d="M 0 0h16v16hN6vN6"/ D 4 1h8v1h-8vN"/ D 4 5h8v1h-8vN"/ D 4 9h8v1h-8vN"/ D 4 13h8v1h-8vN"/`
     return `<path fill="${subColor || 'white'}" d="M 0 0h16v16hN6vN6"/ D 3 1h1v1hNvN"/ D 12 1h1v1hNvN"/ D 4 2h8v1h-8vN"/ D 3 5h1v1hNvN"/ D 12 5h1v1hNvN"/ D 4 6h8v1h-8vN"/ D 3 9h1v1hNvN"/ D 12 9h1v1hNvN"/ D 4 10h8v1h-8vN"/ D 3 13h1v1hNvN"/ D 12 13h1v1hNvN"/ D 4 14h8v1h-8vN"/`
   }
 
@@ -194,15 +168,10 @@ function init() {
   } 
 
   const exit = subColor =>{
-    // return `
-    // <path fill="${main}" d="M 0 0h16v1hNv1hNv1hNv1hNv1hTv1h-4vNhTvNhNvNhNvNhNvNhNvN"/ <path fill="${subColor}" d="M 0 1h1v1h1v1h1v1h1v1h2v1h4vNh2vNh1vNh1vNh1vNh1v15hN6vN5"/
-    // `
     return `<path fill="${subColor}" d="M 0 0h16v4hTv2hTvThTv2hTvThTv2hTvThTv2hTv-6"/ D 2 4h2v2hTvT"/ D 6 4h2v2hTvT"/ D 10 4h2v2hTvT"/ D 14 4h2v2hTvT"/ D 0 6h2v2h2vTh2v2h2vTh2v2h2vTh2v2h2v8hN6vN0"/ <path fill="${subColor}" d="M 2 6h2v2hTvT"/ <path fill="${subColor}" d="M 6 6h2v2hTvT"/ <path fill="${subColor}" d="M 10 6h2v2hTvT"/ <path fill="${subColor}" d="M 14 6h2v2hTvT"/`
   }
 
-  // const sub = '#e2cc9c'
   const sub = '#f9ede5'
-  // const main = '#7d551c'
   const main = '#74645a'
 
   const svgData = {
@@ -255,137 +224,6 @@ function init() {
     'lh': { svg: ladderHole, color: '#bba293', subColor: sub }
   }
 
-  const eventPoints = {
-    tree1: {
-      text: [
-        'hello! I\'m a tree!',
-        'yeah!'
-      ],
-      art: 'http://masahito.co.uk/img/icecream_bunny.png',
-      // item: null,
-      direction: 'up'
-    },
-    bunny1: {
-      text: ['hello! Bunny!'],
-      // item: null,
-      direction: 'left'
-    },
-    hello: { text: ['hello!'] },
-    tomato: {
-      text: [
-        'hello!',
-        'yeah!'
-      ]
-    },
-    apple: {
-      text: [
-        'how are you?#q1',
-        'yeah!/really?#yesNo',
-        'cool!/ /whatever'
-      ],
-      q1: [
-        'okay',
-        'not so good'
-      ],
-      yesNo: [
-        'yes',
-        'no',
-        'maybe'
-      ]
-    }
-  }
-
-  
-  const entryPoints = {
-    start: {
-      map: 1,
-      cell: 313,
-    },
-    portal1: {
-      map: 1,
-      name: 'untitled',
-      cell: 35,
-      direction: 'down',
-    },
-    portal2: {
-      map: 2,
-      name: 'untitled',
-      cell: 1139,
-      direction: 'up'
-    },
-    portal3: {
-      map: 3,
-      name: 'untitled',
-      cell: 224,
-      direction: 'up'
-    },
-    portal4: {
-      map: 4,
-      name: 'untitled',
-      cell: 81,
-      direction: 'right'
-    },
-    portal5: {
-      map: 1,
-      name: 'untitled',
-      cell: 418,
-      direction: 'left'
-    },
-    portal6: {
-      map: 5,
-      name: 'home',
-      cell: 79,
-      direction: 'up',
-      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
-    },
-    portal7: {
-      map: 5,
-      name: 'home',
-      cell: 62,
-      direction: 'up',
-      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
-    },
-    portal8: {
-      map: 1,
-      name: 'home',
-      cell: 283,
-      direction: 'down',
-    },
-    portal9: {
-      map: 1,
-      name: 'home',
-      cell: 318,
-      direction: 'down',
-    },
-    portal10: {
-      map: 6,
-      name: 'home_1',
-      cell: 21,
-      direction: 'right',
-      noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
-    },
-    portal11: {
-      map: 5,
-      name: 'home',
-      cell: 5,
-      direction: 'up',
-      noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
-    },
-    portal12: {
-      map: 1,
-      name: 'map1',
-      cell: 197,
-      direction: 'down',
-      noWall: ['d','pt','s','pu','rp','pr','g','pb','y','do']
-    },
-    portal13: {
-      map: 6,
-      name: 'home_1',
-      cell: 26,
-      direction: 'up',
-      noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
-    }
-  }
 
   const events = {
     transport: transport,
@@ -413,6 +251,65 @@ function init() {
         '167_transport-portal13'
       ],
       map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nr1,sr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,sl1,p1,nr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,sl1,p1,sr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
+      eventContents: {
+        hello: { text: ['hello!'] },
+        tomato: {
+          text: [
+            'hello!',
+            'yeah!'
+          ]
+        },
+        apple: {
+          text: [
+            'how are you?#q1',
+            'yeah!/really?#yesNo',
+            'cool!/ /whatever'
+          ],
+          q1: [
+            'okay',
+            'not so good'
+          ],
+          yesNo: [
+            'yes',
+            'no',
+            'maybe'
+          ]
+        }
+      },
+      entry: {
+        start: {
+          map: 0,
+          cell: 313,
+        },
+        portal3: {
+          map: 2,
+          cell: 224,
+          direction: 'up'
+        },
+        portal4: {
+          map: 3,
+          cell: 81,
+          direction: 'right'
+        },
+        portal7: {
+          map: 4,
+          cell: 62,
+          direction: 'up',
+          noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
+        },
+        portal6: {
+          map: 4,
+          cell: 79,
+          direction: 'up',
+          noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
+        },
+        portal13: {
+          map: 5,
+          cell: 26,
+          direction: 'up',
+          noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
+        },
+      },
     },
     {
       name: 'two',
@@ -426,7 +323,17 @@ function init() {
         '1179_transport-portal1',
         '1180_transport-portal1'
       ],
-      map: 'v18,b3,v20,w17,b3,w12,v8,w1,b30,w1,v2,t1,v5,w1,b11,t1,b18,w1,v8,w1,b6,t1,b19,t1,b3,w1,v5,t1,v2,w1,b2,t1,b27,w1,v8,w1,b18,t1,b2,t1,b8,w7,v2,w1,b36,w1,v2,w1,b11,t1,b24,w1,v2,w1,b33,t1,b2,w1,v2,w1,b6,t1,b29,w1,v2,w1,b2,t1,b20,o8,b5,w1,v2,w1,b23,o8,b5,w1,v2,w1,b16,t1,b6,o8,b5,w1,v2,w1,b23,o8,b2,t1,b2,w1,v2,w1,b23,o8,b5,w1,v2,w1,b3,t1,b8,t1,b10,o8,b5,w1,v2,w1,b36,w1,v2,w1,b36,w1,v2,w1,b7,t1,b25,t1,b2,w1,v2,w1,b36,w1,v2,w13,b24,w1,v14,w1,b4,t1,b4,t1,b9,t1,b4,w1,v4,t1,v4,t1,v4,w1,b24,w1,v14,w1,b24,w1,v6,t1,v7,w1,b1,t1,b22,w1,v12,t1,v1,w1,b12,t1,b3,t1,b2,t1,b4,w1,v14,w1,b24,w1,v4,t1,v5,t1,v3,w5,b3,w18,v19,b3,v19'
+      map: 'v18,b3,v20,w17,b3,w12,v8,w1,b30,w1,v2,t1,v5,w1,b11,t1,b18,w1,v8,w1,b6,t1,b19,t1,b3,w1,v5,t1,v2,w1,b2,t1,b27,w1,v8,w1,b18,t1,b2,t1,b8,w7,v2,w1,b36,w1,v2,w1,b11,t1,b24,w1,v2,w1,b33,t1,b2,w1,v2,w1,b6,t1,b29,w1,v2,w1,b2,t1,b20,o8,b5,w1,v2,w1,b23,o8,b5,w1,v2,w1,b16,t1,b6,o8,b5,w1,v2,w1,b23,o8,b2,t1,b2,w1,v2,w1,b23,o8,b5,w1,v2,w1,b3,t1,b8,t1,b10,o8,b5,w1,v2,w1,b36,w1,v2,w1,b36,w1,v2,w1,b7,t1,b25,t1,b2,w1,v2,w1,b36,w1,v2,w13,b24,w1,v14,w1,b4,t1,b4,t1,b9,t1,b4,w1,v4,t1,v4,t1,v4,w1,b24,w1,v14,w1,b24,w1,v6,t1,v7,w1,b1,t1,b22,w1,v12,t1,v1,w1,b12,t1,b3,t1,b2,t1,b4,w1,v14,w1,b24,w1,v4,t1,v5,t1,v3,w5,b3,w18,v19,b3,v19',
+      eventPoints: {
+        hello: { text: ['hello!'] },
+      },
+      entry: {
+        portal1: {
+          map: 0,
+          cell: 35,
+          direction: 'down',
+        },
+      }
     },
     {
       name: 'three',
@@ -444,7 +351,31 @@ function init() {
         '44_check-tree1',
         '112_check-bunny1'
       ],
-      map: 'v19,w16,v2,w1,b1,o3,b6,o3,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o3,b6,o3,b1,w1,v2,w6,b3,w7,v8,b3,v8'
+      map: 'v19,w16,v2,w1,b1,o3,b6,o3,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o3,b6,o3,b1,w1,v2,w6,b3,w7,v8,b3,v8',
+      eventContents: {
+        hello: { text: ['hello!'] },
+        tree1: {
+          text: [
+            'hello! I\'m a tree!',
+            'yeah!'
+          ],
+          art: 'http://masahito.co.uk/img/icecream_bunny.png',
+          // item: null,
+          direction: 'up'
+        },
+        bunny1: {
+          text: ['hello! Bunny!'],
+          // item: null,
+          direction: 'left'
+        },
+      },
+      entry: {
+        portal1: {
+          map: 0,
+          cell: 35,
+          direction: 'down',
+        },
+      }
     },
     {
       name: 'four',
@@ -452,16 +383,19 @@ function init() {
       iHeight: 10,
       // characters: [
       //   '135_bunny_9_hello',
-      //   '101_bunny_6_hello',
-      //   '165_bunny_3_hello'
       // ],
       events: [
         '80_transport-portal5',
         '100_transport-portal5'
-        // '243_transport-portal1',
-        // '44_check-tree1',
       ],
-      map: 'v21,w14,v6,w1,b12,w1,v6,w1,b2,o3,b7,w5,v1,b18,w1,v1,b18,w1,v2,w1,b12,o3,b1,w1,v2,w1,b16,w1,v2,w18,v21'
+      map: 'v21,w14,v6,w1,b12,w1,v6,w1,b2,o3,b7,w5,v1,b18,w1,v1,b18,w1,v2,w1,b12,o3,b1,w1,v2,w1,b16,w1,v2,w18,v21',
+      entry: {
+        portal5: {
+          map: 0,
+          cell: 418,
+          direction: 'left'
+        },
+      }
     },
     {
       name: 'house_one_0',
@@ -469,15 +403,31 @@ function init() {
       iHeight: 9,
       // characters: [
       //   '135_bunny_9_hello',
-      //   '101_bunny_6_hello',
-      //   '165_bunny_3_hello'
       // ],
       events: [
         '74_transport-portal8',
         '91_transport-portal9',
         '5_transport-portal10'
       ],
-      map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,ry1,at5,rt1,bd2,ry1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd3,e1,bd1,bx1,ab2,p1,ab2,by1,bd8,e1,bd16'
+      map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,ry1,at5,rt1,bd2,ry1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd3,e1,bd1,bx1,ab2,p1,ab2,by1,bd8,e1,bd16',
+      entry: {
+        portal8: {
+          map: 0,
+          cell: 283,
+          direction: 'down',
+        },
+        portal9: {
+          map: 0,
+          cell: 318,
+          direction: 'down',
+        },
+        portal10: {
+          map: 5,
+          cell: 21,
+          direction: 'down',
+          noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
+        }, 
+      }
     },
     {
       name: 'house_one_1',
@@ -487,19 +437,23 @@ function init() {
         '20_transport-portal11',
         '32_transport-portal12'
       ],
-      map: 'bd7,rp4,bd2,rp1,la1,rp2,bd2,ry1,lh1,at1,rt1,bd2,bx1,p1,ab1,by1,bd3,e1,bd3'
+      map: 'bd7,rp4,bd2,rp1,la1,rp2,bd2,ry1,lh1,at1,rt1,bd2,bx1,p1,ab1,by1,bd3,e1,bd3',
+      entry: {
+        portal11: {
+          map: 4,
+          cell: 5,
+          direction: 'up',
+          noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
+        },
+        portal12: {
+          map: 0,
+          cell: 197,
+          direction: 'down',
+          noWall: ['d','pt','s','pu','rp','pr','g','pb','y','do']
+        },
+      }
     }
   ]
-
-  // const buttonWrapper = document.querySelector('.button')
-  // buttonWrapper.innerHTML = mapData.map((m,i)=>{
-  //   return `
-  //     <button data-index=${i}>
-  //       ${m.name}
-  //     </button>
-  //   `
-  // }).join('')
-  // const buttons = document.querySelectorAll('button')
 
 
   const transitionCover = document.querySelector('.transition_cover')
@@ -519,9 +473,7 @@ function init() {
   let sprites
 
   
-  
-
-  //* map related variables
+  // map related variables
   let height
   let width
   let iHeight
@@ -529,14 +481,16 @@ function init() {
   let start
   const cellD = 32
   let minicellD 
-  let x 
-  let y 
+  const mapXY = {
+    x: null,
+    y: null
+  }
   let mapTiles
   let locationTiles
   let mapImageTiles
 
-  //* gameplay related variables
-  let mapIndex = 1
+  // gameplay related variables
+  let mapIndex = 0
   const spawnData = []
   const bear = {
     spritePos: null,
@@ -569,7 +523,7 @@ function init() {
   }
 
   const setLocation = index => {
-    mapIndex = index - 1
+    mapIndex = index
     setWidthAndHeight()
 
     iHeight = mapData[mapIndex].iHeight
@@ -582,21 +536,15 @@ function init() {
     if (mapData[mapIndex].events) mapData[mapIndex].events.forEach(cell=>{
       mapImageTiles[+cell.split('_')[0]].setAttribute('data-event',cell.split('_')[1])
     })
-
-    
   }
 
-  //! center of the map
-  // const startbear.pos = (w,h)=> {
-  //   return ((w) * (h / 2)) - (w / 2) - 1
-  // }
 
   const placeInCenterOfMap = () =>{
     start = Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
   }
 
   const mapMap = (w, h, classToAdd)=>{
-    const mapArr = new Array(w * h).fill('').map((_ele,i)=>i)
+    const mapArr = new Array(w * h).fill('').map((_ele, i)=>i)
     return mapArr.map((_ele,i)=>{
       const dataX = i % w
       const dataY = Math.floor(i / w)
@@ -608,13 +556,13 @@ function init() {
     }).join('')
   }
 
-  const adjustRectSize = (target,w,h,c,t) =>{
-    target.style.width = `${w * c}px`
-    target.style.height = `${h * c}px` 
-    t 
-      ? t.forEach(tile=>{
-        tile.style.width = `${c}px`
-        tile.style.height = `${c}px`
+  const adjustRectSize = (target, w, h, cellD, cells) =>{
+    target.style.width = `${w * cellD}px`
+    target.style.height = `${h * cellD}px` 
+    cells 
+      ? cells.forEach(cell=>{
+        cell.style.width = `${cellD}px`
+        cell.style.height = `${cellD}px`
       })
       : ''
   }
@@ -630,7 +578,7 @@ function init() {
     return noWallList.filter(w => mapImageTiles[pos].classList.contains(w)).length
   }
 
-  const populateWithSvg = (key,target) =>{
+  const populateWithSvg = (key, target) =>{
     if (svgData[key]){
       const { svg, color, subColor, rotate, flip, animation } = svgData[key]
       let colorAction = ''
@@ -668,53 +616,33 @@ function init() {
       const letterCode = decompressedMap[i]
       tile.classList.add(letterCode)
 
-      // if (svgData[letterCode])  {
-      //   const { svg, color, subColor, rotate, flip } = svgData[letterCode]
-      //   let colorAction = ''
-      //   colorAction = typeof(color) === 'function' ? color() : color
-      //   tile.innerHTML = 
-      //     svgWrapper(
-      //       decode(subColor ? svg(subColor) : svg()),
-      //       color ? colorAction : '',
-      //       rotate ? rotate : 0,
-      //       flip ? flip : null 
-      //     )
-      // }
-
       if (svgData[letterCode])  {
-        populateWithSvg(letterCode,tile) 
+        populateWithSvg(letterCode, tile) 
       }
-
-
     })
   }
   
-  const spawnWalk = (actor,para,m,spawn) =>{
+  const spawnWalk = (actor, para, m, spawn) =>{
     actor[para] += m
     spawn.style[para] = `${actor[para]}px`
   }
   
-  const spawnMotion = (spawn,i) =>{
-    console.log('test one')
+  const spawnMotion = (spawn, i) =>{
+    // console.log('test one')
     if (spawnData[i].pause || !windowActive) return
-    console.log('test two')
+    // console.log('test two')
     const motionOption = [
-      ()=>spriteWalk('down',spawnData[i],sprites[i],spawn),
-      ()=>spriteWalk('right',spawnData[i],sprites[i],spawn),
-      ()=>spriteWalk('up',spawnData[i],sprites[i],spawn),
-      ()=>spriteWalk('left',spawnData[i],sprites[i],spawn)
+      ()=>spriteWalk('down', spawnData[i], sprites[i], spawn),
+      ()=>spriteWalk('right', spawnData[i], sprites[i], spawn),
+      ()=>spriteWalk('up', spawnData[i], sprites[i], spawn),
+      ()=>spriteWalk('left', spawnData[i], sprites[i], spawn)
     ]
     motionOption[Math.floor(Math.random() * 4)]()
   }
-  
-  const setX = num =>{
-    x = num
-    mapImage.style.left = `${x}px`
-  }
 
-  const setY = num =>{
-    y = num
-    mapImage.style.top = `${y}px`
+  const setPos = (key,num,dir) =>{
+    mapXY[key] = num
+    mapImage.style[dir] = `${num}px`
   }
 
   const setSpritePos = (num,actor,sprite) =>{
@@ -770,14 +698,16 @@ function init() {
       spawn.style.fill = '#74645a'
       spawnContainer.appendChild(spawn)    
       mapImage.appendChild(spawnContainer)    
-      spawnData[i].interval = setInterval(()=>spawnMotion(spawnContainer,i),avatars[c.split('_')[1]].speed)
+      spawnData[i].interval = setInterval(()=>{
+        spawnMotion(spawnContainer, i)
+      }, avatars[c.split('_')[1]].speed)
     })
 
     sprites = document.querySelectorAll('.sprite')
     sprites.forEach((sprite,i)=>{
       if (i === sprites.length - 1) return
       sprites[i].style.animationDelay = `${i * 0.1}s`
-      turnSprite(directionKey[spawnData[i].spritePos],spawnData[i],sprite,false)
+      turnSprite(directionKey[spawnData[i].spritePos], spawnData[i], sprite,false)
     })
   }
 
@@ -809,17 +739,17 @@ function init() {
 
     talkTarget.pause = true
     const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
-    turnSprite(opposite,talkTarget,sprites[talkTargetIndex],false)
-    displayText(bear.textCount,eventPoints[talkTarget.event],prev)
+    turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
+    displayText(bear.textCount, mapData[mapIndex].eventContents[talkTarget.event], prev)
   }
   
-  //* displays multiple choice
+  // displays multiple choice
   const displayAnswer = (q,prev) =>{ 
     bear.pause = true
     bear.choice = prev ? bear.prevChoices[bear.textCount - 1] : 0 
     texts[1].innerHTML = q.map((qu,i)=>`<div class="option ${i === bear.choice && 'selected'}">${qu}</div>`).join('')
     
-    //* makes multiple choice clickable
+    // makes multiple choice clickable
     bear.options = document.querySelectorAll('.option')
     bear.options.forEach((op,i)=>{
       op.addEventListener('click',()=>{
@@ -851,8 +781,8 @@ function init() {
   const displayText = (count,eventPoint,prev) =>{
     if (count < eventPoint.text.length){
       
-      //* displays text and answer
-      const text = eventPoint.text[count].split('/')[prev ? bear.prevChoices[bear.textCount - 1]  : bear.choice] || eventPoint.text[count]
+      // displays text and answer
+      const text = eventPoint.text[count].split('/')[prev ? bear.prevChoices[bear.textCount - 1] : bear.choice] || eventPoint.text[count]
       bear.textCount++
       bear.motion = false
       if (text.includes('#')) {
@@ -861,9 +791,6 @@ function init() {
       } else if (text !== ' ') {
         displayTextGradual(text,0) 
       } 
-      // else {
-      //   clearText()
-      // }
 
       if (eventPoint.art) transitionCover.innerHTML = `
         <div>
@@ -876,27 +803,28 @@ function init() {
   }
 
 
-  function check(count,prev = false){
+  function check(count, prev = false){
     if (mapImageTiles[bear.pos].dataset.event) { //* checking static object
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
-      const eventPoint = eventPoints[index]
+      const eventPoint = mapData[mapIndex].eventContents[index]
       if (bear.facingDirection === eventPoint.direction) displayText(count,eventPoint,prev)
       return
     }
     talk(prev)
   }
 
-
   function transport(index){
-    // setTimeout(()=>{
     transition()
-    // },200)
+
     mapImage.classList.add('transition')
     setTimeout(()=>{
       mapImage.classList.remove('transition')
     },400)
-    const entryPoint = entryPoints[index]
-    noWallList = entryPoints[index].noWall || ['b','do']
+    const entryPoint = mapData[mapIndex].entry[index]
+    if (!entryPoint) return // this added to prevent error when user walks too fast
+    
+    // console.log('entryPoint', entryPoint)
+    noWallList = entryPoint.noWall || ['b','do']
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
@@ -907,83 +835,75 @@ function init() {
       turnSprite(entryPoint.direction,bear,sprite,false)
     },150)
     spawnCharacter()
-    
   }
   
 
-  const turnSprite = (e = 'down',actor,sprite,animate) => {
+  const turnSprite = (e = 'down', actor, sprite, animate) => {
     let m = -cellD
     actor.facingDirection = e
-    const animateWalk = (a,b,c,turn) =>{
+    const animateWalk = (a, b ,c , turn) =>{
       actor.animationTimer.forEach(timer=>clearTimeout(timer))
       m = animate ? m * a : m * c
       if (turn) sprite.parentNode.classList.contains('right') 
         ? sprite.parentNode.classList.remove('right') 
         : sprite.parentNode.classList.add('right')
       if (animate){
-        actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * b,actor,sprite),100)
-        actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * c,actor,sprite),200) 
+        actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * b, actor, sprite),100)
+        actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * c, actor, sprite),200) 
       }   
     }
     const spriteChange = {
       right: ()=> { 
         sprite.parentNode.classList.add('right')
-        animateWalk(4,6,5,false)
+        animateWalk(4, 6, 5, false)
       },
       left: ()=> { 
         sprite.parentNode.classList.remove('right')
-        animateWalk(4,6,5,false)
+        animateWalk(4, 6, 5, false)
       },
-      up: ()=> animateWalk(2,2,3,true), 
-      down: ()=> animateWalk(0,0,1,true)
+      up: ()=> animateWalk(2, 2, 3, true), 
+      down: ()=> animateWalk(0, 0, 1, true)
     }
     spriteChange[e]()
     setSpritePos(m,actor,sprite)
   }
 
-  const spriteWalk = (e,actor,sprite,spawn = false) =>{
+  const spriteWalk = (e, actor, sprite, spawn = false) =>{
     // when spawn is true, this function is used by spawn
+    const { x, y } = mapXY
 
     if (!e || !bear.motion) return
     if (!spawn) locationTiles[actor.pos].classList.remove('mark')
     // const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
-
     const direction = e
 
-    //* prevents bear from turning away from ladder
+    // prevents bear from turning away from ladder
     mapImageTiles[bear.pos].classList.contains('la') || 
     (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
     && direction === 'down')
-      ? turnSprite('up',actor,sprite,true)
-      : turnSprite(direction,actor,sprite,true)
+      ? turnSprite('up', actor, sprite, true)
+      : turnSprite(direction, actor, sprite, true)
       
     switch (direction) {
       case 'right': if (noWall(actor.pos + 1)){
-        spawn ? spawnWalk(actor,'left',cellD,spawn) : setX(x - cellD)
+        spawn ? spawnWalk(actor, 'left', cellD, spawn) : setPos('x', x - cellD, 'left')
         actor.pos += 1 
       } break
       case 'left': if (noWall(actor.pos - 1)){
-        spawn ? spawnWalk(actor,'left',-cellD,spawn) : setX(x + cellD)
+        spawn ? spawnWalk(actor, 'left', -cellD, spawn) : setPos('x', x + cellD, 'left')
         actor.pos -= 1 
       } break
       case 'up': if (noWall(actor.pos - iWidth)){
-        spawn ? spawnWalk(actor,'top',-cellD,spawn) : setY(y + cellD)
+        spawn ? spawnWalk(actor, 'top', -cellD, spawn) : setPos('y', y + cellD, 'top')
         actor.pos -= iWidth 
       } break
       case 'down': if (noWall(actor.pos + iWidth)){
-        spawn ? spawnWalk(actor,'top',cellD,spawn) : setY(y - cellD)
+        spawn ? spawnWalk(actor, 'top', cellD, spawn) : setPos('y', y - cellD, 'top')
         actor.pos += iWidth 
       } break
       default: console.log('invalid command')
         return
     }
-    
-    // //* prevents bear from turning away from ladder
-    // mapImageTiles[bear.pos].classList.contains('la') || 
-    // (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
-    // && direction === 'down')
-    //   ? turnSprite('up',actor,sprite,true)
-    //   : turnSprite(direction,actor,sprite,true)
       
     if (!spawn) locationTiles[actor.pos].classList.add('mark')
 
@@ -1011,7 +931,7 @@ function init() {
   const prevText = () =>{
     if (bear.textCount > 1) {
       texts[1].innerHTML = ''
-      //* needs to be minus 2, because textCount would be incremented by then
+      // needs to be minus 2, because textCount would be incremented by then
       bear.textCount = bear.textCount - 2 
       bear.pause = false
       check(bear.textCount,true)
@@ -1048,48 +968,44 @@ function init() {
   }
 
 
-  //* key control
-  window.addEventListener('keyup', (e)=>handleKeyAction(e))
-
-  
-  
-
-  const resize = () =>{    　
+  const resize = () =>{
     positionSprite(start)
 
-    //* update offset margins
+    // update offset margins
     const dataX = mapImageTiles[bear.pos].dataset.x
     const dataY = mapImageTiles[bear.pos].dataset.y
     const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
     const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
-    setX(xMargin)  
-    setY(yMargin)
+    // setX(xMargin)
+    setPos('x', xMargin, 'left')  
+    setPos('y', yMargin, 'top')
+    // setY(yMargin)
 
-    //* adjust sprite
-    setSpritePos(-cellD,bear,sprite)
+    // adjust sprite
+    setSpritePos(-cellD, bear, sprite)
     sprite.style.height = `${cellD}px`
     sprite.style.width = `${cellD * 7}px`
     spriteContainer.style.height = `${cellD}px`
     spriteContainer.style.width = `${cellD}px`
 
-    //* resize mapImageContainer
-    adjustRectSize(mapImageContainer,width,height,cellD)
+    // resize mapImageContainer
+    adjustRectSize(mapImageContainer, width, height, cellD)
     
-    //* resize map
+    // resize map
     map.innerHTML = mapMap(width,height,'map_tile')
     mapTiles = document.querySelectorAll('.map_tile')
-    adjustRectSize(map,width,height,cellD,mapTiles)
+    adjustRectSize(map, width, height, cellD, mapTiles)
     
-    //* setup location indicator
+    // setup location indicator
     minicellD = Math.floor(cellD / 8)
-    adjustRectSize(location,iWidth,iHeight,minicellD,locationTiles)
+    adjustRectSize(location, iWidth, iHeight, minicellD, locationTiles)
     locationTiles[bear.pos].classList.add('mark')
   
-    //* setup map image
-    adjustRectSize(mapImage,iWidth,iHeight,cellD,mapImageTiles)
+    // setup map image
+    adjustRectSize(mapImage, iWidth, iHeight, cellD, mapImageTiles)
     
-    //* setup mapcover
-    adjustRectSize(mapCover,width,height,cellD)
+    // setup mapcover
+    adjustRectSize(mapCover, width, height, cellD)
   }
   
   const setWidthAndHeightAndResize = () =>{
@@ -1097,25 +1013,27 @@ function init() {
     placeInCenterOfMap()
     resize()
   }
+  
+
+  // set up
+
+  // key control
+  window.addEventListener('keyup', (e)=>handleKeyAction(e))
 
   window.addEventListener('resize', setWidthAndHeightAndResize)
-  transport('start')
-
-
-  // buttons[5].addEventListener('click',()=>events['transport']('portal1'))
-  // buttons[6].addEventListener('click',()=>events.transport('portal2'))
-  // buttons[7].addEventListener('click',()=>events.transport('portal3'))
 
   controlButtons.forEach(c=>{
     c.addEventListener('click',()=>handleKeyAction(c.dataset.c))
   })
 
-  
   touchToggle.addEventListener('change', ()=>{
     control.classList.toggle('hide')
     const status = document.querySelector('.touch_status')
     status.innerHTML = status.innerHTML === 'off' ? 'on' : 'off'
   })
+
+  transport('start')
+
 }
 
 window.addEventListener('DOMContentLoaded', init)
