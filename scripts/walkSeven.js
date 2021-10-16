@@ -580,16 +580,14 @@ function init() {
       colorAction = typeof(color) === 'function' ? color() : color
 
       const svgContent = `
-      ${animation ? 
-    `
-        ${svgWrapper(
-    decode(subColor ? animation(subColor) : animation()),
-    color ? colorAction : '',
-    rotate ? rotate : 0,
-    flip ? flip : null,
-    'svg_anim_wrap' 
-  )}
-  `
+      ${animation 
+    ? `${svgWrapper(
+      decode(subColor ? animation(subColor) : animation()),
+      color ? colorAction : '',
+      rotate ? rotate : 0,
+      flip ? flip : null,
+      'svg_anim_wrap' 
+    )}`
     : ''
 }
           ${svgWrapper(
@@ -600,7 +598,6 @@ function init() {
     'svg_wrap' 
   )}  
       `
-
       target.innerHTML = svgContent
     } 
   }
@@ -658,7 +655,7 @@ function init() {
 
     if (!mapData[mapKey].characters) return
 
-    mapData[mapKey].characters.forEach((c,i)=>{
+    mapData[mapKey].characters.forEach((c, i)=>{
       const pos = +c.split('_')[0]
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
@@ -669,7 +666,7 @@ function init() {
         left: sx,
         top: sy,
         animationTimer: ['',''],
-        pos,
+        pos
       }
 
       const spawnContainer = document.createElement('div')
@@ -699,7 +696,7 @@ function init() {
     })
 
     sprites = document.querySelectorAll('.sprite')
-    sprites.forEach((sprite,i)=>{
+    sprites.forEach((sprite, i)=>{
       if (i === sprites.length - 1) return
       sprites[i].style.animationDelay = `${i * 0.1}s`
       turnSprite(directionKey[spawnData[i].spritePos], spawnData[i], sprite,false)
@@ -781,10 +778,10 @@ function init() {
       bear.textCount++
       bear.motion = false
       if (text.includes('#')) {
-        displayTextGradual(text.split('#')[0],0)
-        displayAnswer(eventPoint[text.split('#')[1]],prev)
+        displayTextGradual(text.split('#')[0], 0)
+        displayAnswer(eventPoint[text.split('#')[1]], prev)
       } else if (text !== ' ') {
-        displayTextGradual(text,0) 
+        displayTextGradual(text, 0) 
       } 
 
       if (eventPoint.art) transitionCover.innerHTML = `
@@ -802,7 +799,7 @@ function init() {
     if (mapImageTiles[bear.pos].dataset.event) { //* checking static object
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
       const eventPoint = mapData[mapKey].eventContents[index]
-      if (bear.facingDirection === eventPoint.direction) displayText(count,eventPoint,prev)
+      if (bear.facingDirection === eventPoint.direction) displayText(count, eventPoint, prev)
       return
     }
     talk(prev)
@@ -825,9 +822,9 @@ function init() {
     setWidthAndHeightAndResize()
     setUpWalls(mapImageTiles)
     setUpWalls(locationTiles)
-    turnSprite(bear.facingDirection,bear,sprite,false)
+    turnSprite(bear.facingDirection, bear, sprite, false)
     setTimeout(()=>{
-      turnSprite(entryPoint.direction,bear,sprite,false)
+      turnSprite(entryPoint.direction, bear, sprite, false)
     },150)
     spawnCharacter()
   }
@@ -869,7 +866,6 @@ function init() {
 
     if (!e || !bear.motion) return
     if (!spawn) locationTiles[actor.pos].classList.remove('mark')
-    // const direction = e.key ? e.key.toLowerCase().replace('arrow','') : e
     const direction = e
 
     // prevents bear from turning away from ladder
@@ -910,8 +906,7 @@ function init() {
       },200)
     } 
 
-    const dataX = mapImageTiles[bear.pos].dataset.x
-    const dataY = mapImageTiles[bear.pos].dataset.y
+    const { x: dataX, y: dataY } = mapImageTiles[bear.pos].dataset
     indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
   }
 
@@ -967,14 +962,11 @@ function init() {
     positionSprite(start)
 
     // update offset margins
-    const dataX = mapImageTiles[bear.pos].dataset.x
-    const dataY = mapImageTiles[bear.pos].dataset.y
+    const { x: dataX, y: dataY } = mapImageTiles[bear.pos].dataset
     const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
     const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
-    // setX(xMargin)
     setPos('x', xMargin, 'left')  
     setPos('y', yMargin, 'top')
-    // setY(yMargin)
 
     // adjust sprite
     setSpritePos(-cellD, bear, sprite)
