@@ -231,9 +231,8 @@ function init() {
   }
     
 
-  const mapData = [
-    {
-      name: 'one',
+  const mapData = {
+    one: {
       iWidth: 30,
       iHeight: 20,
       characters: [
@@ -278,41 +277,40 @@ function init() {
       },
       entry: {
         start: {
-          map: 0,
+          map: 'one',
           cell: 313,
         },
         portal3: {
-          map: 2,
+          map: 'three',
           cell: 224,
           direction: 'up'
         },
         portal4: {
-          map: 3,
+          map: 'four',
           cell: 81,
           direction: 'right'
         },
         portal7: {
-          map: 4,
+          map: 'house_one_0',
           cell: 62,
           direction: 'up',
           noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
         },
         portal6: {
-          map: 4,
+          map: 'house_one_0',
           cell: 79,
           direction: 'up',
           noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
         },
         portal13: {
-          map: 5,
+          map: 'house_one_1',
           cell: 26,
           direction: 'up',
           noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
         },
       },
     },
-    {
-      name: 'two',
+    two: {
       iWidth: 40,
       iHeight: 30,
       characters: [
@@ -329,14 +327,13 @@ function init() {
       },
       entry: {
         portal1: {
-          map: 0,
+          map: 'one',
           cell: 35,
           direction: 'down',
         },
       }
     },
-    {
-      name: 'three',
+    three: {
       iWidth: 18,
       iHeight: 14,
       characters: [
@@ -371,14 +368,13 @@ function init() {
       },
       entry: {
         portal1: {
-          map: 0,
+          map: 'one',
           cell: 35,
           direction: 'down',
         },
       }
     },
-    {
-      name: 'four',
+    four: {
       iWidth: 20,
       iHeight: 10,
       // characters: [
@@ -391,13 +387,13 @@ function init() {
       map: 'v21,w14,v6,w1,b12,w1,v6,w1,b2,o3,b7,w5,v1,b18,w1,v1,b18,w1,v2,w1,b12,o3,b1,w1,v2,w1,b16,w1,v2,w18,v21',
       entry: {
         portal5: {
-          map: 0,
+          map: 'one',
           cell: 418,
           direction: 'left'
         },
       }
     },
-    {
+    house_one_0: {
       name: 'house_one_0',
       iWidth: 12,
       iHeight: 9,
@@ -412,25 +408,24 @@ function init() {
       map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,ry1,at5,rt1,bd2,ry1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd3,e1,bd1,bx1,ab2,p1,ab2,by1,bd8,e1,bd16',
       entry: {
         portal8: {
-          map: 0,
+          map: 'one',
           cell: 283,
           direction: 'down',
         },
         portal9: {
-          map: 0,
+          map: 'one',
           cell: 318,
           direction: 'down',
         },
         portal10: {
-          map: 5,
+          map: 'house_one_1',
           cell: 21,
           direction: 'down',
           noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
         }, 
       }
     },
-    {
-      name: 'house_one_1',
+    house_one_1: {
       iWidth: 6,
       iHeight: 6,
       events: [
@@ -440,20 +435,20 @@ function init() {
       map: 'bd7,rp4,bd2,rp1,la1,rp2,bd2,ry1,lh1,at1,rt1,bd2,bx1,p1,ab1,by1,bd3,e1,bd3',
       entry: {
         portal11: {
-          map: 4,
+          map: 'house_one_0',
           cell: 5,
           direction: 'up',
           noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
         },
         portal12: {
-          map: 0,
+          map: 'one',
           cell: 197,
           direction: 'down',
           noWall: ['d','pt','s','pu','rp','pr','g','pb','y','do']
         },
       }
     }
-  ]
+  }
 
 
   const transitionCover = document.querySelector('.transition_cover')
@@ -490,7 +485,7 @@ function init() {
   let mapImageTiles
 
   // gameplay related variables
-  let mapIndex = 0
+  let mapKey = 'one'
   const spawnData = []
   const bear = {
     spritePos: null,
@@ -522,18 +517,18 @@ function init() {
     height = 2 * Math.floor((pHeight / cellD) / 2)
   }
 
-  const setLocation = index => {
-    mapIndex = index
+  const setLocation = key => {
+    mapKey = key
     setWidthAndHeight()
 
-    iHeight = mapData[mapIndex].iHeight
-    iWidth = mapData[mapIndex].iWidth
+    iHeight = mapData[mapKey].iHeight
+    iWidth = mapData[mapKey].iWidth
     location.innerHTML = mapMap(iWidth,iHeight,'location_indicator_tile')
     locationTiles = document.querySelectorAll('.location_indicator_tile')
     mapImage.innerHTML = mapMap(iWidth,iHeight,'map_image_tile')
     mapImageTiles = document.querySelectorAll('.map_image_tile')
     
-    if (mapData[mapIndex].events) mapData[mapIndex].events.forEach(cell=>{
+    if (mapData[mapKey].events) mapData[mapKey].events.forEach(cell=>{
       mapImageTiles[+cell.split('_')[0]].setAttribute('data-event',cell.split('_')[1])
     })
   }
@@ -611,7 +606,7 @@ function init() {
   }
 
   const setUpWalls = target =>{
-    const decompressedMap = decompress(mapData[mapIndex].map)
+    const decompressedMap = decompress(mapData[mapKey].map)
     target.forEach((tile,i)=>{
       const letterCode = decompressedMap[i]
       tile.classList.add(letterCode)
@@ -661,9 +656,9 @@ function init() {
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
     spawnData.length = 0
 
-    if (!mapData[mapIndex].characters) return
+    if (!mapData[mapKey].characters) return
 
-    mapData[mapIndex].characters.forEach((c,i)=>{
+    mapData[mapKey].characters.forEach((c,i)=>{
       const pos = +c.split('_')[0]
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
@@ -740,7 +735,7 @@ function init() {
     talkTarget.pause = true
     const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
     turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
-    displayText(bear.textCount, mapData[mapIndex].eventContents[talkTarget.event], prev)
+    displayText(bear.textCount, mapData[mapKey].eventContents[talkTarget.event], prev)
   }
   
   // displays multiple choice
@@ -806,21 +801,21 @@ function init() {
   function check(count, prev = false){
     if (mapImageTiles[bear.pos].dataset.event) { //* checking static object
       const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
-      const eventPoint = mapData[mapIndex].eventContents[index]
+      const eventPoint = mapData[mapKey].eventContents[index]
       if (bear.facingDirection === eventPoint.direction) displayText(count,eventPoint,prev)
       return
     }
     talk(prev)
   }
 
-  function transport(index){
+  function transport(key){
     transition()
 
     mapImage.classList.add('transition')
     setTimeout(()=>{
       mapImage.classList.remove('transition')
     },400)
-    const entryPoint = mapData[mapIndex].entry[index]
+    const entryPoint = mapData[mapKey].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
     
     // console.log('entryPoint', entryPoint)
