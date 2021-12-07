@@ -230,9 +230,9 @@ function init() {
       iWidth: 30,
       iHeight: 20,
       characters: [
-        '155_bunny_0_hello',
-        '156_bunny_0_apple',
-        '309_bunny_0_tomato'
+        { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello' },
+        { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple' },
+        { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato' },
       ],
       events: {
         5: { event: transport, gateway: 'portal3'},
@@ -253,21 +253,46 @@ function init() {
           ]
         },
         // TODO could this be refactored somehow?
+        // apple: {
+        //   text: [
+        //     'how are you?#q1',
+        //     'yeah!/really?#yesNo',
+        //     'cool!/ /whatever'
+        //   ],
+        //   q1: [
+        //     'okay',
+        //     'not so good'
+        //   ],
+        //   yesNo: [
+        //     'yes',
+        //     'no',
+        //     'maybe'
+        //   ]
+        // }
         apple: {
-          text: [
-            'how are you?#q1',
-            'yeah!/really?#yesNo',
-            'cool!/ /whatever'
-          ],
-          q1: [
-            'okay',
-            'not so good'
-          ],
-          yesNo: [
-            'yes',
-            'no',
-            'maybe'
-          ]
+          dialogue:{ 
+              text:['how are you?', 'test'], 
+              choice: {
+                'okay': 's_1',
+                'not so good': 's_2'
+              }
+            },
+          s_1: {
+            text: ['yeah!'], 
+              choice: {
+                'yes': 's_3',
+                'no': 's_4'
+              }
+            },
+          s_2: {
+            text: ['really?'], 
+              choice: {
+                'yes': 's_3',
+                'no': 's_4'
+              }
+            },
+          s_3: { text: ['cool!','cool two'] },
+          s_4: { text: ['whatever'] }    
         }
       },
       entry: {
@@ -309,7 +334,7 @@ function init() {
       iWidth: 40,
       iHeight: 30,
       characters: [
-        '779_bunny_0_hello'
+        { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello' },
       ],
       events: {
         1178: { event: transport, gateway: 'portal1'},
@@ -332,9 +357,9 @@ function init() {
       iWidth: 18,
       iHeight: 14,
       characters: [
-        '135_bunny_9_hello',
-        '101_bunny_6_hello',
-        '165_bunny_3_hello'
+        { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello' },
+        { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello' },
+        { pos: 165, avatar: 'bunny', spritePos: 3, event: 'hello' },
       ],
       events: {
         241: { event: transport, gateway: 'portal1'},
@@ -372,9 +397,6 @@ function init() {
     four: {
       iWidth: 20,
       iHeight: 10,
-      // characters: [
-      //   '135_bunny_9_hello',
-      // ],
       events: {
         80: { event: transport, gateway: 'portal5'},
         100: { event: transport, gateway: 'portal5'},
@@ -392,9 +414,6 @@ function init() {
       name: 'house_one_0',
       iWidth: 12,
       iHeight: 9,
-      // characters: [
-      //   '135_bunny_9_hello',
-      // ],
       events: {
         74: { event: transport, gateway: 'portal8'},
         91: { event: transport, gateway: 'portal9'},
@@ -627,7 +646,7 @@ function init() {
     mapImage.style[dir] = `${num}px`
   }
 
-  const setSpritePos = (num,actor,sprite) =>{
+  const setSpritePos = (num, actor, sprite) =>{
     actor.spritePos = num
     sprite.style.marginLeft = `${num}px`
   }
@@ -643,19 +662,17 @@ function init() {
     if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
     spawnData.length = 0
 
-    if (!mapData[mapKey].characters) return
-
-    mapData[mapKey].characters.forEach((c, i)=>{
-      const pos = +c.split('_')[0]
+    mapData[mapKey].characters?.forEach((c, i)=>{
+      const { pos, avatar, spritePos, event } = c
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
       spawnData[i] = {
         interval: null,
-        spritePos: +c.split('_')[2],
-        event: c.split('_')[3],
         left: sx,
         top: sy,
         animationTimer: ['',''],
+        spritePos,
+        event,
         pos
       }
 
@@ -668,7 +685,7 @@ function init() {
       const sprite = () =>{
         return `
         <svg class="sprite" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 112 16" style="height: ${cellD}px; width: ${cellD * 7}px;">
-          ${decode(avatars[c.split('_')[1]].sprite)}
+          ${decode(avatars[avatar].sprite)}
         </svg>  
         `
       }
@@ -682,7 +699,7 @@ function init() {
       mapImage.appendChild(spawnContainer)    
       spawnData[i].interval = setInterval(()=>{
         spawnMotion(spawnContainer, i)
-      }, avatars[c.split('_')[1]].speed)
+      }, avatars[avatar].speed)
     })
 
     sprites = document.querySelectorAll('.sprite')
@@ -715,6 +732,7 @@ function init() {
   }
 
   const talk = prev => {
+    console.log('talk')
     const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
     const talkTarget = spawnData.find(actor => actor.pos === bear.pos + key[bear.facingDirection])
     if (talkTarget) {
@@ -722,29 +740,45 @@ function init() {
       talkTarget.pause = true
       const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
       turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
-      displayText(bear.textCount, mapData[mapKey].eventContents[talkTarget.event], prev)
+      
+      // TODO if this is always 'dialogue', conversation will reset
+      displayText(bear.textCount, mapData[mapKey].eventContents[talkTarget.event], 'dialogue', prev)
     } 
   }
   
   // displays multiple choice
-  const displayAnswer = (q,prev) =>{ 
+  const displayAnswer = (event, key, prev) =>{ 
+    const eventPoint = event[key]
     bear.pause = true
     bear.choice = prev ? bear.prevChoices[bear.textCount - 1] : 0 
-    texts[1].innerHTML = q.map((qu,i)=>`<div class="option ${i === bear.choice && 'selected'}">${qu}</div>`).join('')
+    texts[1].innerHTML = Object.keys(eventPoint.choice).map((qu, i)=>{
+      return `
+        <div class="option ${i === bear.choice && 'selected'}">
+          ${qu}
+        </div>`
+    }).join('')
     
     // makes multiple choice clickable
     bear.options = document.querySelectorAll('.option')
-    bear.options.forEach((op,i)=>{
-      op.addEventListener('click',()=>{
-        bear.options.forEach(op=>op.classList.remove('selected'))
+    bear.options.forEach((op, i)=>{
+      op.addEventListener('click',(e)=>{
+        bear.options.forEach(op => op.classList.remove('selected'))
         op.classList.add('selected')
         bear.choice = i
+    
+        // console.log('test', event[eventPoint.choice[e.target.innerText]])
+        console.log('count', bear.textCount, event)
+        // bear.textCount = 0
+        const choiceText = e.target.innerText
+        clearText()
+        displayText(bear.textCount, event, eventPoint.choice[choiceText], prev)
+        console.log('end')
       })
     })
   }
 
-  const displayTextGradual = (t,i) =>{
-    texts[0].innerHTML = t.slice(0,i)
+  const displayTextGradual = (t, i) =>{
+    texts[0].innerHTML = t.slice(0, i)
     if (i < t.length) {
       setTimeout(()=>{
         displayTextGradual(t, i + 1)
@@ -753,28 +787,46 @@ function init() {
   }
 
   const clearText = () =>{
+    console.log('clear text')
     bear.textCount = 0
     bear.prevChoices.length = 0
     bear.motion = true
     bear.pause = false
-    texts.forEach(t=>t.innerText = '')
+    texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
   }
 
-  const displayText = (count,eventPoint,prev) =>{
+  const displayText = (count, event, key, prev) =>{
+    const eventPoint = event[key]
+    console.log('check one', eventPoint)
     if (count < eventPoint.text.length){
-      
+      console.log('check two')
       // displays text and answer
-      const text = eventPoint.text[count].split('/')[prev ? bear.prevChoices[bear.textCount - 1] : bear.choice] || eventPoint.text[count]
+      const text = eventPoint.text[count]
+
       bear.textCount++
       bear.motion = false
-      if (text.includes('#')) {
-        displayTextGradual(text.split('#')[0], 0)
-        displayAnswer(eventPoint[text.split('#')[1]], prev)
-      } else if (text !== ' ') {
-        displayTextGradual(text, 0) 
+      displayTextGradual(text, 0)
+      if (eventPoint.choice && count === eventPoint.text.length - 1) {
+        displayAnswer(event, key, prev)
       } 
+      if (eventPoint.art) transitionCover.innerHTML = `
+      <div>
+        <img src=${eventPoint.art} />
+      </div>
+    `
+      return
+    }
+    clearText()
+  }
 
+  const investigate = (count, eventPoint) =>{
+    if (count < eventPoint.text.length){
+      // displays text and answer
+      const text = eventPoint.text[count]
+      bear.textCount++
+      bear.motion = false
+      displayTextGradual(text, 0)
       if (eventPoint.art) transitionCover.innerHTML = `
         <div>
           <img src=${eventPoint.art} />
@@ -787,12 +839,16 @@ function init() {
 
 
   function check(count, prev = false){
+    console.log('check')
     const event = mapData[mapKey].events[bear.pos]
     if (event) {
       console.log('test check', event)
       const eventPoint = mapData[mapKey].eventContents[event.index]
-      if (eventPoint && bear.facingDirection === eventPoint.direction) displayText(count, eventPoint, prev)
-      return
+      if (eventPoint && bear.facingDirection === eventPoint.direction) {
+        // displayText(count, event, false)
+        investigate(count, eventPoint)
+        return
+      }
     }
     talk(prev)
   }
