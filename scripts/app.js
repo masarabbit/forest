@@ -270,7 +270,7 @@ function init() {
         //   ]
         // }
         apple: {
-          dialogue:{ 
+          first:{ 
               text:['how are you?', 'test'], 
               choice: {
                 'okay': 's_1',
@@ -512,6 +512,9 @@ function init() {
     choice: 0,
     prevChoices: [], 
     animationTimer: [],
+    dialogue: {},
+    dialogueKey: '',
+    dialogueHistory: []
   }
 
   const directionKey = {
@@ -721,6 +724,7 @@ function init() {
   }
 
   const displayChoiceDetails = () =>{
+    // TODO update this to show other dialogue parameter.
     indicator.innerHTML = (   
       `
         <div>
@@ -731,7 +735,7 @@ function init() {
       ` )
   }
 
-  const talk = prev => {
+  const talk = () => {
     console.log('talk')
     const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
     const talkTarget = spawnData.find(actor => actor.pos === bear.pos + key[bear.facingDirection])
@@ -741,38 +745,51 @@ function init() {
       const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
       turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
       
-      // TODO if this is always 'dialogue', conversation will reset
-      displayText(bear.textCount, mapData[mapKey].eventContents[talkTarget.event], 'dialogue', prev)
+
+      if (!bear.dialogueKey) {
+        bear.dialogue = mapData[mapKey].eventContents[talkTarget.event]
+        bear.dialogueKey = 'first'
+      }
+
+      bear.dialogue[bear.dialogueKey].text.length !== bear.textCount
+        ? displayText(bear.textCount, false)
+        : clearText()
     } 
   }
   
+
+  
   // displays multiple choice
-  const displayAnswer = (event, key, prev) =>{ 
-    const eventPoint = event[key]
+  const displayAnswer = prev =>{ 
+    const eventPoint = bear.dialogue[bear.dialogueKey]
     bear.pause = true
     bear.choice = prev ? bear.prevChoices[bear.textCount - 1] : 0 
-    texts[1].innerHTML = Object.keys(eventPoint.choice).map((qu, i)=>{
+    bear.optionTexts = Object.keys(eventPoint.choice)
+    texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
       return `
         <div class="option ${i === bear.choice && 'selected'}">
           ${qu}
         </div>`
     }).join('')
+    //// console.log('display answer', bear)
     
     // makes multiple choice clickable
     bear.options = document.querySelectorAll('.option')
     bear.options.forEach((op, i)=>{
-      op.addEventListener('click',(e)=>{
+      op.addEventListener('click',()=>{
         bear.options.forEach(op => op.classList.remove('selected'))
         op.classList.add('selected')
-        bear.choice = i
-    
-        // console.log('test', event[eventPoint.choice[e.target.innerText]])
-        console.log('count', bear.textCount, event)
-        // bear.textCount = 0
-        const choiceText = e.target.innerText
+
         clearText()
-        displayText(bear.textCount, event, eventPoint.choice[choiceText], prev)
-        console.log('end')
+        bear.choice = i
+
+        bear.dialogueHistory.push(bear.dialogueKey)
+        bear.dialogueKey = eventPoint.choice[bear.optionTexts[i]]
+        displayText(bear.textCount, prev)
+        bear.prevChoices[bear.textCount - 1] = bear.choice
+        displayChoiceDetails()
+
+        //// console.log('end', bear)
       })
     })
   }
@@ -794,27 +811,25 @@ function init() {
     bear.pause = false
     texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
+    bear.dialogueHistory.length = 0
+    bear.dialogue = {}
+    bear.dialogueKey = ''
   }
 
-  const displayText = (count, event, key, prev) =>{
-    const eventPoint = event[key]
-    console.log('check one', eventPoint)
+  const displayText = (count, prev) =>{
+    const eventPoint = bear.dialogue[bear.dialogueKey]
+    //// console.log('check one', eventPoint)
     if (count < eventPoint.text.length){
       console.log('check two')
-      // displays text and answer
+      //// displays text and answer
       const text = eventPoint.text[count]
 
       bear.textCount++
       bear.motion = false
       displayTextGradual(text, 0)
       if (eventPoint.choice && count === eventPoint.text.length - 1) {
-        displayAnswer(event, key, prev)
+        displayAnswer(prev)
       } 
-      if (eventPoint.art) transitionCover.innerHTML = `
-      <div>
-        <img src=${eventPoint.art} />
-      </div>
-    `
       return
     }
     clearText()
@@ -838,19 +853,19 @@ function init() {
   }
 
 
-  function check(count, prev = false){
-    console.log('check')
+  function check(count){
+    //// console.log('check')
     const event = mapData[mapKey].events[bear.pos]
     if (event) {
-      console.log('test check', event)
+      //// console.log('test check', event)
       const eventPoint = mapData[mapKey].eventContents[event.index]
       if (eventPoint && bear.facingDirection === eventPoint.direction) {
-        // displayText(count, event, false)
         investigate(count, eventPoint)
         return
       }
     }
-    talk(prev)
+    //// console.log('pre talk', bear)
+    talk()
   }
 
   function transport(key){
@@ -861,7 +876,6 @@ function init() {
     const entryPoint = mapData[mapKey].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
     
-    // console.log('entryPoint', entryPoint)
     noWallList = entryPoint.noWall || ['b','do']
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
@@ -904,40 +918,43 @@ function init() {
     setSpritePos(m,actor,sprite)
   }
 
-  const spriteWalk = (e, actor, sprite, spawn = false) =>{
+  const spriteWalk = (dir, actor, sprite, spawn = false) =>{
     // when spawn is true, this function is used by spawn
-    const { x, y } = mapXY
 
-    if (!e || !bear.motion) return
+    if (!dir || !bear.motion) return
     if (!spawn) locationTiles[actor.pos].classList.remove('mark')
-    const direction = e
+    const { x, y } = mapXY
 
     // prevents bear from turning away from ladder
     mapImageTiles[bear.pos].classList.contains('la') || 
     (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
-    && direction === 'down')
+    && dir === 'down')
       ? turnSprite('up', actor, sprite, true)
-      : turnSprite(direction, actor, sprite, true)
+      : turnSprite(dir, actor, sprite, true)
       
-    switch (direction) {
-      case 'right': if (noWall(actor.pos + 1)){
-        spawn ? spawnWalk(actor, 'left', cellD, spawn) : setPos('x', x - cellD, 'left')
-        actor.pos += 1 
-      } break
-      case 'left': if (noWall(actor.pos - 1)){
-        spawn ? spawnWalk(actor, 'left', -cellD, spawn) : setPos('x', x + cellD, 'left')
-        actor.pos -= 1 
-      } break
-      case 'up': if (noWall(actor.pos - iWidth)){
-        spawn ? spawnWalk(actor, 'top', -cellD, spawn) : setPos('y', y + cellD, 'top')
-        actor.pos -= iWidth 
-      } break
-      case 'down': if (noWall(actor.pos + iWidth)){
-        spawn ? spawnWalk(actor, 'top', cellD, spawn) : setPos('y', y - cellD, 'top')
-        actor.pos += iWidth 
-      } break
-      default: console.log('invalid command')
-        return
+    if (dir === 'right' && noWall(actor.pos + 1)) {
+      spawn 
+        ? spawnWalk(actor, 'left', cellD, spawn) 
+        : setPos('x', x - cellD, 'left')
+      actor.pos += 1 
+    }
+    if (dir === 'left' && noWall(actor.pos - 1)) {
+      spawn 
+        ? spawnWalk(actor, 'left', -cellD, spawn) 
+        : setPos('x', x + cellD, 'left')
+      actor.pos -= 1 
+    }
+    if (dir === 'up' && noWall(actor.pos - iWidth)) {
+      spawn 
+        ? spawnWalk(actor, 'top', -cellD, spawn) 
+        : setPos('y', y + cellD, 'top')
+      actor.pos -= iWidth 
+    }
+    if (dir === 'down' && noWall(actor.pos + iWidth)) {
+      spawn 
+        ? spawnWalk(actor, 'top', cellD, spawn) 
+        : setPos('y', y - cellD, 'top')
+      actor.pos += iWidth 
     }
       
     if (!spawn) locationTiles[actor.pos].classList.add('mark')
@@ -953,23 +970,59 @@ function init() {
   }
 
   const select = () =>{
-    // bear.textCount++
+    console.log('select', bear)
     texts[1].innerHTML = ''
     bear.pause = false
     bear.prevChoices[bear.textCount - 1] = bear.choice
-    check(bear.textCount)
+    
+    bear.textCount = 0
+    const eventPoint = bear.dialogue[bear.dialogueKey]
+    bear.dialogueHistory.push(bear.dialogueKey)
+    bear.dialogueKey = eventPoint.choice[bear.optionTexts[bear.choice]]
+    displayText(bear.textCount, false)
+
   }
 
   const prevText = () =>{
-    if (bear.textCount > 1) {
+
+    console.log('prev text', bear)
+    console.log('text count', bear.textCount)
+    console.log('length', bear.dialogue[bear.dialogueKey].text.length)
+    
+    // TODO need to work out how to judge when to go back within same dialogue, and when to go back to previous dialogue 
+    // if (bear.textCount === bear.dialogue[bear.dialogueKey].text.length) {
+    //   bear.textCount--
+    // } else 
+    
+    if ( bear.dialogue[bear.dialogueKey].text.length !== bear.textCount) {
+      if (bear.dialogueHistory.length) bear.dialogueKey = bear.dialogueHistory.pop()
+      const previousDialogue = bear.dialogue[bear.dialogueKey].text
+      // bear.dialogueKey = eventPoint.choice[bear.optionTexts[bear.choice]]
       texts[1].innerHTML = ''
-      // needs to be minus 2, because textCount would be incremented by then
-      bear.textCount = bear.textCount - 2 
-      bear.pause = false
-      check(bear.textCount,true)
-    } else {
-      clearText()
+      console.log('prev dialogue', previousDialogue.length - 1)
+      bear.textCount = previousDialogue.length - 1
+    } 
+    else {
+      console.log('else', bear.textCount)
+      bear.textCount --
+      console.log('else', bear.textCount)
     }
+    
+    displayText(bear.textCount, false)
+
+
+    // if (bear.textCount > 1) {
+    //   texts[1].innerHTML = ''
+    //   // needs to be minus 2, because textCount would be incremented by then
+
+    //   bear.textCount = bear.textCount - 2 
+    //   bear.pause = false
+    //   check(bear.textCount,true)
+    //   console.log('prev text', bear)
+
+    // } else {
+    //   clearText()
+    // }
   }
   
 
@@ -978,15 +1031,10 @@ function init() {
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
     if (bear.pause) {
       bear.options.forEach(option=>option.classList.remove('selected'))
-      switch (key) {
-        case 'up': if (bear.choice > 0) bear.choice--; break
-        case 'down': if (bear.choice < bear.options.length - 1) bear.choice++; break
-        case ' ': select(); break   
-        case 'enter': select(); break   
-        case 'right': select(); break 
-        case 'left' : prevText(); break
-        default: console.log('invalid command')
-      }
+      if (key === 'up' && bear.choice > 0) bear.choice--
+      if (key === 'down' && bear.choice < bear.options.length - 1) bear.choice++
+      if ([' ', 'enter', 'right'].some(k => k === key)) select()
+      if (key === 'left') prevText()
       displayChoiceDetails()
       bear.options[bear.choice].classList.add('selected')
       return

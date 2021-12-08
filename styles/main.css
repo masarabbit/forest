@@ -307,6 +307,7 @@ a:hover {
 .text {
   color: white;
   transition: 0.4s;
+  /* border: pink 1px solid; */
 }
 
 .text_display {
