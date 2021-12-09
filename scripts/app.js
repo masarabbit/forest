@@ -5,6 +5,7 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
+//! change when the map is updated (currently updates too early)
 
 
 function init() {
@@ -245,36 +246,17 @@ function init() {
       },
       map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nr1,sr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,sl1,p1,nr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,sl1,p1,sr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
       eventContents: {
-        hello: { text: ['hello!'] },
+        hello: { first:{ text:['hello!'], }, },
         tomato: {
-          text: [
-            'hello!',
-            'yeah!'
-          ]
+          first:{ text:['hello!', 'test'], },
         },
-        // TODO could this be refactored somehow?
-        // apple: {
-        //   text: [
-        //     'how are you?#q1',
-        //     'yeah!/really?#yesNo',
-        //     'cool!/ /whatever'
-        //   ],
-        //   q1: [
-        //     'okay',
-        //     'not so good'
-        //   ],
-        //   yesNo: [
-        //     'yes',
-        //     'no',
-        //     'maybe'
-        //   ]
-        // }
         apple: {
           first:{ 
               text:['how are you?', 'test'], 
               choice: {
                 'okay': 's_1',
-                'not so good': 's_2'
+                'not so good': 's_2',
+                'banana' : 'banana'
               }
             },
           s_1: {
@@ -292,7 +274,8 @@ function init() {
               }
             },
           s_3: { text: ['cool!','cool two'] },
-          s_4: { text: ['whatever'] }    
+          s_4: { text: ['whatever'] },  
+          banana: { text: ['banana!', 'bananananana!'] }  
         }
       },
       entry: {
@@ -370,7 +353,7 @@ function init() {
       },
       map: 'v19,w16,v2,w1,b1,o3,b6,o3,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o3,b6,o3,b1,w1,v2,w6,b3,w7,v8,b3,v8',
       eventContents: {
-        hello: { text: ['hello!'] },
+        hello: { first:{ text:['hello!'], }, },
         tree1: {
           text: [
             'hello! I\'m a tree!',
@@ -510,10 +493,11 @@ function init() {
     pause: false,
     option: 0,
     choice: 0,
-    prevChoices: [], 
+    prevChoices: {}, 
     animationTimer: [],
+    // could this be renamed to something else?
     dialogue: {},
-    dialogueKey: '',
+    dialogueKey: null,
     dialogueHistory: []
   }
 
@@ -599,7 +583,7 @@ function init() {
       decode(subColor ? animation(subColor) : animation()),
       color ? colorAction : '',
       rotate ? rotate : 0,
-      flip ? flip : null,
+      flip,
       'svg_anim_wrap' 
     )}`
     : ''
@@ -608,7 +592,7 @@ function init() {
     decode(subColor ? svg(subColor) : svg()),
     color ? colorAction : '',
     rotate ? rotate : 0,
-    flip ? flip : null,
+    flip,
     'svg_wrap' 
   )}  
       `
@@ -724,7 +708,6 @@ function init() {
   }
 
   const displayChoiceDetails = () =>{
-    // TODO update this to show other dialogue parameter.
     indicator.innerHTML = (   
       `
         <div>
@@ -736,16 +719,16 @@ function init() {
   }
 
   const talk = () => {
-    console.log('talk')
     const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
-    const talkTarget = spawnData.find(actor => actor.pos === bear.pos + key[bear.facingDirection])
-    if (talkTarget) {
-      const talkTargetIndex = spawnData.findIndex(actor => actor.pos === bear.pos + key[bear.facingDirection])
+    const targetDirection = key[bear.facingDirection]
+    const talkTargetIndex = spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)
+  
+    if (talkTargetIndex !== -1) {
+      const talkTarget = spawnData[talkTargetIndex]
       talkTarget.pause = true
-      const opposite = Object.keys(key).find(k => key[k] === key[bear.facingDirection] * -1)
+      const opposite = Object.keys(key).find(k => key[k] === targetDirection * -1)
       turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
       
-
       if (!bear.dialogueKey) {
         bear.dialogue = mapData[mapKey].eventContents[talkTarget.event]
         bear.dialogueKey = 'first'
@@ -763,7 +746,7 @@ function init() {
   const displayAnswer = prev =>{ 
     const eventPoint = bear.dialogue[bear.dialogueKey]
     bear.pause = true
-    bear.choice = prev ? bear.prevChoices[bear.textCount - 1] : 0 
+    bear.choice = prev ? bear.prevChoices[bear.dialogueKey] : 0 
     bear.optionTexts = Object.keys(eventPoint.choice)
     texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
       return `
@@ -771,7 +754,6 @@ function init() {
           ${qu}
         </div>`
     }).join('')
-    //// console.log('display answer', bear)
     
     // makes multiple choice clickable
     bear.options = document.querySelectorAll('.option')
@@ -780,16 +762,8 @@ function init() {
         bear.options.forEach(op => op.classList.remove('selected'))
         op.classList.add('selected')
 
-        clearText()
         bear.choice = i
-
-        bear.dialogueHistory.push(bear.dialogueKey)
-        bear.dialogueKey = eventPoint.choice[bear.optionTexts[i]]
-        displayText(bear.textCount, prev)
-        bear.prevChoices[bear.textCount - 1] = bear.choice
-        displayChoiceDetails()
-
-        //// console.log('end', bear)
+        select()
       })
     })
   }
@@ -804,24 +778,22 @@ function init() {
   }
 
   const clearText = () =>{
-    console.log('clear text')
     bear.textCount = 0
-    bear.prevChoices.length = 0
+    bear.prevChoices = {}
     bear.motion = true
     bear.pause = false
-    texts.forEach(t => t.innerText = '')
-    transitionCover.innerHTML = ''
     bear.dialogueHistory.length = 0
     bear.dialogue = {}
-    bear.dialogueKey = ''
+    bear.dialogueKey = null
+
+    texts.forEach(t => t.innerText = '')
+    transitionCover.innerHTML = ''
   }
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialogue[bear.dialogueKey]
-    //// console.log('check one', eventPoint)
+
     if (count < eventPoint.text.length){
-      console.log('check two')
-      //// displays text and answer
       const text = eventPoint.text[count]
 
       bear.textCount++
@@ -854,17 +826,14 @@ function init() {
 
 
   function check(count){
-    //// console.log('check')
     const event = mapData[mapKey].events[bear.pos]
     if (event) {
-      //// console.log('test check', event)
       const eventPoint = mapData[mapKey].eventContents[event.index]
       if (eventPoint && bear.facingDirection === eventPoint.direction) {
         investigate(count, eventPoint)
         return
       }
     }
-    //// console.log('pre talk', bear)
     talk()
   }
 
@@ -933,27 +902,19 @@ function init() {
       : turnSprite(dir, actor, sprite, true)
       
     if (dir === 'right' && noWall(actor.pos + 1)) {
-      spawn 
-        ? spawnWalk(actor, 'left', cellD, spawn) 
-        : setPos('x', x - cellD, 'left')
+      spawn ? spawnWalk(actor, 'left', cellD, spawn) : setPos('x', x - cellD, 'left')
       actor.pos += 1 
     }
     if (dir === 'left' && noWall(actor.pos - 1)) {
-      spawn 
-        ? spawnWalk(actor, 'left', -cellD, spawn) 
-        : setPos('x', x + cellD, 'left')
+      spawn ? spawnWalk(actor, 'left', -cellD, spawn) : setPos('x', x + cellD, 'left')
       actor.pos -= 1 
     }
     if (dir === 'up' && noWall(actor.pos - iWidth)) {
-      spawn 
-        ? spawnWalk(actor, 'top', -cellD, spawn) 
-        : setPos('y', y + cellD, 'top')
+      spawn ? spawnWalk(actor, 'top', -cellD, spawn) : setPos('y', y + cellD, 'top')
       actor.pos -= iWidth 
     }
     if (dir === 'down' && noWall(actor.pos + iWidth)) {
-      spawn 
-        ? spawnWalk(actor, 'top', cellD, spawn) 
-        : setPos('y', y - cellD, 'top')
+      spawn ? spawnWalk(actor, 'top', cellD, spawn) : setPos('y', y - cellD, 'top')
       actor.pos += iWidth 
     }
       
@@ -970,63 +931,39 @@ function init() {
   }
 
   const select = () =>{
-    console.log('select', bear)
     texts[1].innerHTML = ''
     bear.pause = false
-    bear.prevChoices[bear.textCount - 1] = bear.choice
+    bear.prevChoices[bear.dialogueKey] = bear.choice
     
     bear.textCount = 0
     const eventPoint = bear.dialogue[bear.dialogueKey]
     bear.dialogueHistory.push(bear.dialogueKey)
     bear.dialogueKey = eventPoint.choice[bear.optionTexts[bear.choice]]
     displayText(bear.textCount, false)
-
   }
 
   const prevText = () =>{
-
-    console.log('prev text', bear)
-    console.log('text count', bear.textCount)
-    console.log('length', bear.dialogue[bear.dialogueKey].text.length)
+    const { dialogue, dialogueKey, dialogueHistory } = bear
+    const currentDialogueLength = dialogue[dialogueKey].text.length
     
-    // TODO need to work out how to judge when to go back within same dialogue, and when to go back to previous dialogue 
-    // if (bear.textCount === bear.dialogue[bear.dialogueKey].text.length) {
-    //   bear.textCount--
-    // } else 
-    
-    if ( bear.dialogue[bear.dialogueKey].text.length !== bear.textCount) {
-      if (bear.dialogueHistory.length) bear.dialogueKey = bear.dialogueHistory.pop()
-      const previousDialogue = bear.dialogue[bear.dialogueKey].text
-      // bear.dialogueKey = eventPoint.choice[bear.optionTexts[bear.choice]]
-      texts[1].innerHTML = ''
-      console.log('prev dialogue', previousDialogue.length - 1)
+    if (!dialogueHistory.length && bear.textCount === 1) {
+      // if beginning of dialogue, end conversation
+      clearText()
+      return
+    } else if ( currentDialogueLength === 1 || (currentDialogueLength > 1 && bear.textCount === 1)) {
+      // return to previous dialogue
+      bear.dialogueKey = bear.dialogueHistory.pop()
+      const previousDialogue = dialogue[bear.dialogueKey].text
       bear.textCount = previousDialogue.length - 1
-    } 
-    else {
-      console.log('else', bear.textCount)
-      bear.textCount --
-      console.log('else', bear.textCount)
+    } else {
+      // return within same dialogue
+      bear.textCount -= 2
     }
-    
-    displayText(bear.textCount, false)
-
-
-    // if (bear.textCount > 1) {
-    //   texts[1].innerHTML = ''
-    //   // needs to be minus 2, because textCount would be incremented by then
-
-    //   bear.textCount = bear.textCount - 2 
-    //   bear.pause = false
-    //   check(bear.textCount,true)
-    //   console.log('prev text', bear)
-
-    // } else {
-    //   clearText()
-    // }
+    texts[1].innerHTML = ''
+    displayText(bear.textCount, true)
   }
   
 
-  //! need external index handler if there are more than one choice for answer.
   const handleKeyAction = e =>{
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
     if (bear.pause) {
