@@ -495,7 +495,7 @@ function init() {
     choice: 0,
     prevChoices: {}, 
     animationTimer: [],
-    // could this be renamed to something else?
+    //? could this be renamed to something else?
     dialogue: {},
     dialogueKey: null,
     dialogueHistory: []
@@ -931,13 +931,14 @@ function init() {
   }
 
   const select = () =>{
+    const { dialogueKey } = bear
     texts[1].innerHTML = ''
     bear.pause = false
-    bear.prevChoices[bear.dialogueKey] = bear.choice
+    bear.prevChoices[dialogueKey] = bear.choice
     
     bear.textCount = 0
-    const eventPoint = bear.dialogue[bear.dialogueKey]
-    bear.dialogueHistory.push(bear.dialogueKey)
+    const eventPoint = bear.dialogue[dialogueKey]
+    bear.dialogueHistory.push(dialogueKey)
     bear.dialogueKey = eventPoint.choice[bear.optionTexts[bear.choice]]
     displayText(bear.textCount, false)
   }
