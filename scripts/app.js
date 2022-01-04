@@ -38,12 +38,23 @@ function init() {
     return output
   }
 
-  const svgWrapper = (content, color, rotate, flip, wrapper ) =>{
+  // const svgWrapper = ( content, color, rotate, flip, wrapper ) =>{
+  //   let scale = 1
+  //   if (flip === 'h') scale = '-1, 1'
+  //   if (flip === 'v') scale = '1, -1'
+  //   return `
+  //     <div class="${wrapper}" style="transform: rotate(${rotate}deg) scale(${scale});">
+  //       <svg x="0px" y="0px" width="100%" height="200%" viewBox="0 0 16 32" fill="${color ? color : 'black'}">${content}</svg>
+  //     </div>
+  //     `
+  // }
+
+  const svgWrapper = ( { content, color, rotate, flip, wrapper }) =>{
     let scale = 1
     if (flip === 'h') scale = '-1, 1'
     if (flip === 'v') scale = '1, -1'
     return `
-      <div class="${wrapper}" style="transform: rotate(${rotate}deg) scale(${scale});">
+      <div class="${wrapper}" style="transform: rotate(${rotate || 0}deg) scale(${scale});">
         <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${color ? color : 'black'}">${content}</svg>
       </div>
       `
@@ -75,8 +86,11 @@ function init() {
   //   return `rgb(${r()},${g()},${b()})`
   // }
 
+
   const tree = () =>{
-    return 'D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/'
+    // return 'D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/'
+    return '<path fill="#3ddbbc" d="M 6 1 h 4 v 1 h 1 v 1 h 1 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -2"/> <path fill="#239f86" d="M 5 2 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="#185463" d="M 3 8 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -2 v 1 h -2 v -1 h -4 v -1 h -1 v -4"/> <path fill="#2e114b" d="M 6 13 h 2 v 1 h 2 v 2 h -4 v -3"/>'
+    // return `<path fill="#51c8e6" d="M 6 5 h 4 v 1 h 1 v 1 h 1 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -2"/> <path fill="#2fa4c1" d="M 5 6 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="#247589" d="M 3 12 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -1 v 2 h -3 v -1 h -3 v -1 h -1 v -1 h -1 v -4"/> <path fill="#239f86" d="M 5 18 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="#3ddbbc" d="M 6 18 h 2 v 1 h 4 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -1"/> <path fill="#185463" d="M 3 24 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -2 v 1 h -2 v -1 h -4 v -1 h -1 v -4"/> <path fill="#2e114b" d="M 6 29 h 2 v 1 h 2 v 2 h -4 v -3"/>`
   }
 
   const flowers = () =>{
@@ -580,20 +594,24 @@ function init() {
       const svgContent = `
       ${animation 
     ? `${svgWrapper(
-      decode(subColor ? animation(subColor) : animation()),
-      color ? colorAction : '',
-      rotate ? rotate : 0,
+      {
+      content: decode(subColor ? animation(subColor) : animation()),
+      color: color ? colorAction : '',
+      rotate,
       flip,
-      'svg_anim_wrap' 
+      wrapper: 'svg_anim_wrap', 
+      }
     )}`
     : ''
 }
           ${svgWrapper(
-    decode(subColor ? svg(subColor) : svg()),
-    color ? colorAction : '',
-    rotate ? rotate : 0,
+    {
+    content: decode(subColor ? svg(subColor) : svg()),
+    color: color ? colorAction : '',
+    rotate,
     flip,
-    'svg_wrap' 
+    wrapper: 'svg_wrap',
+    }
   )}  
       `
       target.innerHTML = svgContent
