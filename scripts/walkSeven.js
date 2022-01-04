@@ -802,7 +802,10 @@ function init() {
 
   function check(count, prev = false){
     if (mapImageTiles[bear.pos].dataset.event) { //* checking static object
-      const index = mapImageTiles[bear.pos].dataset.event.split('-')[1]
+      const index = mapImageTiles[bear.pos].dataset.event.split('-')[1] // TODO can be simplified?
+
+      console.log('index', index)
+
       const eventPoint = mapData[mapKey].eventContents[index]
       if (bear.facingDirection === eventPoint.direction) displayText(count, eventPoint, prev)
       return
