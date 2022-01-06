@@ -85,7 +85,22 @@ function init() {
   //   const b = ()=> Math.ceil(Math.random() * 100)
   //   return `rgb(${r()},${g()},${b()})`
   // }
+  
+  const treeOne = () =>{
+    return '<path fill="#3ddbbc" d="M 13 0 h 3 v 9 h -2 v -1 h -2 v -2 h -1 v -3 h -1 v -1 h 2 v -1 h 1 v -1"/> <path fill="#239f86" d="M 9 3 h 2 v 3 h 1 v 2 h 2 v 1 h 2 v 7 h -9 v -2 h -1 v -2 h -2 v -3 h 1 v -2 h 1 v -2 h 2 v -1 h 1 v -1"/> <path fill="#185463" d="M 3 12 h 3 v 2 h 1 v 2 h -6 v -1 h 1 v -1 h 1 v -2"/>'
+  }
 
+  const treeTwo = () =>{
+    return '<path fill="#3ddbbc" d="M 0 0 h 3 v 1 h 1 v 1 h 2 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 2 h -2 v 1 h -1 v 1 h -4 v -1 h -1 v -2 h -1 v 1 h -2 v -9"/> <path fill="#239f86" d="M 2 8 h 1 v 2 h 1 v 1 h 4 v -1 h 1 v -1 h 3 v 3 h 1 v 2 h 1 v 1 h 1 v 1 h -15 v -7 h 2 v -1"/>'
+  }
+
+  const treeThree = () =>{
+    return '<path fill="#185463" d="M 1 0 h 7 v 1 h 2 v 1 h 4 v -1 h 2 v 7 h -8 v -1 h -3 v -1 h -2 v -1 h -1 v -2 h -1 v -3"/> <path fill="#239f86" d="M 8 0 h 8 v 1 h -2 v 1 h -4 v -1 h -2 v -1"/> <path fill="#2e114b" d="M 11 8 h 3 v 4 h 2 v 3 h -4 v -1 h -1 v -1 h -1 v -1 h 1 v -4"/> <path fill="#542682" d="M 14 8 h 2 v 4 h -2 v -4"/> <path fill="#185463" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/>'
+  }
+
+  const treeFour = () =>{
+    return '<path fill="#239f86" d="M 0 0 h 1 v 1 h -1 v -1"/> <path fill="#185463" d="M 1 0 h 1 v 2 h 1 v 1 h 1 v 1 h 5 v -1 h 1 v -1 h 1 v -1 h 1 v 1 h 3 v 1 h -1 v 2 h -1 v 1 h -2 v 1 h -3 v 1 h -4 v 1 h -4 v -8 h 1 v -1"/> <path fill="#239f86" d="M 2 0 h 13 v 2 h -3 v -1 h -1 v 1 h -1 v 1 h -1 v 1 h -5 v -1 h -1 v -1 h -1 v -2"/> <path fill="#542682" d="M 4 8 h 1 v 4 h -1 v 1 h -4 v -4 h 4 v -1"/> <path fill="#185463" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="#2e114b" d="M 4 12 h 2 v 1 h -1 v 1 h -1 v 1 h -4 v -2 h 4 v -1"/>'
+  }
 
   const tree = () =>{
     // return 'D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/'
@@ -190,6 +205,10 @@ function init() {
   const main = '#74645a'
 
   const svgData = {
+    'ta': { svg: treeOne },
+    'tb': { svg: treeTwo },
+    'tc': { svg: treeThree },
+    'td': { svg: treeFour },
     't': { svg: tree, color: '#0d8799' },
     'w': { svg: tree, color: '#0d8799' },
     'o': { svg: flowers, color: randomColor },
@@ -362,10 +381,11 @@ function init() {
         241: { event: transport, gateway: 'portal1'},
         242: { event: transport, gateway: 'portal1'},
         243: { event: transport, gateway: 'portal1'},
-        44: { event: check, index: 'tree1'},
+        62: { event: check, index: 'tree1'},
         112: { event: check, index: 'bunny1'},
       },
-      map: 'v19,w16,v2,w1,b1,o3,b6,o3,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o3,b6,o3,b1,w1,v2,w6,b3,w7,v8,b3,v8',
+      // map: 'v19,w16,v2,w1,b1,o3,b6,o3,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b1,o1,b10,o1,b1,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b14,w1,v2,w1,b1,o3,b6,o3,b1,w1,v2,w6,b3,w7,v8,b3,v8',
+      map: 'v19,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,o1,b10,o1,ta1,tb1,v2,tc1,td1,o1,b6,ta1,tb1,b2,o1,tc1,td1,v2,ta1,tb1,o1,b6,tc1,td1,b2,o1,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,ta1,tb1,ta1,tb1,b2,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,b2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v8,b2,v9',
       eventContents: {
         hello: { first:{ text:['hello!'], }, },
         tree1: {
