@@ -521,7 +521,7 @@ function init() {
   let locationTiles
   let mapImageTiles
 
-  const animIntervals = []
+  let animInterval
 
   // gameplay related variables
   let mapKey = 'one'
@@ -634,33 +634,24 @@ function init() {
     } 
   }
 
-  // const animateCell = ({ index, target, start, frameNo, speed }) => {
-  //   const startFrame = start || 0
-  //   let i = startFrame
-  //   if (!animateCells[index]) return
-  //   setTimeout(()=> {
-  //     console.log('trigger', i >= frameNo, i, i + 1)
-  //     target.style.marginLeft = `${-(i * 100)}%`
-  //     const nextFrame =  i >= frameNo - 1
-  //       ? 0
-  //       : i + 1
-  //     animateCell( { index, target, start: nextFrame, frameNo, speed })       
-  //       // ? animateCell( { index, target, start: 0, frameNo, speed })
-  //       // : animateCell( { index, target, start: i + 1, frameNo, speed })
-  //   }, +speed || 200)
-  // }
 
-  const animateCell = ({ target, start, frameNo, speed }) => {
-    const startFrame = start || 0
-    let i = startFrame
-    const animInterval = setInterval(()=> {
-      console.log('anim', animInterval)
-      target.style.marginLeft = `${-(i * 100)}%`
-      i = i >= frameNo - 1
-        ? startFrame
-        : i + 1
-    }, speed || 200)
-    animIntervals.push(animInterval)
+  const animateCell = cells => {
+    animInterval = setInterval(()=> {
+      cells.forEach( cell =>{
+        const current =  cell.style.marginLeft.replace('%','') / -100
+        // console.log('anim', animInterval)
+        const next = current >= cell.dataset.frame_no - 1
+          ? 0
+          : current + 1
+        cell.style.marginLeft = `${-(next * 100)}%`  
+      })
+    }, 500)
+  }
+
+  const startCellAnimations = () =>{
+    clearInterval(animInterval)
+    const cells = document.querySelectorAll('.svg_anim')
+    animateCell(cells)
   }
 
   const setUpWalls = target =>{
@@ -670,26 +661,13 @@ function init() {
       tile.classList.add(letterCode)
 
       if (svgData[letterCode])  {
-        populateWithSvg(letterCode, tile) 
+        target !== locationTiles
+          ? populateWithSvg(letterCode, tile) 
+          : populateWithSvg(letterCode, tile) // TODO change this logic to change map appearance
       }
     })
   }
 
-  const startCellAnimations = () =>{
-    document.querySelectorAll('.svg_anim').forEach((cell, i)=>{
-      console.log('trigger animation')
-      // console.log(i)
-      // const animationInterval = null
-      // animateCells.push(animationInterval)
-      // animateCells[i] = true
-      animateCell({
-        target: cell, 
-        frameNo: cell.dataset.frame_no, 
-        speed: cell.dataset.speed
-      })
-    })
-  }
-  
   const spawnWalk = (actor, para, m, spawn) =>{
     actor[para] += m
     spawn.style[para] = `${actor[para]}px`
@@ -916,40 +894,26 @@ function init() {
   }
 
   function transport(key){
-    console.log('transport')
+    // console.log('transport')
     transition()
-
     mapImage.classList.add('transition')
-    setTimeout(()=> mapImage.classList.remove('transition'),400)
     const entryPoint = mapData[mapKey].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
-
-    console.log(animIntervals)
-    
-    // clear animation
-    animIntervals.forEach((animInterval)=>{
-      // console.log(animInterval)
-      clearInterval(animInterval)
-    })
-    animIntervals.length = 0
-    // let id = window.setInterval(function() {}, 0)
-    // while (id--) {
-    //   window.clearInterval(id)
-    // }  
-
-    console.log(animIntervals)
-
     
     noWallList = entryPoint.noWall || ['b','do']
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
     setUpWalls(mapImageTiles)
-    setUpWalls(locationTiles)
     turnSprite(bear.facingDirection, bear, sprite, false)
-    setTimeout(()=> turnSprite(entryPoint.direction, bear, sprite, false),150)
+    setTimeout(()=>turnSprite(entryPoint.direction, bear, sprite, false),150)
     spawnCharacter()
     startCellAnimations()
+
+    setTimeout(()=> {
+      mapImage.classList.remove('transition')
+      setUpWalls(locationTiles)
+    },400)
   }
   
 
