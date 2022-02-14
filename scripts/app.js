@@ -7,7 +7,8 @@
 
 //! change when the map is updated (currently updates too early)
 
-//TODO how to remove cleared intervals? animation keeps going after cell is removed.
+// TODO how to remove cleared intervals? animation keeps going after cell is removed.
+// TODO instead of having different interval for each cell animating, could have one big one controlling it (if same no of frames)
 
 
 function init() {
@@ -520,7 +521,7 @@ function init() {
   let locationTiles
   let mapImageTiles
 
-  const animateCells = []
+  const animIntervals = []
 
   // gameplay related variables
   let mapKey = 'one'
@@ -633,20 +634,33 @@ function init() {
     } 
   }
 
-  const animateCell = ({ index, target, start, frameNo, speed }) => {
+  // const animateCell = ({ index, target, start, frameNo, speed }) => {
+  //   const startFrame = start || 0
+  //   let i = startFrame
+  //   if (!animateCells[index]) return
+  //   setTimeout(()=> {
+  //     console.log('trigger', i >= frameNo, i, i + 1)
+  //     target.style.marginLeft = `${-(i * 100)}%`
+  //     const nextFrame =  i >= frameNo - 1
+  //       ? 0
+  //       : i + 1
+  //     animateCell( { index, target, start: nextFrame, frameNo, speed })       
+  //       // ? animateCell( { index, target, start: 0, frameNo, speed })
+  //       // : animateCell( { index, target, start: i + 1, frameNo, speed })
+  //   }, +speed || 200)
+  // }
+
+  const animateCell = ({ target, start, frameNo, speed }) => {
     const startFrame = start || 0
     let i = startFrame
-    if (!animateCells[index]) return
-    setTimeout(()=> {
-      console.log('trigger', i >= frameNo, i, i + 1)
+    const animInterval = setInterval(()=> {
+      console.log('anim', animInterval)
       target.style.marginLeft = `${-(i * 100)}%`
-      const nextFrame =  i >= frameNo - 1
-        ? 0
+      i = i >= frameNo - 1
+        ? startFrame
         : i + 1
-      animateCell( { index, target, start: nextFrame, frameNo, speed })       
-        // ? animateCell( { index, target, start: 0, frameNo, speed })
-        // : animateCell( { index, target, start: i + 1, frameNo, speed })
-    }, +speed || 200)
+    }, speed || 200)
+    animIntervals.push(animInterval)
   }
 
   const setUpWalls = target =>{
@@ -659,14 +673,16 @@ function init() {
         populateWithSvg(letterCode, tile) 
       }
     })
+  }
 
+  const startCellAnimations = () =>{
     document.querySelectorAll('.svg_anim').forEach((cell, i)=>{
+      console.log('trigger animation')
       // console.log(i)
       // const animationInterval = null
       // animateCells.push(animationInterval)
-      animateCells[i] = true
+      // animateCells[i] = true
       animateCell({
-        index: i,
         target: cell, 
         frameNo: cell.dataset.frame_no, 
         speed: cell.dataset.speed
@@ -900,6 +916,7 @@ function init() {
   }
 
   function transport(key){
+    console.log('transport')
     transition()
 
     mapImage.classList.add('transition')
@@ -907,15 +924,21 @@ function init() {
     const entryPoint = mapData[mapKey].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
 
-    // console.log(animateCells)
+    console.log(animIntervals)
     
-    // // clear animation
-    // document.querySelectorAll('.svg_anim').forEach((_cell, i)=>{
-    //   clearInterval(animateCells[i])
-    // })
+    // clear animation
+    animIntervals.forEach((animInterval)=>{
+      // console.log(animInterval)
+      clearInterval(animInterval)
+    })
+    animIntervals.length = 0
+    // let id = window.setInterval(function() {}, 0)
+    // while (id--) {
+    //   window.clearInterval(id)
+    // }  
 
-    // console.log(animateCells)
-    animateCells.length = 0
+    console.log(animIntervals)
+
     
     noWallList = entryPoint.noWall || ['b','do']
     setLocation(entryPoint.map)
@@ -926,6 +949,7 @@ function init() {
     turnSprite(bear.facingDirection, bear, sprite, false)
     setTimeout(()=> turnSprite(entryPoint.direction, bear, sprite, false),150)
     spawnCharacter()
+    startCellAnimations()
   }
   
 
