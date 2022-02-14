@@ -7,6 +7,8 @@
 
 //! change when the map is updated (currently updates too early)
 
+//TODO how to remove cleared intervals? animation keeps going after cell is removed.
+
 
 function init() {
   
@@ -38,24 +40,15 @@ function init() {
     return output
   }
 
-  // const svgWrapper = ( content, color, rotate, flip, wrapper ) =>{
-  //   let scale = 1
-  //   if (flip === 'h') scale = '-1, 1'
-  //   if (flip === 'v') scale = '1, -1'
-  //   return `
-  //     <div class="${wrapper}" style="transform: rotate(${rotate}deg) scale(${scale});">
-  //       <svg x="0px" y="0px" width="100%" height="200%" viewBox="0 0 16 32" fill="${color ? color : 'black'}">${content}</svg>
-  //     </div>
-  //     `
-  // }
-
-  const svgWrapper = ( { content, color, rotate, flip, wrapper }) =>{
+  const svgWrapper = ( {content, color, rotate, flip, wrapper, frameNo, speed} ) =>{
     let scale = 1
     if (flip === 'h') scale = '-1, 1'
     if (flip === 'v') scale = '1, -1'
     return `
-      <div class="${wrapper}" style="transform: rotate(${rotate || 0}deg) scale(${scale});">
-        <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 16 16" fill="${color ? color : 'black'}">${content}</svg>
+      <div class="${wrapper}" style="transform: rotate(${rotate}deg) scale(${scale}); ">
+        ${frameNo ? `<div class="svg_anim" style="width:${100 * (frameNo || 1)}%;" ${frameNo ? `data-frame_no="${frameNo}"` : ''}  ${speed ? `data-speed="${speed}"` : ''}>` : ''}
+        <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 ${16 * (frameNo || 1)} 16" fill="${color ? color : 'black'}">${content}</svg>
+        ${frameNo ? '</div>' : ''}
       </div>
       `
   }
@@ -189,29 +182,15 @@ function init() {
     const main = '#58d3d8'
     const sub = '#a2fcf0'
 
-    return `<path fill="${main}" d="M 0 0h2v7h2v-7h12v16hTv-7hTv7hN2vN6"/ <path fill="${sub}" d="M 2 0h2v7hTv-7"/ <path fill="${sub}" d="M 7 4h2v8hTv-8"/ <path fill="${sub}" d="M 12 9h2v7hTv-7"/`
-  }
-
-  const riverAnim = () =>{
-    const main = '#58d3d8'
-    const sub = '#a2fcf0'
-
-    return `<path fill="${main}" d="M 0 0h7v4h2v-4h7v16h-7v-5hTv5h-7vN6"/ <path fill="${sub}" d="M 7 0h2v4hTv-4"/ <path fill="${sub}" d="M 12 3h2v9hTv-9"/ <path fill="${sub}" d="M 2 4h2v9hTv-9"/ <path fill="${sub}" d="M 7 11h2v5hTv-5"/`
+    return `<path fill="${main}" d="M 0 0h2v7h2v-7h19v4h2v-4h7v16h-7v-5hTv5h-9v-7hTv7hN2vN6"/ <path fill="${sub}" d="M 2 0h2v7hTv-7"/ <path fill="${sub}" d="M 23 0h2v4hTv-4"/ <path fill="${sub}" d="M 28 3h2v9hTv-9"/ <path fill="${sub}" d="M 7 4h2v8hTv-8"/ <path fill="${sub}" d="M 18 4h2v9hTv-9"/ <path fill="${sub}" d="M 12 9h2v7hTv-7"/ <path fill="${sub}" d="M 23 11h2v5hTv-5"/`
+    // return `<path fill="#000" d="M 8 0 h 10 v 7 h 2 v -7 h 19 v 4 h 2 v -4 h 7 v 16 h -7 v -5 h -2 v 5 h -9 v -7 h -2 v 7 h -14 v -2 h 2 v -2 h -2 v 1 h -2 v 3 h -8 v -5 h 1 v -2 h -2 v 2 h -1 v 5 h -2 v -8 h 1 v -2 h 1 v -2 h 1 v -1 h 1 v -1 h 2 v -1 h 2 v -1"/> <path fill="#cccccc" d="M 18 0 h 2 v 7 h -2 v -7"/> <path fill="#cccccc" d="M 39 0 h 2 v 4 h -2 v -4"/> <path fill="#cccccc" d="M 13 2 h 3 v 2 h -3 v 1 h -4 v -2 h 4 v -1"/> <path fill="#cccccc" d="M 44 3 h 2 v 9 h -2 v -9"/> <path fill="#cccccc" d="M 23 4 h 2 v 8 h -2 v -8"/> <path fill="#cccccc" d="M 34 4 h 2 v 9 h -2 v -9"/> <path fill="#cccccc" d="M 10 7 h 3 v 2 h -3 v 1 h -1 v 1 h -2 v -2 h 1 v -1 h 2 v -1"/> <path fill="#cccccc" d="M 3 9 h 2 v 2 h -1 v 5 h -2 v -5 h 1 v -2"/> <path fill="#cccccc" d="M 28 9 h 2 v 7 h -2 v -7"/> <path fill="#cccccc" d="M 39 11 h 2 v 5 h -2 v -5"/> <path fill="#cccccc" d="M 14 12 h 2 v 2 h -2 v 2 h -2 v -3 h 2 v -1"/>`
   }
 
   const riverCurve = () =>{
     const main = '#58d3d8'
     const sub = '#a2fcf0'
-
-    return `<path fill="${main}" d="M 8 0h8v16h-7v-4h1vTh1vNh2vThTv1hNv1hNv1hNv2hNv4h-7v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 10 2h5v2h-5v1hTv1hNv1hTvTh2vNh1vNh2vN"/ <path fill="${sub}" d="M 11 7h2v2hTv1hNv2hNv4hTv-4h1vTh1vNh1vNh1vN"/`
-  }
-
-  const riverCurveAnim = () =>{
-    const main = '#58d3d8'
-    const sub = '#a2fcf0'
-
-    return `<path fill="${main}" d="M 8 0h8v2h-3v1h-4v2h4vNh3v8hTv1hTv3h-8v-5h1vThTv2hNv5hTv-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 13 2h3v2h-3v1h-4vTh4vN"/ <path fill="${sub}" d="M 10 7h3v2h-3v1hNv1hTvTh1vNh2vN"/ <path fill="${sub}" d="M 3 9h2v2hNv5hTv-5h1vT"/ <path fill="${sub}" d="M 14 12h2v2hTv2hTv-3h2vN"/ <path fill="${main}" d="M 14 14h2v2hTvT"/`
-    
+    return `
+    <path fill="${main}" d="M 8 0h8v8h1vTh1vTh1vNh1vNh2vNh2vNh8v2h-3v1h-4v2h4vNh3v8hTv1hTv3h-8v-5h1vThTv2hNv5h-9v-4h1vTh1vNh2vThTv1hNv1hNv1hNv2hNv4h-7v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 10 2h5v2h-5v1hTv1hNv1hTvTh2vNh1vNh2vN"/ <path fill="${sub}" d="M 29 2h3v2h-3v1h-4vTh4vN"/ <path fill="${sub}" d="M 11 7h2v2hTv1hNv2hNv4hTv-4h1vTh1vNh1vNh1vN"/ <path fill="${sub}" d="M 26 7h3v2h-3v1hNv1hTvTh1vNh2vN"/ <path fill="${sub}" d="M 19 9h2v2hNv5hTv-5h1vT"/ <path fill="${sub}" d="M 30 12h2v2hTv2hTv-3h2vN"/ <path fill="${main}" d="M 30 14h2v2hTvT"/`
   }
 
   const ladder = subColor =>{
@@ -272,12 +251,12 @@ function init() {
     'pu': { svg: plainEdge, color: main, subColor: sub, rotate: 270 },
     'b': { svg: plain, subColor: '#a2fcf0' },
     'bd': { svg: plain, subColor: '#0d8799' },
-    'r': { svg: river, animation: riverAnim },
-    'rh': { svg: river, rotate: 90, animation: riverAnim },
-    'ra': { svg: riverCurve, animation: riverCurveAnim },
-    'rb': { svg: riverCurve, rotate: 90, animation: riverCurveAnim },
-    'rd': { svg: riverCurve, rotate: 180, animation: riverCurveAnim },
-    're': { svg: riverCurve, rotate: 270, animation: riverCurveAnim },
+    'r': { svg: river, frameNo: 2, speed: 1000 },
+    'rh': { svg: river, rotate: 90, frameNo: 2, speed: 1000 },
+    'ra': { svg: riverCurve, frameNo: 2, speed: 1000 },
+    'rb': { svg: riverCurve, rotate: 90, frameNo: 2, speed: 1000 },
+    'rd': { svg: riverCurve, rotate: 180, frameNo: 2, speed: 1000 },
+    're': { svg: riverCurve, rotate: 270, frameNo: 2, speed: 1000 },
     'la': { svg: ladder, color: main, subColor: sub },
     'c': { svg: checkered, color: '#a2e8fc' },
     'e': { svg: exit, color: '#0d8799', subColor: '#fff' },
@@ -541,6 +520,8 @@ function init() {
   let locationTiles
   let mapImageTiles
 
+  const animateCells = []
+
   // gameplay related variables
   let mapKey = 'one'
   const spawnData = []
@@ -633,35 +614,39 @@ function init() {
 
   const populateWithSvg = (key, target) =>{
     if (svgData[key]){
-      const { svg, color, subColor, rotate, flip, animation } = svgData[key]
+      const { svg, color, subColor, rotate, flip, frameNo, speed } = svgData[key]
       let colorAction = ''
       colorAction = typeof(color) === 'function' ? color() : color
 
-      const svgContent = `
-      ${animation 
-    ? `${svgWrapper(
-      {
-      content: decode(subColor ? animation(subColor) : animation()),
-      color: color ? colorAction : '',
-      rotate,
-      flip,
-      wrapper: 'svg_anim_wrap', 
-      }
-    )}`
-    : ''
-}
-          ${svgWrapper(
-    {
-    content: decode(subColor ? svg(subColor) : svg()),
-    color: color ? colorAction : '',
-    rotate,
-    flip,
-    wrapper: 'svg_wrap',
-    }
-  )}  
-      `
+      const svgContent = 
+      `${svgWrapper({
+          content: decode(subColor ? svg(subColor) : svg()),
+          color: colorAction || '',
+          rotate: rotate || 0,
+          flip,
+          wrapper: frameNo ? 'anim_wrapper' : 'svg_wrap',
+          frameNo,
+          speed
+        })}`
+      
       target.innerHTML = svgContent
     } 
+  }
+
+  const animateCell = ({ index, target, start, frameNo, speed }) => {
+    const startFrame = start || 0
+    let i = startFrame
+    if (!animateCells[index]) return
+    setTimeout(()=> {
+      console.log('trigger', i >= frameNo, i, i + 1)
+      target.style.marginLeft = `${-(i * 100)}%`
+      const nextFrame =  i >= frameNo - 1
+        ? 0
+        : i + 1
+      animateCell( { index, target, start: nextFrame, frameNo, speed })       
+        // ? animateCell( { index, target, start: 0, frameNo, speed })
+        // : animateCell( { index, target, start: i + 1, frameNo, speed })
+    }, +speed || 200)
   }
 
   const setUpWalls = target =>{
@@ -673,6 +658,19 @@ function init() {
       if (svgData[letterCode])  {
         populateWithSvg(letterCode, tile) 
       }
+    })
+
+    document.querySelectorAll('.svg_anim').forEach((cell, i)=>{
+      // console.log(i)
+      // const animationInterval = null
+      // animateCells.push(animationInterval)
+      animateCells[i] = true
+      animateCell({
+        index: i,
+        target: cell, 
+        frameNo: cell.dataset.frame_no, 
+        speed: cell.dataset.speed
+      })
     })
   }
   
@@ -908,6 +906,16 @@ function init() {
     setTimeout(()=> mapImage.classList.remove('transition'),400)
     const entryPoint = mapData[mapKey].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
+
+    // console.log(animateCells)
+    
+    // // clear animation
+    // document.querySelectorAll('.svg_anim').forEach((_cell, i)=>{
+    //   clearInterval(animateCells[i])
+    // })
+
+    // console.log(animateCells)
+    animateCells.length = 0
     
     noWallList = entryPoint.noWall || ['b','do']
     setLocation(entryPoint.map)

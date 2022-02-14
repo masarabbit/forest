@@ -576,16 +576,31 @@ input:checked + .slider:before {
   margin: 100px 0 0 0;
 }
 
+.anim_wrapper {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  /* border: pink 1px solid; */
+  pointer-events: none;
+}
+
+.svg_anim {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* border: blue 1px solid; */
+}
+/* 
 .svg_anim_wrap {
   transform-origin: center;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  /* border: blue 1px solid; */
+  border: blue 1px solid;
   animation: blink infinite 1.5s;
   margin-right: -100%;
   z-index: 50;
-}
+} */
 
 /* .palette_cell .svg_anim_wrap {
   margin-right: 0;
