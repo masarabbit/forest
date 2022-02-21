@@ -5,11 +5,6 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
-//! change when the map is updated (currently updates too early)
-
-// TODO how to remove cleared intervals? animation keeps going after cell is removed.
-// TODO instead of having different interval for each cell animating, could have one big one controlling it (if same no of frames)
-
 
 function init() {
   
@@ -80,39 +75,43 @@ function init() {
   //   const b = ()=> Math.ceil(Math.random() * 100)
   //   return `rgb(${r()},${g()},${b()})`
   // }
-
-  // const subGreen = '#00a383'
-  const subGreen = '#3de9f5'
-  // #00a383
+  // const treeColor = '#74645a'
+  // const treeColor = '#3de9f5'
+  const treeColor ='#0d8799'
+  // const treeHighlight = '#58d3d8'
+  // const subGreen = '#0d8799'
+  const treeHighlight = '#3de9f5' 
+  const subGreen = '#58d3d8'
+  // ${treeColor}
   
   const treeOne = () =>{
-    // return '<path fill="#3ddbbc" d="M 13 0 h 3 v 9 h -2 v -1 h -2 v -2 h -1 v -3 h -1 v -1 h 2 v -1 h 1 v -1"/> F 9 3 h 2 v 3 h 1 v 2 h 2 v 1 h 2 v 7 h -9 v -2 h -1 v -2 h -2 v -3 h 1 v -2 h 1 v -2 h 2 v -1 h 1 v -1"/> <path fill="#3bfcd5" d="M 3 12 h 3 v 2 h 1 v 2 h -6 v -1 h 1 v -1 h 1 v -2"/>'
-    // return `<path fill="#00a383" d="M 13 0 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 11 1 h 2 v 1 h -2 v -1"/> <path fill="#3ddbbc" d="M 13 1 h 3 v 9 h -1 v -1 h -1 v -1 h -2 v -2 h -1 v -4 h 2 v -1"/> <path fill="#00a383" d="M 10 2 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 9 3 h 1 v 1 h -1 v -1"/> F 10 3 h 1 v 3 h 1 v 2 h 2 v 1 h 1 v 1 h 1 v 6 h -8 v -1 h -1 v -2 h -1 v -1 h -1 v -3 h 1 v -2 h 1 v -1 h 1 v -1 h 1 v -1 h 1 v -1"/> <path fill="#00a383" d="M 8 4 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 7 5 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 6 6 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 5 7 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 4 9 h 1 v 3 h -1 v -3"/> <path fill="#00a383" d="M 3 12 h 1 v 2 h -1 v -2"/> <path fill="#3bfcd5" d="M 4 12 h 2 v 1 h 1 v 2 h 1 v 1 h -6 v -1 h 1 v -1 h 1 v -2"/> <path fill="#00a383" d="M 2 14 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 1 15 h 1 v 1 h -1 v -1"/>`
-    return `<path fill="#00a383" d="M 13 0 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 11 1 h 2 v 1 h -2 v -1"/> <path fill="#3bfcd5" d="M 13 1 h 3 v 14 h -1 v -1 h -1 v -1 h 1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -1 h 1 v -1 h -1 v -1 h -1 v -1 h 1 v -2 h 1 v -1 h -1 v -2 h 2 v -1"/> <path fill="#00a383" d="M 10 2 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 9 3 h 1 v 1 h -1 v -1"/> <path fill="${subGreen}" d="M 10 3 h 1 v 1 h 1 v 1 h -1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h -1 v 1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 1 h -1 v 1 h 1 v 1 h 1 v 1 h -14 v -1 h 1 v -1 h 1 v -3 h 1 v -2 h 1 v -2 h 1 v -1 h 1 v -1 h 1 v -1 h 1 v -1"/> <path fill="#00a383" d="M 8 4 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 7 5 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 6 6 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 5 7 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 4 9 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 3 12 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 2 14 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 1 15 h 1 v 1 h -1 v -1"/>`
+    // return '<path fill="${treeHighlight}" d="M 13 0 h 3 v 9 h -2 v -1 h -2 v -2 h -1 v -3 h -1 v -1 h 2 v -1 h 1 v -1"/> F 9 3 h 2 v 3 h 1 v 2 h 2 v 1 h 2 v 7 h -9 v -2 h -1 v -2 h -2 v -3 h 1 v -2 h 1 v -2 h 2 v -1 h 1 v -1"/> <path fill="${treeHighlight}" d="M 3 12 h 3 v 2 h 1 v 2 h -6 v -1 h 1 v -1 h 1 v -2"/>'
+    // return `<path fill="${treeColor}" d="M 13 0 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 11 1 h 2 v 1 h -2 v -1"/> <path fill="${treeHighlight}" d="M 13 1 h 3 v 9 h -1 v -1 h -1 v -1 h -2 v -2 h -1 v -4 h 2 v -1"/> <path fill="${treeColor}" d="M 10 2 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 9 3 h 1 v 1 h -1 v -1"/> F 10 3 h 1 v 3 h 1 v 2 h 2 v 1 h 1 v 1 h 1 v 6 h -8 v -1 h -1 v -2 h -1 v -1 h -1 v -3 h 1 v -2 h 1 v -1 h 1 v -1 h 1 v -1 h 1 v -1"/> <path fill="${treeColor}" d="M 8 4 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 7 5 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 6 6 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 5 7 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 4 9 h 1 v 3 h -1 v -3"/> <path fill="${treeColor}" d="M 3 12 h 1 v 2 h -1 v -2"/> <path fill="${treeHighlight}" d="M 4 12 h 2 v 1 h 1 v 2 h 1 v 1 h -6 v -1 h 1 v -1 h 1 v -2"/> <path fill="${treeColor}" d="M 2 14 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 1 15 h 1 v 1 h -1 v -1"/>`
+    return `<path fill="${treeColor}" d="M 13 0 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 11 1 h 2 v 1 h -2 v -1"/> <path fill="${treeHighlight}" d="M 13 1 h 3 v 14 h -1 v -1 h -1 v -1 h 1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -1 h 1 v -1 h -1 v -1 h -1 v -1 h 1 v -2 h 1 v -1 h -1 v -2 h 2 v -1"/> <path fill="${treeColor}" d="M 10 2 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 9 3 h 1 v 1 h -1 v -1"/> <path fill="${subGreen}" d="M 10 3 h 1 v 1 h 1 v 1 h -1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h -1 v 1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 1 h -1 v 1 h 1 v 1 h 1 v 1 h -14 v -1 h 1 v -1 h 1 v -3 h 1 v -2 h 1 v -2 h 1 v -1 h 1 v -1 h 1 v -1 h 1 v -1"/> <path fill="${treeColor}" d="M 8 4 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 7 5 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 6 6 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 5 7 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 4 9 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 3 12 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 2 14 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 1 15 h 1 v 1 h -1 v -1"/>`
   }
 
   const treeTwo = () =>{
-    // return '<path fill="#3ddbbc" d="M 0 0 h 3 v 1 h 1 v 1 h 2 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 2 h -2 v 1 h -1 v 1 h -4 v -1 h -1 v -2 h -1 v 1 h -2 v -9"/> F 2 8 h 1 v 2 h 1 v 1 h 4 v -1 h 1 v -1 h 3 v 3 h 1 v 2 h 1 v 1 h 1 v 1 h -15 v -7 h 2 v -1"/>'
-    // return `<path fill="#3ddbbc" d="M 0 0 h 3 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 1 h 1 v 1 h -2 v 1 h -1 v 1 h -7 v -1 h -1 v -10"/> <path fill="#00a383" d="M 4 1 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 5 2 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 6 3 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 7 4 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 9 6 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 10 7 h 1 v 1 h -1 v -1"/> F 9 9 h 2 v 3 h 1 v 2 h 1 v 1 h -1 v 1 h -12 v -6 h 1 v 1 h 7 v -1 h 1 v -1"/> <path fill="#00a383" d="M 11 9 h 1 v 3 h -1 v -3"/> <path fill="#00a383" d="M 12 12 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 13 14 h 1 v 1 h -1 v -1"/> <path fill="#3bfcd5" d="M 12 15 h 2 v 1 h -2 v -1"/> <path fill="#00a383" d="M 14 15 h 1 v 1 h -1 v -1"/>`
-    return `<path fill="#3bfcd5" d="M 0 0 h 3 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 1 h 1 v 3 h 1 v 2 h -1 v 1 h -1 v -1 h -1 v 3 h -1 v -1 h -1 v -1 h -1 v 2 h -3 v -2 h -1 v 1 h -1 v 1 h -1 v -16"/> <path fill="#00a383" d="M 4 1 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 5 2 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 6 3 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 7 4 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 9 6 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 10 7 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 11 9 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 12 12 h 1 v 2 h -1 v -2"/> <path fill="${subGreen}" d="M 9 13 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 1 h 1 v 1 h -5 v -3"/> <path fill="${subGreen}" d="M 2 14 h 1 v 2 h -2 v -1 h 1 v -1"/> <path fill="${subGreen}" d="M 6 14 h 1 v 1 h 1 v 1 h -2 v -2"/> <path fill="#00a383" d="M 13 14 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 14 15 h 1 v 1 h -1 v -1"/>`
+    // return '<path fill="${treeHighlight}" d="M 0 0 h 3 v 1 h 1 v 1 h 2 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 2 h -2 v 1 h -1 v 1 h -4 v -1 h -1 v -2 h -1 v 1 h -2 v -9"/> F 2 8 h 1 v 2 h 1 v 1 h 4 v -1 h 1 v -1 h 3 v 3 h 1 v 2 h 1 v 1 h 1 v 1 h -15 v -7 h 2 v -1"/>'
+    // return `<path fill="${treeHighlight}" d="M 0 0 h 3 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 1 h 1 v 1 h -2 v 1 h -1 v 1 h -7 v -1 h -1 v -10"/> <path fill="${treeColor}" d="M 4 1 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 5 2 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 6 3 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 7 4 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 9 6 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 10 7 h 1 v 1 h -1 v -1"/> F 9 9 h 2 v 3 h 1 v 2 h 1 v 1 h -1 v 1 h -12 v -6 h 1 v 1 h 7 v -1 h 1 v -1"/> <path fill="${treeColor}" d="M 11 9 h 1 v 3 h -1 v -3"/> <path fill="${treeColor}" d="M 12 12 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 13 14 h 1 v 1 h -1 v -1"/> <path fill="${treeHighlight}" d="M 12 15 h 2 v 1 h -2 v -1"/> <path fill="${treeColor}" d="M 14 15 h 1 v 1 h -1 v -1"/>`
+    return `<path fill="${treeHighlight}" d="M 0 0 h 3 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 1 h 1 v 3 h 1 v 2 h -1 v 1 h -1 v -1 h -1 v 3 h -1 v -1 h -1 v -1 h -1 v 2 h -3 v -2 h -1 v 1 h -1 v 1 h -1 v -16"/> <path fill="${treeColor}" d="M 4 1 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 5 2 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 6 3 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 7 4 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 9 6 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 10 7 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 11 9 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 12 12 h 1 v 2 h -1 v -2"/> <path fill="${subGreen}" d="M 9 13 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 1 h 1 v 1 h -5 v -3"/> <path fill="${subGreen}" d="M 2 14 h 1 v 2 h -2 v -1 h 1 v -1"/> <path fill="${subGreen}" d="M 6 14 h 1 v 1 h 1 v 1 h -2 v -2"/> <path fill="${treeColor}" d="M 13 14 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 14 15 h 1 v 1 h -1 v -1"/>`
   }
 
   const treeThree = () =>{
-    // return '<path fill="#3bfcd5" d="M 1 0 h 7 v 1 h 2 v 1 h 4 v -1 h 2 v 7 h -8 v -1 h -3 v -1 h -2 v -1 h -1 v -2 h -1 v -3"/> F 8 0 h 8 v 1 h -2 v 1 h -4 v -1 h -2 v -1"/> <path fill="#00a383" d="M 11 8 h 3 v 4 h 2 v 3 h -4 v -1 h -1 v -1 h -1 v -1 h 1 v -4"/> <path fill="#542682" d="M 14 8 h 2 v 4 h -2 v -4"/> <path fill="#3bfcd5" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/>'
-    // return `<path fill="#00a383" d="M 1 0 h 1 v 3 h -1 v -3"/> <path fill="#3bfcd5" d="M 2 0 h 7 v 1 h 2 v 1 h 2 v 1 h 3 v 4 h -4 v 1 h -1 v -1 h -3 v -1 h -3 v -1 h -2 v -2 h -1 v -3"/> F 9 0 h 7 v 3 h -3 v -1 h -2 v -1 h -2 v -1"/> <path fill="#00a383" d="M 2 3 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 3 5 h 2 v 1 h -2 v -1"/> <path fill="#00a383" d="M 5 6 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 8 7 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 12 7 h 4 v 1 h -4 v -1"/> <path fill="#00a383" d="M 11 8 h 1 v 3 h -1 v -3"/> <path fill="#9e63d9" d="M 12 8 h 4 v 6 h -4 v -1 h -1 v -2 h 1 v -3"/> <path fill="#3bfcd5" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/> <path fill="#00a383" d="M 10 12 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 11 13 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 12 14 h 4 v 1 h -4 v -1"/>`
-    return `<path fill="#00a383" d="M 1 0 h 1 v 3 h -1 v -3"/> <path fill="${subGreen}" d="M 2 0 h 14 v 7 h -4 v 1 h -1 v -1 h -3 v -1 h -3 v -1 h -2 v -2 h -1 v -3"/> <path fill="#00a383" d="M 2 3 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 3 5 h 2 v 1 h -2 v -1"/> <path fill="#00a383" d="M 5 6 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 8 7 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 12 7 h 4 v 1 h -4 v -1"/> <path fill="#00a383" d="M 11 8 h 1 v 3 h -1 v -3"/> F 12 8 h 4 v 6 h -4 v -1 h -1 v -2 h 1 v -3"/> <path fill="#3bfcd5" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/> <path fill="#00a383" d="M 10 12 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 11 13 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 12 14 h 4 v 1 h -4 v -1"/>`
+    // return '<path fill="${treeHighlight}" d="M 1 0 h 7 v 1 h 2 v 1 h 4 v -1 h 2 v 7 h -8 v -1 h -3 v -1 h -2 v -1 h -1 v -2 h -1 v -3"/> F 8 0 h 8 v 1 h -2 v 1 h -4 v -1 h -2 v -1"/> <path fill="${treeColor}" d="M 11 8 h 3 v 4 h 2 v 3 h -4 v -1 h -1 v -1 h -1 v -1 h 1 v -4"/> <path fill="#542682" d="M 14 8 h 2 v 4 h -2 v -4"/> <path fill="${treeHighlight}" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/>'
+    // return `<path fill="${treeColor}" d="M 1 0 h 1 v 3 h -1 v -3"/> <path fill="${treeHighlight}" d="M 2 0 h 7 v 1 h 2 v 1 h 2 v 1 h 3 v 4 h -4 v 1 h -1 v -1 h -3 v -1 h -3 v -1 h -2 v -2 h -1 v -3"/> F 9 0 h 7 v 3 h -3 v -1 h -2 v -1 h -2 v -1"/> <path fill="${treeColor}" d="M 2 3 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 3 5 h 2 v 1 h -2 v -1"/> <path fill="${treeColor}" d="M 5 6 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 8 7 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 12 7 h 4 v 1 h -4 v -1"/> <path fill="${treeColor}" d="M 11 8 h 1 v 3 h -1 v -3"/> <path fill="#9e63d9" d="M 12 8 h 4 v 6 h -4 v -1 h -1 v -2 h 1 v -3"/> <path fill="${treeHighlight}" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/> <path fill="${treeColor}" d="M 10 12 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 11 13 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 12 14 h 4 v 1 h -4 v -1"/>`
+    return `<path fill="${treeColor}" d="M 1 0 h 1 v 3 h -1 v -3"/> <path fill="${subGreen}" d="M 2 0 h 14 v 7 h -4 v 1 h -1 v -1 h -3 v -1 h -3 v -1 h -2 v -2 h -1 v -3"/> <path fill="${treeColor}" d="M 2 3 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 3 5 h 2 v 1 h -2 v -1"/> <path fill="${treeColor}" d="M 5 6 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 8 7 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 12 7 h 4 v 1 h -4 v -1"/> <path fill="${treeColor}" d="M 11 8 h 1 v 3 h -1 v -3"/> F 12 8 h 4 v 6 h -4 v -1 h -1 v -2 h 1 v -3"/> <path fill="${treeHighlight}" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/> <path fill="${treeColor}" d="M 10 12 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 11 13 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 12 14 h 4 v 1 h -4 v -1"/>`
   }
 
   const treeFour = () =>{
-    // return 'F 0 0 h 1 v 1 h -1 v -1"/> <path fill="#3bfcd5" d="M 1 0 h 1 v 2 h 1 v 1 h 1 v 1 h 5 v -1 h 1 v -1 h 1 v -1 h 1 v 1 h 3 v 1 h -1 v 2 h -1 v 1 h -2 v 1 h -3 v 1 h -4 v 1 h -4 v -8 h 1 v -1"/> F 2 0 h 13 v 2 h -3 v -1 h -1 v 1 h -1 v 1 h -1 v 1 h -5 v -1 h -1 v -1 h -1 v -2"/> <path fill="#542682" d="M 4 8 h 1 v 4 h -1 v 1 h -4 v -4 h 4 v -1"/> <path fill="#3bfcd5" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="#00a383" d="M 4 12 h 2 v 1 h -1 v 1 h -1 v 1 h -4 v -2 h 4 v -1"/>'
-    // return `F 0 0 h 11 v 1 h -4 v 1 h -1 v 1 h -6 v -3"/> <path fill="#3bfcd5" d="M 11 0 h 3 v 3 h -1 v 2 h -2 v 1 h -3 v 1 h -3 v 1 h -5 v -5 h 6 v -1 h 1 v -1 h 4 v -1"/> <path fill="#00a383" d="M 14 0 h 1 v 3 h -1 v -3"/> <path fill="#00a383" d="M 13 3 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 11 5 h 2 v 1 h -2 v -1"/> <path fill="#00a383" d="M 8 6 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 5 7 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 0 8 h 5 v 3 h -1 v -2 h -4 v -1"/> <path fill="#9e63d9" d="M 0 9 h 4 v 2 h 1 v 2 h -1 v 1 h -4 v -5"/> <path fill="#3bfcd5" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="#00a383" d="M 5 12 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 4 13 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 0 14 h 4 v 1 h -4 v -1"/>`
-    return `<path fill="${subGreen}" d="M 0 0 h 4 v 1 h 1 v -1 h 9 v 3 h -1 v 2 h -2 v 1 h -3 v 1 h -3 v 1 h -5 v -8"/> <path fill="#3bfcd5" d="M 4 0 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 14 0 h 1 v 3 h -1 v -3"/> <path fill="#00a383" d="M 13 3 h 1 v 2 h -1 v -2"/> <path fill="#00a383" d="M 11 5 h 2 v 1 h -2 v -1"/> <path fill="#00a383" d="M 8 6 h 3 v 1 h -3 v -1"/> <path fill="#00a383" d="M 5 7 h 3 v 1 h -3 v -1"/> F 0 8 h 1 v 1 h 3 v 2 h 1 v 2 h -1 v 1 h -4 v -6"/> <path fill="#00a383" d="M 1 8 h 4 v 3 h -1 v -2 h -3 v -1"/> <path fill="#3bfcd5" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="#00a383" d="M 5 12 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 4 13 h 1 v 1 h -1 v -1"/> <path fill="#00a383" d="M 0 14 h 4 v 1 h -4 v -1"/>`
+    // return 'F 0 0 h 1 v 1 h -1 v -1"/> <path fill="${treeHighlight}" d="M 1 0 h 1 v 2 h 1 v 1 h 1 v 1 h 5 v -1 h 1 v -1 h 1 v -1 h 1 v 1 h 3 v 1 h -1 v 2 h -1 v 1 h -2 v 1 h -3 v 1 h -4 v 1 h -4 v -8 h 1 v -1"/> F 2 0 h 13 v 2 h -3 v -1 h -1 v 1 h -1 v 1 h -1 v 1 h -5 v -1 h -1 v -1 h -1 v -2"/> <path fill="#542682" d="M 4 8 h 1 v 4 h -1 v 1 h -4 v -4 h 4 v -1"/> <path fill="${treeHighlight}" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="${treeColor}" d="M 4 12 h 2 v 1 h -1 v 1 h -1 v 1 h -4 v -2 h 4 v -1"/>'
+    // return `F 0 0 h 11 v 1 h -4 v 1 h -1 v 1 h -6 v -3"/> <path fill="${treeHighlight}" d="M 11 0 h 3 v 3 h -1 v 2 h -2 v 1 h -3 v 1 h -3 v 1 h -5 v -5 h 6 v -1 h 1 v -1 h 4 v -1"/> <path fill="${treeColor}" d="M 14 0 h 1 v 3 h -1 v -3"/> <path fill="${treeColor}" d="M 13 3 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 11 5 h 2 v 1 h -2 v -1"/> <path fill="${treeColor}" d="M 8 6 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 5 7 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 0 8 h 5 v 3 h -1 v -2 h -4 v -1"/> <path fill="#9e63d9" d="M 0 9 h 4 v 2 h 1 v 2 h -1 v 1 h -4 v -5"/> <path fill="${treeHighlight}" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="${treeColor}" d="M 5 12 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 4 13 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 0 14 h 4 v 1 h -4 v -1"/>`
+    return `<path fill="${subGreen}" d="M 0 0 h 4 v 1 h 1 v -1 h 9 v 3 h -1 v 2 h -2 v 1 h -3 v 1 h -3 v 1 h -5 v -8"/> <path fill="${treeHighlight}" d="M 4 0 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 14 0 h 1 v 3 h -1 v -3"/> <path fill="${treeColor}" d="M 13 3 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 11 5 h 2 v 1 h -2 v -1"/> <path fill="${treeColor}" d="M 8 6 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 5 7 h 3 v 1 h -3 v -1"/> F 0 8 h 1 v 1 h 3 v 2 h 1 v 2 h -1 v 1 h -4 v -6"/> <path fill="${treeColor}" d="M 1 8 h 4 v 3 h -1 v -2 h -3 v -1"/> <path fill="${treeHighlight}" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="${treeColor}" d="M 5 12 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 4 13 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 0 14 h 4 v 1 h -4 v -1"/>`
   }
 
   const tree = () =>{
     return 'D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/'
-    // return '<path fill="#3ddbbc" d="M 6 1 h 4 v 1 h 1 v 1 h 1 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -2"/> F 5 2 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="#3bfcd5" d="M 3 8 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -2 v 1 h -2 v -1 h -4 v -1 h -1 v -4"/> <path fill="#00a383" d="M 6 13 h 2 v 1 h 2 v 2 h -4 v -3"/>'
-    // return `<path fill="#51c8e6" d="M 6 5 h 4 v 1 h 1 v 1 h 1 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -2"/> <path fill="#2fa4c1" d="M 5 6 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="#247589" d="M 3 12 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -1 v 2 h -3 v -1 h -3 v -1 h -1 v -1 h -1 v -4"/> F 5 18 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="#3ddbbc" d="M 6 18 h 2 v 1 h 4 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -1"/> <path fill="#3bfcd5" d="M 3 24 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -2 v 1 h -2 v -1 h -4 v -1 h -1 v -4"/> <path fill="#00a383" d="M 6 29 h 2 v 1 h 2 v 2 h -4 v -3"/>`
+    // return '<path fill="${treeHighlight}" d="M 6 1 h 4 v 1 h 1 v 1 h 1 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -2"/> F 5 2 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="${treeHighlight}" d="M 3 8 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -2 v 1 h -2 v -1 h -4 v -1 h -1 v -4"/> <path fill="${treeColor}" d="M 6 13 h 2 v 1 h 2 v 2 h -4 v -3"/>'
+    // return `<path fill="#51c8e6" d="M 6 5 h 4 v 1 h 1 v 1 h 1 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -2"/> <path fill="#2fa4c1" d="M 5 6 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="#247589" d="M 3 12 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -1 v 2 h -3 v -1 h -3 v -1 h -1 v -1 h -1 v -4"/> F 5 18 h 1 v 1 h 1 v 2 h 1 v -1 h 1 v 2 h 1 v -1 h 1 v 1 h 2 v 6 h -1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -2 h -1 v 1 h -1 v -1 h -1 v -2 h 1 v -3 h 1 v -1"/> <path fill="${treeHighlight}" d="M 6 18 h 2 v 1 h 4 v 3 h -1 v -1 h -1 v 1 h -1 v -2 h -1 v 1 h -1 v -2 h -1 v -1"/> <path fill="${treeHighlight}" d="M 3 24 h 1 v 1 h 1 v -1 h 1 v 2 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 2 h -2 v 1 h -2 v -1 h -4 v -1 h -1 v -4"/> <path fill="${treeColor}" d="M 6 29 h 2 v 1 h 2 v 2 h -4 v -3"/>`
   }
 
   const flowers = () =>{
@@ -538,9 +537,9 @@ function init() {
     prevChoices: {}, 
     animationTimer: [],
     //? could this be renamed to something else?
-    dialogue: {},
-    dialogueKey: null,
-    dialogueHistory: []
+    dialog: {},
+    dialogKey: null,
+    dialogHistory: []
   }
 
   const directionKey = {
@@ -573,6 +572,8 @@ function init() {
     mapImageTiles = document.querySelectorAll('.map_image_tile')
   }
 
+  const setTargetSize = (target, w, h) => Object.assign(target.style, { width: `${w}px`, height: `${h}px` })
+  const setTargetPos = (target, x, y) => Object.assign(target.style, { left: `${x}px`, top: `${y}px` })
 
   const placeInCenterOfMap = () =>{
     start = Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
@@ -592,14 +593,8 @@ function init() {
   }
 
   const adjustRectSize = (target, w, h, cellD, cells) =>{
-    target.style.width = `${w * cellD}px`
-    target.style.height = `${h * cellD}px` 
-    cells 
-      ? cells.forEach(cell=>{
-        cell.style.width = `${cellD}px`
-        cell.style.height = `${cellD}px`
-      })
-      : ''
+    setTargetSize(target, w * cellD, h * cellD) 
+    cells && cells.forEach(cell=>{ setTargetSize(cell, cellD, cellD) })
   }
 
   let noWallList = ['b','do'] //! maybe switch this depending on the map?
@@ -684,7 +679,7 @@ function init() {
     motionOption[Math.floor(Math.random() * 4)]()
   }
 
-  const setPos = (key,num,dir) =>{
+  const setPos = (key, num, dir) =>{
     mapXY[key] = num
     mapImage.style[dir] = `${num}px`
   }
@@ -695,10 +690,11 @@ function init() {
   }
 
   const positionSprite = pos =>{
-    const paraX = pos % width * cellD
-    const paraY = Math.floor(pos / width) * cellD
-    spriteContainer.style.left = `${paraX}px`
-    spriteContainer.style.top = `${paraY}px`
+    setTargetPos(
+      spriteContainer, 
+      pos % width * cellD, 
+      Math.floor(pos / width) * cellD
+    )
   }
   
   const spawnCharacter = () =>{
@@ -721,8 +717,7 @@ function init() {
 
       const spawnContainer = document.createElement('div')
       spawnContainer.classList.add('spawn_container')
-      spawnContainer.style.left = `${sx}px`
-      spawnContainer.style.top = `${sy}px`
+      setTargetPos(spawnContainer, sx, sy)
 
       const spawn = document.createElement('div')
       const sprite = () =>{
@@ -749,7 +744,7 @@ function init() {
     sprites.forEach((sprite, i)=>{
       if (i === sprites.length - 1) return
       sprites[i].style.animationDelay = `${i * 0.1}s`
-      turnSprite(directionKey[spawnData[i].spritePos], spawnData[i], sprite,false)
+      turnSprite(directionKey[spawnData[i].spritePos], spawnData[i], sprite, false)
     })
   }
 
@@ -778,19 +773,19 @@ function init() {
     const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
     const targetDirection = key[bear.facingDirection]
     const talkTargetIndex = spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)
-  
+
     if (talkTargetIndex !== -1) {
       const talkTarget = spawnData[talkTargetIndex]
       talkTarget.pause = true
       const opposite = Object.keys(key).find(k => key[k] === targetDirection * -1)
       turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
       
-      if (!bear.dialogueKey) {
-        bear.dialogue = mapData[mapKey].eventContents[talkTarget.event]
-        bear.dialogueKey = 'first'
+      if (!bear.dialogKey) {
+        bear.dialog = mapData[mapKey].eventContents[talkTarget.event]
+        bear.dialogKey = 'first'
       }
 
-      bear.dialogue[bear.dialogueKey].text.length !== bear.textCount
+      bear.dialog[bear.dialogKey].text.length !== bear.textCount
         ? displayText(bear.textCount, false)
         : clearText()
     } 
@@ -800,9 +795,9 @@ function init() {
   
   // displays multiple choice
   const displayAnswer = prev =>{ 
-    const eventPoint = bear.dialogue[bear.dialogueKey]
+    const eventPoint = bear.dialog[bear.dialogKey]
     bear.pause = true
-    bear.choice = prev ? bear.prevChoices[bear.dialogueKey] : 0 
+    bear.choice = prev ? bear.prevChoices[bear.dialogKey] : 0 
     bear.optionTexts = Object.keys(eventPoint.choice)
     texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
       return `
@@ -834,20 +829,21 @@ function init() {
   }
 
   const clearText = () =>{
-    bear.textCount = 0
-    bear.prevChoices = {}
-    bear.motion = true
-    bear.pause = false
-    bear.dialogueHistory.length = 0
-    bear.dialogue = {}
-    bear.dialogueKey = null
-
+    Object.assign(bear, {
+      textCount: 0,
+      prevChoices: {},
+      motion: true,
+      pause: false,
+      dialogHistory: [],
+      dialog: {},
+      dialogKey: null
+    })
     texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
   }
 
   const displayText = (count, prev) =>{
-    const eventPoint = bear.dialogue[bear.dialogueKey]
+    const eventPoint = bear.dialog[bear.dialogKey]
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
@@ -906,7 +902,7 @@ function init() {
     setWidthAndHeightAndResize()
     setUpWalls(mapImageTiles)
     turnSprite(bear.facingDirection, bear, sprite, false)
-    setTimeout(()=>turnSprite(entryPoint.direction, bear, sprite, false),150)
+    setTimeout(()=>turnSprite(entryPoint.direction, bear, sprite, false), 150)
     spawnCharacter()
     startCellAnimations()
 
@@ -920,15 +916,13 @@ function init() {
   const turnSprite = (e = 'down', actor, sprite, animate) => {
     let m = -cellD
     actor.facingDirection = e
-    const animateWalk = (a, b ,c , turn) =>{
+    const animateWalk = (a, b, c, turn) =>{
       actor.animationTimer.forEach(timer=>clearTimeout(timer))
       m = animate ? m * a : m * c
-      if (turn) sprite.parentNode.classList.contains('right') 
-        ? sprite.parentNode.classList.remove('right') 
-        : sprite.parentNode.classList.add('right')
+      if (turn) sprite.parentNode.classList.toggle('right') 
       if (animate){
-        actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * b, actor, sprite),100)
-        actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * c, actor, sprite),200) 
+        actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * b, actor, sprite), 100)
+        actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * c, actor, sprite), 200) 
       }   
     }
     const spriteChange = {
@@ -944,7 +938,7 @@ function init() {
       down: ()=> animateWalk(0, 0, 1, true)
     }
     spriteChange[e]()
-    setSpritePos(m,actor,sprite)
+    setSpritePos(m, actor, sprite)
   }
 
   const spriteWalk = (dir, actor, sprite, spawn = false) =>{
@@ -991,33 +985,33 @@ function init() {
   }
 
   const select = () =>{
-    const { dialogueKey } = bear
+    const { dialogKey } = bear
     texts[1].innerHTML = ''
     bear.pause = false
-    bear.prevChoices[dialogueKey] = bear.choice
+    bear.prevChoices[dialogKey] = bear.choice
     
     bear.textCount = 0
-    const eventPoint = bear.dialogue[dialogueKey]
-    bear.dialogueHistory.push(dialogueKey)
-    bear.dialogueKey = eventPoint.choice[bear.optionTexts[bear.choice]]
+    const eventPoint = bear.dialog[dialogKey]
+    bear.dialogHistory.push(dialogKey)
+    bear.dialogKey = eventPoint.choice[bear.optionTexts[bear.choice]]
     displayText(bear.textCount, false)
   }
 
   const prevText = () =>{
-    const { dialogue, dialogueKey, dialogueHistory } = bear
-    const currentDialogueLength = dialogue[dialogueKey].text.length
+    const { dialog, dialogKey, dialogHistory } = bear
+    const currentdialogLength = dialog[dialogKey].text.length
     
-    if (!dialogueHistory.length && bear.textCount === 1) {
-      // if beginning of dialogue, end conversation
+    if (!dialogHistory.length && bear.textCount === 1) {
+      // if beginning of dialog, end conversation
       clearText()
       return
-    } else if ( currentDialogueLength === 1 || (currentDialogueLength > 1 && bear.textCount === 1)) {
-      // return to previous dialogue
-      bear.dialogueKey = bear.dialogueHistory.pop()
-      const previousDialogue = dialogue[bear.dialogueKey].text
-      bear.textCount = previousDialogue.length - 1
+    } else if ( currentdialogLength === 1 || (currentdialogLength > 1 && bear.textCount === 1)) {
+      // return to previous dialog
+      bear.dialogKey = bear.dialogHistory.pop()
+      const previousdialog = dialog[bear.dialogKey].text
+      bear.textCount = previousdialog.length - 1
     } else {
-      // return within same dialogue
+      // return within same dialog
       bear.textCount -= 2
     }
     texts[1].innerHTML = ''
@@ -1058,10 +1052,8 @@ function init() {
 
     // adjust sprite
     setSpritePos(-cellD, bear, sprite)
-    sprite.style.height = `${cellD}px`
-    sprite.style.width = `${cellD * 7}px`
-    spriteContainer.style.height = `${cellD}px`
-    spriteContainer.style.width = `${cellD}px`
+    setTargetSize(sprite, cellD * 7, cellD)
+    setTargetSize(spriteContainer, cellD, cellD)
 
     // resize mapImageContainer
     adjustRectSize(mapImageContainer, width, height, cellD)
