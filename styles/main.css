@@ -305,11 +305,21 @@ a:hover {
 }
 
 
+.face {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border: 1px solid white;
+  top: -20px;
+  left: 20px;
+  z-index: 999;
+}
+
 /** multiple choice selection */
 .text {
   color: white;
   transition: 0.4s;
-  border: pink 1px solid;
+  /* border: pink 1px solid; */
 }
 
 
@@ -322,22 +332,16 @@ a:hover {
 }
 
 /** big window */
-.text_display > div:nth-child(1) {
+.dialog_box {
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 20px 20px 0 110px;
   background-color: rgba(3, 31, 92, 0.753);
-  border: cyan 1px solid;
+  /* border: cyan 1px solid; */
 }
-
-.text_display > div:nth-child(2):empty {
-  right: 100vh;
-  animation: none;
-}
-
 
 /** multiple choice selection */
-.text_display > div:nth-child(2) {
+.choice {
   position: absolute;
   right: 100vh;
   top: -20px;
@@ -348,17 +352,32 @@ a:hover {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  animation: none;
-  animation: slide-in forwards ease 0.5s;
+  /* animation: none; */
+  animation: slide-in-from-right forwards ease 0.5s;
   /* padding: 10px 20px; */
-  border: hotpink 1px solid;
+  /* border: hotpink 1px solid; */
 }
 
-.text:empty {
+.face {
+  animation: slide-in-from-left forwards ease 0.5s;
+}
+
+.choice:empty {
+  right: 100vh;
+  animation: none;
+}
+
+.face:empty {
+  left: 100vh;
+  animation: none;
+}
+
+.text_display.hidden .text {
   opacity: 0;
   /* background-color: pink !important; */
   pointer-events: none;
 }
+
 
 .option {
   color: white;
@@ -378,8 +397,14 @@ a:hover {
 }
 
 
+@keyframes slide-in-from-left {
+  0% { left: -100vh; }
+  95% { left: 30px; }
+  100% { left: 20px; }
+}
 
-@keyframes slide-in {
+
+@keyframes slide-in-from-right {
   0% { right: -100vh; }
   95% { right: 60px; }
   100% { right: 50px; }

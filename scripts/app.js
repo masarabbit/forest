@@ -5,6 +5,8 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
+// TODO draw bunny face and animation function to populate .face during dialog
+
 
 function init() {
   
@@ -539,7 +541,8 @@ function init() {
     //? could this be renamed to something else?
     dialog: {},
     dialogKey: null,
-    dialogHistory: []
+    dialogHistory: [],
+    isTalking: false,
   }
 
   const directionKey = {
@@ -773,8 +776,9 @@ function init() {
     const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
     const targetDirection = key[bear.facingDirection]
     const talkTargetIndex = spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)
-
     if (talkTargetIndex !== -1) {
+      bear.isTalking = true
+      texts[0].parentNode.classList.remove('hidden')
       const talkTarget = spawnData[talkTargetIndex]
       talkTarget.pause = true
       const opposite = Object.keys(key).find(k => key[k] === targetDirection * -1)
@@ -836,8 +840,10 @@ function init() {
       pause: false,
       dialogHistory: [],
       dialog: {},
-      dialogKey: null
+      dialogKey: null,
+      isTalking: false
     })
+    texts[0].parentNode.classList.add('hidden')
     texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
   }
@@ -1021,18 +1027,20 @@ function init() {
 
   const handleKeyAction = e =>{
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
-    if (bear.pause) {
-      bear.options.forEach(option=>option.classList.remove('selected'))
-      if (key === 'up' && bear.choice > 0) bear.choice--
-      if (key === 'down' && bear.choice < bear.options.length - 1) bear.choice++
-      if ([' ', 'enter', 'right'].some(k => k === key)) select()
-      if (key === 'left') prevText()
-      displayChoiceDetails()
-      bear.options[bear.choice].classList.add('selected')
-      return
+    if (bear.isTalking) {
+      if (bear.pause) {
+        bear.options.forEach(option=>option.classList.remove('selected'))
+        if (key === 'up' && bear.choice > 0) bear.choice--
+        if (key === 'down' && bear.choice < bear.options.length - 1) bear.choice++
+        if ([' ', 'enter', 'right'].some(k => k === key)) select()
+        if (key === 'left') prevText()
+        displayChoiceDetails()
+        bear.options[bear.choice].classList.add('selected')
+        return
+      }
+      if (key === 'left' && texts[0].innerHTML) prevText()
     }
-    if (key === 'left' && texts[0].innerHTML) prevText()
-    if (key === ' ' || key === 'enter' || (key === 'right' && texts[0].innerHTML)) {
+    if (key === ' ' || key === 'enter' || (key === 'right' && bear.isTalking)) {
       check(bear.textCount)
       return
     }
