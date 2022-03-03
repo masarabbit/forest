@@ -6,6 +6,7 @@
 //! design other avatars and map
 
 // TODO draw bunny face and animation function to populate .face during dialog
+// Refactor before proceeding
 
 
 function init() {
@@ -258,9 +259,9 @@ function init() {
       iWidth: 30,
       iHeight: 20,
       characters: [
-        { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello' },
-        { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple' },
-        { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato' },
+        { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio' },
+        { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon' },
+        { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo' },
       ],
       events: {
         5: { event: transport, gateway: 'portal3'},
@@ -313,8 +314,10 @@ function init() {
       },
       entry: {
         start: {
-          map: 'one',
-          cell: 313,
+          // map: 'one',
+          // cell: 313,
+          map: 'three',
+          cell: 188,
         },
         portal3: {
           map: 'three',
@@ -350,7 +353,7 @@ function init() {
       iWidth: 40,
       iHeight: 30,
       characters: [
-        { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello' },
+        { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot' },
       ],
       events: {
         1178: { event: transport, gateway: 'portal1'},
@@ -373,9 +376,9 @@ function init() {
       iWidth: 18,
       iHeight: 14,
       characters: [
-        { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello' },
-        { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello' },
-        { pos: 165, avatar: 'bunny', spritePos: 3, event: 'hello' },
+        { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala' },
+        { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira' },
+        { pos: 165, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko' },
       ],
       events: {
         241: { event: transport, gateway: 'portal1'},
@@ -386,7 +389,11 @@ function init() {
       },
       map: 'v19,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,o1,b10,o1,ta1,tb1,v2,tc1,td1,o1,b6,ta1,tb1,b2,o1,tc1,td1,v2,ta1,tb1,o1,b6,tc1,td1,b2,o1,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,ta1,tb1,ta1,tb1,b2,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,b2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v8,b2,v9',
       eventContents: {
-        hello: { first:{ text:['hello!'], }, },
+        hello: { 
+          first:{ 
+            text:['hello!'], 
+          }, 
+        },
         tree1: {
           text: [
             'hello! I\'m a tree!',
@@ -678,13 +685,12 @@ function init() {
   
   const spawnMotion = (spawn, i) =>{
     if (spawnData[i].pause || !windowActive) return
-    const motionOption = [
-      ()=>spriteWalk('down', spawnData[i], sprites[i], spawn),
-      ()=>spriteWalk('right', spawnData[i], sprites[i], spawn),
-      ()=>spriteWalk('up', spawnData[i], sprites[i], spawn),
-      ()=>spriteWalk('left', spawnData[i], sprites[i], spawn)
-    ]
-    motionOption[Math.floor(Math.random() * 4)]()
+    spriteWalk({
+      dir: ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)],
+      actor: spawnData[i], 
+      sprite: sprites[i], 
+      spawn
+    })
   }
 
   const setPos = (key, num, dir) =>{
@@ -710,7 +716,7 @@ function init() {
     spawnData.length = 0
 
     mapData[mapKey].characters?.forEach((c, i)=>{
-      const { pos, avatar, spritePos, event } = c
+      const { pos, avatar, spritePos, event, name } = c
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
       spawnData[i] = {
@@ -721,7 +727,9 @@ function init() {
         face: avatars[avatar].face,
         spritePos,
         event,
-        pos
+        pos,
+        spawn: null,
+        name
       }
 
       const spawnContainer = document.createElement('div')
@@ -743,7 +751,8 @@ function init() {
       // spawn.style.fill = randomColor()
       spawn.style.fill = '#74645a'
       spawnContainer.appendChild(spawn)    
-      mapImage.appendChild(spawnContainer)    
+      mapImage.appendChild(spawnContainer)   
+      spawnData[i].spawn = spawn
       spawnData[i].interval = setInterval(()=>{
         spawnMotion(spawnContainer, i)
       }, avatars[avatar].speed)
@@ -960,7 +969,7 @@ function init() {
         actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * c, actor, sprite), 200) 
       }   
     }
-    const spriteChange = {
+    const spriteChange = { // TODO can refactor this bit?
       right: ()=> { 
         sprite.parentNode.classList.add('right')
         animateWalk(4, 6, 5, false)
@@ -976,7 +985,7 @@ function init() {
     setSpritePos(m, actor, sprite)
   }
 
-  const spriteWalk = (dir, actor, sprite, spawn = false) =>{
+  const spriteWalk = ({ dir, actor, sprite, spawn }) =>{
     // when spawn is true, this function is used by spawn
 
     if (!dir || !bear.motion) return
@@ -1073,7 +1082,12 @@ function init() {
       check(bear.textCount)
       return
     }
-    spriteWalk(key, bear, sprites[sprites.length - 1])
+    
+    spriteWalk({
+      dir: key, 
+      actor: bear, 
+      sprite: sprites[sprites.length - 1]
+    })
   }
 
 
@@ -1137,6 +1151,24 @@ function init() {
   })
 
   transport('start')
+
+
+  testButton = document.querySelector('.test_button')
+  testButton.addEventListener('click', ()=>{
+    const tontokoData = spawnData.filter(s => s.name === 'tontoko')[0]
+    tontokoData.spawn.style.backgroundColor = 'yellow'
+    tontokoData.pause = true
+
+    console.log('sprite',tontokoData.spawn.parentNode)
+
+    spriteWalk({
+      dir: 'right', 
+      actor: tontokoData, 
+      sprite: tontokoData.spawn.childNodes[1],
+      spawn: tontokoData.spawn.parentNode
+    })
+  })
+
 
 }
 
