@@ -7,9 +7,14 @@
 
 // TODO draw bunny face and animation function to populate .face during dialog
 // Refactor before proceeding
+import mapData from './data/mapData.js'
+import avatars from './data/avatars.js'
+import svgData from './data/svgData.js'
+import { animateCell, startCellAnimations } from './utils/animation.js'
 
 
 function init() {
+  
   
   //* stops intervals firing while window is inactive
   let windowActive
@@ -38,455 +43,6 @@ function init() {
     })
     return output
   }
-
-  const svgWrapper = ( {content, color, rotate, flip, wrapper, frameNo, speed, frameSize} ) =>{
-    let scale = 1
-    if (flip === 'h') scale = '-1, 1'
-    if (flip === 'v') scale = '1, -1'
-    const size = frameSize || 16
-    return `
-      <div class="${wrapper}" style="transform: rotate(${rotate}deg) scale(${scale}); ">
-        ${frameNo ? `<div class="svg_anim" style="width:${100 * (frameNo || 1)}%;" ${frameNo ? `data-frame_no="${frameNo}"` : ''}  ${speed ? `data-speed="${speed}"` : ''}>` : ''}
-        <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 ${size * (frameNo || 1)} ${size}" fill="${color ? color : 'black'}">${content}</svg>
-        ${frameNo ? '</div>' : ''}
-      </div>
-      `
-  }
-
-  const avatars = {
-    avatar: {
-      sprite: `
-      <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 87.64 87.64">
-        <ellipse cx="43.82" cy="43.82" rx="28.191" ry="38.099"/>
-      </svg>`,
-      motion: 'udlr',
-      speed: 5000
-    },
-    bunny: {
-      sprite: 'D 4 0h2v1hTvN"/D 10 0h2v1hTvN"/D 20 0h2v1hTvN"/D 26 0h2v1hTvN"/D 36 0h2v1hTvN"/D 42 0h2v1hTvN"/D 52 0h2v1hTvN"/D 58 0h2v1hTvN"/D 70 0h2v1hTvN"/D 73 0h2v1hTvN"/D 86 0h2v1hTvN"/D 89 0h2v1hTvN"/D 102 0h2v1hTvN"/D 105 0h2v1hTvN"/D 3 1h1v4hNv-4"/>F 4 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv2hTvNhNvNhTvNhNv2hTvNhNv-8h1v-4"/D 6 1h1v2hNvT"/D 9 1h1v2hNvT"/D 12 1h1v4hNv-4"/D 19 1h1v4hNv-4"/>F 20 1h2v2hNv1h1vNh1v1h2vNh1vTh2v4hTv2h2vTh1v8hNv1hTvNh1vNh1v-3hTv2h1v1hNv1h-3vNhNv2hTvNhNv-8h1v-4"/D 22 1h1v2hNvT"/D 25 1h1v2hNvT"/D 28 1h1v4hNv-4"/D 35 1h1v4hNv-4"/>F 36 1h2v2h1v1h2vNh1vTh2v4h1v9hNv1hTvNhNvNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 38 1h1v2hNvT"/D 41 1h1v2hNvT"/D 44 1h1v4hNv-4"/D 51 1h1v4hNv-4"/>F 52 1h2v2h1v1h2vNh1vTh2v4h1v8hNv1h-3vNh1vThNvNhTv1hNv2h1v1h-3vNhNv-8h1v-4"/D 54 1h1v2hNvT"/D 57 1h1v2hNvT"/D 60 1h1v4hNv-4"/D 69 1h1v3hNv-3"/>F 70 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1h-3vNhNvNhNvNh1vNhNv1hNv1h1v1h1v2hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 72 1h1v3hNv-3"/D 75 1h1v3hNv-3"/D 85 1h1v3hNv-3"/>F 86 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvNhNv1hTvNhNv-4hNvNh1vNhNvTh1vNh1v-3"/D 88 1h1v3hNv-3"/D 91 1h1v3hNv-3"/D 101 1h1v3hNv-3"/>F 102 1h2v3h1v-3h2v3h1v1h1v3hNv2h1v2hNv1hNv1hTvThNvNhNvNh1vNhNv1hNv1h1v1h1v1h-3v-4hNvNh1vNhNvTh1vNh1v-3"/D 104 1h1v3hNv-3"/D 107 1h1v3hNv-3"/>F 5 3h1v1hNvN"/D 7 3h2v1hTvN"/>F 21 3h1v1hNvN"/D 23 3h2v1hTvN"/D 39 3h2v1hTvN"/D 55 3h2v1hTvN"/D 68 4h1v1hNvN"/D 76 4h1v1hNvN"/D 84 4h1v1hNvN"/D 92 4h1v1hNvN"/D 100 4h1v1hNvN"/D 108 4h1v1hNvN"/D 2 5h1v3hNv-3"/D 5 5h1v2hNvT"/D 10 5h1v2hNvT"/>F 11 5h1v2hNvT"/D 13 5h1v3hNv-3"/D 18 5h1v3hNv-3"/D 21 5h1v2hNvT"/D 26 5h1v2hNvT"/>F 27 5h1v2hNvT"/D 29 5h1v3hNv-3"/D 34 5h1v3hNv-3"/D 45 5h1v3hNv-3"/D 50 5h1v3hNv-3"/D 61 5h1v3hNv-3"/D 67 5h1v2h1v1hTv-3"/D 70 5h1v2hNvT"/D 77 5h1v3hNv-3"/D 83 5h1v2h1v1hTv-3"/D 86 5h1v2hNvT"/D 93 5h1v3hNv-3"/D 99 5h1v2h1v1hTv-3"/D 102 5h1v2hNvT"/D 109 5h1v3hNv-3"/>F 4 6h1v1hNvN"/>F 20 6h1v1hNvN"/D 7 7h2v1hTvN"/D 23 7h2v1hTvN"/>F 6 8h1v1hNvN"/>F 22 8h1v1hNvN"/D 76 8h1v2hNvT"/D 92 8h1v2hNvT"/D 108 8h1v2hNvT"/D 2 9h1v4hNv-4"/D 4 9h1v1hNvN"/>F 5 9h1v1hNvN"/>F 10 9h1v1hNvN"/D 11 9h1v1hNvN"/D 13 9h1v5hNv-5"/D 18 9h1v4hNv-4"/D 20 9h1v1hNvN"/>F 21 9h1v1hNvN"/>F 26 9h1v1hNvN"/D 27 9h1v1hNvN"/D 29 9h1v4hNv-4"/D 34 9h1v4hNv-4"/D 45 9h1v5hNv-5"/D 50 9h1v4hNv-4"/D 61 9h1v4hNv-4"/D 68 9h1v4hNv-4"/D 71 9h1v1hNvN"/D 84 9h1v4hNv-4"/D 87 9h1v1hNvN"/D 100 9h1v4hNv-4"/D 103 9h1v1hNvN"/D 5 10h1v1hNvN"/D 10 10h1v1hNvN"/>F 11 10h1v1hNvN"/D 21 10h1v1hNvN"/D 26 10h1v1hNvN"/>F 27 10h1v1hNvN"/D 39 10h2v1hTvN"/D 55 10h2v1hTvN"/D 70 10h1v1hNvN"/D 77 10h1v2hNvT"/D 86 10h1v1hNvN"/D 93 10h1v2hNvT"/D 102 10h1v1hNvN"/D 109 10h1v2hNvT"/D 4 11h1v1hNvN"/D 11 11h1v1hNvN"/D 20 11h1v1hNvN"/D 27 11h1v1hNvN"/D 38 11h1v2hNvT"/>F 39 11h2v2hTvT"/D 41 11h1v2hNvT"/D 54 11h1v2hNvT"/>F 55 11h2v2hTvT"/D 57 11h1v2hNvT"/D 71 11h1v1hNvN"/D 87 11h1v1hNvN"/D 103 11h1v1hNvN"/>F 6 12h1v1hNvN"/>F 10 12h1v1hNvN"/>F 22 12h1v1hNvN"/>F 26 12h1v1hNvN"/D 72 12h1v1h3v1h-4vT"/D 76 12h1v1hNvN"/D 92 12h1v1hNvN"/D 104 12h1v2h-4vNh3vN"/D 108 12h1v1hNvN"/D 3 13h1v1hNvN"/D 6 13h3v1h-3vN"/>F 12 13h1v1hNvN"/D 19 13h1v1hNvN"/D 22 13h4v1h-4vN"/D 28 13h1v1hNvN"/D 35 13h1v1hNvN"/D 39 13h2v1hTvN"/D 51 13h1v1hNvN"/D 55 13h2v1hTvN"/D 60 13h1v1hNvN"/D 69 13h1v1hNvN"/D 85 13h1v1hNvN"/D 88 13h1v1hNvN"/D 91 13h1v1hNvN"/D 107 13h1v1hNvN"/D 4 14h2v1hTvN"/D 9 14h1v1hNvN"/D 12 14h1v1hNvN"/D 20 14h2v1hTvN"/D 26 14h2v1hTvN"/D 36 14h2v1hTvN"/D 41 14h1v1hNvN"/D 44 14h1v1hNvN"/D 52 14h2v1hTvN"/D 58 14h2v1hTvN"/D 70 14h2v1hTvN"/D 86 14h2v1hTvN"/D 89 14h2v1hTvN"/D 105 14h2v1hTvN"/D 10 15h2v1hTvN"/D 42 15h2v1hTvN"/>',
-      speed: 2000,
-      face: {
-        happy: {
-          sprite: `D 8 5h4v1h-4vN"/ D 20 5h4v1h-4vN"/ D 40 5h4v1h-4vN"/ D 52 5h4v1h-4vN"/ D 7 6h1v2hNvT"/ F 8 6h4v2h1v5h1v1h1v1h2vNh1vNh1v-5h1vTh4v2h1v9h1v1h1v2h1v5hNv2hNv3h1v2hT2vTh1v-3hNvThNv-5h1vTh1vNh1v-9h1vT"/ D 12 6h1v2hNvT"/ D 19 6h1v2hNvT"/ D 24 6h1v2hNvT"/ D 39 6h1v2hNvT"/ F 40 6h4v2h1v5h1v1h1v1h2vNh1vNh1v-5h1vTh4v2h1v9h1v1h1v2h1v5hNv2hNv3h1v2hT2vTh1v-3hNvThNv-5h1vTh1vNh1v-9h1vT"/ D 44 6h1v2hNvT"/ D 51 6h1v2hNvT"/ D 56 6h1v2hNvT"/ D 6 8h1v9hNv-9"/ D 13 8h1v5hNv-5"/ D 18 8h1v5hNv-5"/ D 25 8h1v9hNv-9"/ D 38 8h1v9hNv-9"/ D 45 8h1v5hNv-5"/ D 50 8h1v5hNv-5"/ D 57 8h1v9hNv-9"/ D 14 13h1v1hNvN"/ D 17 13h1v1hNvN"/ D 46 13h1v1hNvN"/ D 49 13h1v1hNvN"/ D 15 14h2v1hTvN"/ D 47 14h2v1hTvN"/ D 5 17h1v1hNvN"/ D 26 17h1v1hNvN"/ D 37 17h1v1hNvN"/ D 58 17h1v1hNvN"/ D 4 18h1v2hNvT"/ D 9 18h2v4hTv-4"/ D 21 18h2v4hTv-4"/ D 27 18h1v2hNvT"/ D 36 18h1v2hNvT"/ D 41 18h2v4hTv-4"/ D 53 18h2v4hTv-4"/ D 59 18h1v2hNvT"/ D 3 20h1v5hNv-5"/ D 28 20h1v5hNv-5"/ D 35 20h1v5hNv-5"/ D 60 20h1v5hNv-5"/ D 47 21h2v1hTvN"/ D 14 22h1v1hNvN"/ D 17 22h1v1hNvN"/ D 46 22h1v1hNvN"/ <path fill="#ffc2c2" d="M 47 22h2v1hTvN"/ D 49 22h1v1hNvN"/ D 15 23h2v1hTvN"/ D 47 23h2v1hTvN"/ D 4 25h1v2hNvT"/ D 27 25h1v2hNvT"/ D 36 25h1v2hNvT"/ D 59 25h1v2hNvT"/ D 5 27h1v3hNv-3"/ D 26 27h1v3hNv-3"/ D 37 27h1v3hNv-3"/ D 58 27h1v3hNv-3"/ D 4 30h1v2hNvT"/ D 27 30h1v2hNvT"/ D 36 30h1v2hNvT"/ D 59 30h1v2hNvT"/`,
-          frameNo: 2
-        },
-        sad: {
-          sprite: `D 8 5h4v1h-4vN"/ D 20 5h4v1h-4vN"/ D 40 5h4v1h-4vN"/ D 52 5h4v1h-4vN"/ D 72 5h4v1h-4vN"/ D 84 5h4v1h-4vN"/ D 7 6h1v2hNvT"/ F 8 6h4v2h1v5h1v1h1v1h2vNh1vNh1v-5h1vTh4v2h1v9h1v1h1v2h1v5hNv2hNv3h1v2hT2vTh1v-3hNvThNv-5h1vTh1vNh1v-9h1vT"/ D 12 6h1v2hNvT"/ D 19 6h1v2hNvT"/ D 24 6h1v2hNvT"/ D 39 6h1v2hNvT"/ F 40 6h4v2h1v5h1v1h1v1h2vNh1vNh1v-5h1vTh4v2h1v9h1v1h1v2h1v5hNv2hNv3h1v2hT2vTh1v-3hNvThNv-5h1vTh1vNh1v-9h1vT"/ D 44 6h1v2hNvT"/ D 51 6h1v2hNvT"/ D 56 6h1v2hNvT"/ D 71 6h1v2hNvT"/ F 72 6h4v2h1v5h1v1h1v1h2vNh1vNh1v-5h1vTh4v2h1v9h1v1h1v2h1v5hNv2hNv3h1v2hT2vTh1v-3hNvThNv-5h1vTh1vNh1v-9h1vT"/ D 76 6h1v2hNvT"/ D 83 6h1v2hNvT"/ D 88 6h1v2hNvT"/ D 6 8h1v9hNv-9"/ D 13 8h1v5hNv-5"/ D 18 8h1v5hNv-5"/ D 25 8h1v9hNv-9"/ D 38 8h1v9hNv-9"/ D 45 8h1v5hNv-5"/ D 50 8h1v5hNv-5"/ D 57 8h1v9hNv-9"/ D 70 8h1v9hNv-9"/ D 77 8h1v5hNv-5"/ D 82 8h1v5hNv-5"/ D 89 8h1v9hNv-9"/ D 14 13h1v1hNvN"/ D 17 13h1v1hNvN"/ D 46 13h1v1hNvN"/ D 49 13h1v1hNvN"/ D 78 13h1v1hNvN"/ D 81 13h1v1hNvN"/ D 15 14h2v1hTvN"/ D 47 14h2v1hTvN"/ D 79 14h2v1hTvN"/ D 5 17h1v1hNvN"/ D 26 17h1v1hNvN"/ D 37 17h1v1hNvN"/ D 58 17h1v1hNvN"/ D 69 17h1v1hNvN"/ D 90 17h1v1hNvN"/ D 4 18h1v2hNvT"/ D 27 18h1v2hNvT"/ D 36 18h1v2hNvT"/ D 59 18h1v2hNvT"/ D 68 18h1v2hNvT"/ D 74 18h2v2hTv1hTvTh2vN"/ D 84 18h2v1h2v2hTvNhTvT"/ D 91 18h1v2hNvT"/ D 8 19h4v2h-4vT"/ D 20 19h4v2h-4vT"/ D 40 19h4v2h-4vT"/ D 52 19h4v2h-4vT"/ D 3 20h1v5hNv-5"/ D 28 20h1v5hNv-5"/ D 35 20h1v5hNv-5"/ D 60 20h1v5hNv-5"/ D 67 20h1v5hNv-5"/ D 92 20h1v5hNv-5"/ D 15 21h2v1hTvN"/ D 47 21h2v1hTvN"/ D 79 21h2v1hTvN"/ D 14 22h1v1hNvN"/ D 17 22h1v1hNvN"/ D 46 22h1v1hNvN"/ <path fill="#ffc2c2" d="M 47 22h2v1hTvN"/ D 49 22h1v1hNvN"/ D 78 22h1v1hNvN"/ D 81 22h1v1hNvN"/ D 47 23h2v1hTvN"/ D 4 25h1v2hNvT"/ D 27 25h1v2hNvT"/ D 36 25h1v2hNvT"/ D 59 25h1v2hNvT"/ D 68 25h1v2hNvT"/ D 91 25h1v2hNvT"/ D 5 27h1v3hNv-3"/ D 26 27h1v3hNv-3"/ D 37 27h1v3hNv-3"/ D 58 27h1v3hNv-3"/ D 69 27h1v3hNv-3"/ D 90 27h1v3hNv-3"/ D 4 30h1v2hNvT"/ D 27 30h1v2hNvT"/ D 36 30h1v2hNvT"/ D 59 30h1v2hNvT"/ D 68 30h1v2hNvT"/ D 91 30h1v2hNvT"/`,
-          frameNo: 3
-        }
-      }
-    }     
-  }
-  const randomColor = () =>{
-    const r = ()=> Math.ceil(Math.random() * 255)
-    return `rgb(${r()},${r()},${r()})`
-  }
-
-  // const randomGreen = () =>{
-  //   const r = ()=> Math.ceil(Math.random() * 80)
-  //   const g = ()=> Math.ceil(Math.random() * 155) + 100
-  //   const b = ()=> Math.ceil(Math.random() * 100)
-  //   return `rgb(${r()},${g()},${b()})`
-  // }
-  // const treeColor = '#74645a'
-  // const treeColor = '#3de9f5'
-  const treeColor ='#0d8799'
-  // const treeHighlight = '#58d3d8'
-  // const subGreen = '#0d8799'
-  const treeHighlight = '#3de9f5' 
-  const subGreen = '#58d3d8'
-  // ${treeColor}
-  
-  const treeOne = () =>{
-    return `<path fill="${treeColor}" d="M 13 0 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 11 1 h 2 v 1 h -2 v -1"/> <path fill="${treeHighlight}" d="M 13 1 h 3 v 14 h -1 v -1 h -1 v -1 h 1 v -1 h -1 v -1 h -1 v 1 h -1 v -1 h -1 v -1 h 1 v -1 h -1 v -1 h -1 v -1 h 1 v -2 h 1 v -1 h -1 v -2 h 2 v -1"/> <path fill="${treeColor}" d="M 10 2 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 9 3 h 1 v 1 h -1 v -1"/> <path fill="${subGreen}" d="M 10 3 h 1 v 1 h 1 v 1 h -1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h -1 v 1 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 1 h -1 v 1 h 1 v 1 h 1 v 1 h -14 v -1 h 1 v -1 h 1 v -3 h 1 v -2 h 1 v -2 h 1 v -1 h 1 v -1 h 1 v -1 h 1 v -1"/> <path fill="${treeColor}" d="M 8 4 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 7 5 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 6 6 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 5 7 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 4 9 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 3 12 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 2 14 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 1 15 h 1 v 1 h -1 v -1"/>`
-  }
-
-  const treeTwo = () =>{
-    return `<path fill="${treeHighlight}" d="M 0 0 h 3 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 1 v 1 h 2 v 2 h 1 v 1 h 1 v 3 h 1 v 2 h -1 v 1 h -1 v -1 h -1 v 3 h -1 v -1 h -1 v -1 h -1 v 2 h -3 v -2 h -1 v 1 h -1 v 1 h -1 v -16"/> <path fill="${treeColor}" d="M 4 1 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 5 2 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 6 3 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 7 4 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 9 6 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 10 7 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 11 9 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 12 12 h 1 v 2 h -1 v -2"/> <path fill="${subGreen}" d="M 9 13 h 1 v 1 h 1 v -1 h 1 v 1 h 1 v 1 h 1 v 1 h -5 v -3"/> <path fill="${subGreen}" d="M 2 14 h 1 v 2 h -2 v -1 h 1 v -1"/> <path fill="${subGreen}" d="M 6 14 h 1 v 1 h 1 v 1 h -2 v -2"/> <path fill="${treeColor}" d="M 13 14 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 14 15 h 1 v 1 h -1 v -1"/>`
-  }
-
-  const treeThree = () =>{
-    return `<path fill="${treeColor}" d="M 1 0 h 1 v 3 h -1 v -3"/> <path fill="${subGreen}" d="M 2 0 h 14 v 7 h -4 v 1 h -1 v -1 h -3 v -1 h -3 v -1 h -2 v -2 h -1 v -3"/> <path fill="${treeColor}" d="M 2 3 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 3 5 h 2 v 1 h -2 v -1"/> <path fill="${treeColor}" d="M 5 6 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 8 7 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 12 7 h 4 v 1 h -4 v -1"/> <path fill="${treeColor}" d="M 11 8 h 1 v 3 h -1 v -3"/> F 12 8 h 4 v 6 h -4 v -1 h -1 v -2 h 1 v -3"/> <path fill="${treeHighlight}" d="M 10 10 h 1 v 2 h -1 v 1 h 1 v 1 h 1 v 1 h 4 v 1 h -5 v -1 h -1 v -1 h -1 v -3 h 1 v -1"/> <path fill="${treeColor}" d="M 10 12 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 11 13 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 12 14 h 4 v 1 h -4 v -1"/>`
-  }
-
-  const treeFour = () =>{
-    return `<path fill="${subGreen}" d="M 0 0 h 4 v 1 h 1 v -1 h 9 v 3 h -1 v 2 h -2 v 1 h -3 v 1 h -3 v 1 h -5 v -8"/> <path fill="${treeHighlight}" d="M 4 0 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 14 0 h 1 v 3 h -1 v -3"/> <path fill="${treeColor}" d="M 13 3 h 1 v 2 h -1 v -2"/> <path fill="${treeColor}" d="M 11 5 h 2 v 1 h -2 v -1"/> <path fill="${treeColor}" d="M 8 6 h 3 v 1 h -3 v -1"/> <path fill="${treeColor}" d="M 5 7 h 3 v 1 h -3 v -1"/> F 0 8 h 1 v 1 h 3 v 2 h 1 v 2 h -1 v 1 h -4 v -6"/> <path fill="${treeColor}" d="M 1 8 h 4 v 3 h -1 v -2 h -3 v -1"/> <path fill="${treeHighlight}" d="M 5 10 h 1 v 1 h 1 v 3 h -1 v 1 h -1 v 1 h -5 v -1 h 4 v -1 h 1 v -1 h 1 v -1 h -1 v -2"/> <path fill="${treeColor}" d="M 5 12 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 4 13 h 1 v 1 h -1 v -1"/> <path fill="${treeColor}" d="M 0 14 h 4 v 1 h -4 v -1"/>`
-  }
-
-  const tree = () =>{
-    return 'D 5 0h6v1h2v1h1v1h1v1h1v7hNv1hNv1hNv1hTv2hNv-3hNvNhTv1hNv3hNvThTvNhNvNhNvNhNv-7h1vNh1vNh1vNh2vN"/ F 7 12h2v1h1v3h-4v-3h1vN"/'
-  }
-
-  const flowers = () =>{
-    return 'D 2 1h2v1hTvN"/ D 1 2h1v1hNvN"/ D 4 2h1v1hNvN"/ D 2 3h2v1hTvN"/ D 11 4h2v1hTvN"/ D 10 5h1v1hNvN"/ D 13 5h1v1hNvN"/ D 11 6h2v1hTvN"/ D 4 8h2v1hTvN"/ D 3 9h1v1hNvN"/ D 6 9h1v1hNvN"/ D 4 10h2v1hTvN"/ D 13 12h2v1hTvN"/ D 12 13h1v1hNvN"/ D 15 13h1v1hNvN"/ D 13 14h2v1hTvN"/'
-  }
-
-  const buildingCorner = subColor =>{
-    return `D 5 0h3v1h-3vN"/ <path fill="${subColor || 'white'}" d="M 8 0h2v1h2vNh2v1h2v15hN5vN1h1vTh1vNh2vNh3vN"/ D 10 0h2v1hTvN"/ D 14 0h2v1hTvN"/ D 3 1h2v1hTvN"/ D 2 2h1v1hNvN"/ D 1 3h1v2hNvT"/ D 0 5h1v11hNvN1"/`
-  }
-
-  const roofCorner = subColor =>{
-    return `D 0 0h1v2hNvT"/ <path fill="${subColor || 'white'}" d="M 1 0h15v15hN1vNhTvNhTv-5hNvTh1vThNvTh1vT"/ D 0 4h1v2hNvT"/ D 0 8h1v8hNv-8"/ F 1 13h1v1h1v1h2v1h-4v-3"/ D 2 13h1v1hNvN"/ D 3 14h2v1hTvN"/ D 5 15h11v1hN1vN"/`
-  }
-
-  const checkered = () =>{
-    return 'D 0 0h2v2hTvT"/ D 4 0h2v2hTvT"/ D 8 0h2v2hTvT"/ D 12 0h2v2hTvT"/ D 2 2h2v2hTvT"/ D 6 2h2v2hTvT"/ D 10 2h2v2hTvT"/ D 14 2h2v2hTvT"/ D 0 4h2v2hTvT"/ D 4 4h2v2hTvT"/ D 8 4h2v2hTvT"/ D 12 4h2v2hTvT"/ D 2 6h2v2hTvT"/ D 6 6h2v2hTvT"/ D 10 6h2v2hTvT"/ D 14 6h2v2hTvT"/ D 0 8h2v2hTvT"/ D 4 8h2v2hTvT"/ D 8 8h2v2hTvT"/ D 12 8h2v2hTvT"/ D 2 10h2v2hTvT"/ D 6 10h2v2hTvT"/ D 10 10h2v2hTvT"/ D 14 10h2v2hTvT"/ D 0 12h2v2hTvT"/ D 4 12h2v2hTvT"/ D 8 12h2v2hTvT"/ D 12 12h2v2hTvT"/ D 2 14h2v2hTvT"/ D 6 14h2v2hTvT"/ D 10 14h2v2hTvT"/ D 14 14h2v2hTvT"/'
-  }
-
-  const plain = subColor =>{
-    return `<path fill="${subColor || 'white'}" d="M 0 0h16v16hN6vN6"/`
-  }
-
-  const plainEdge = subColor =>{
-    return `D 0 0h16v1hN6vN"/ <path fill="${subColor || 'white'}" d="M 0 1h16v15hN6vN5"/`
-  }
-
-  const door = () =>{
-    return 'F 0 0h16v15hNvN0hNvThTvNhTvNh-4v1hTv1hTv2hNv10hNvN5"/ D 6 1h4v1h2v1h2v2h1v10h1v1hN6vNh1vN0h1vTh2vNh2vN"/'
-  }
-
-  const roundWindow = () =>{
-    return 'F 0 0h16v16hN6vN6"/ D 6 2h4v1h2v1h1v2h1v4hNv2hNv1hTv1h-4vNhTvNhNvThNv-4h1vTh1vNh2vN"/'
-  }
-
-  const squareWindow = () =>{
-    return 'F 0 0h16v16hN6vN6"/ D 5 2h6v1h1v10hNv1h-6vNhNvN0h1vN"/'
-  }
-
-  const sideSquareWindow = () =>{
-    return 'D 0 0h1v16hNvN6"/ F 1 0h15v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-8vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/'
-  }
-
-  const noSideWindow = () =>{
-    return 'F 0 0h16v16h-3vNh1v-9hNvNh-4v1hNv9h1v1h-9vN6"/ D 9 5h4v1h1v9hNv1h-4vNhNv-9h1vN"/`'
-  }
-
-  const roofCurve = subColor =>{
-    return `<path fill="${subColor || 'white'}" d="M 0 0h16v15hTvNhNvNhNvNhTvNh-4v1hTv1hNv1hNv1hTvN5"/ D 6 11h4v1h-4vN"/ D 4 12h2v1hTvN"/ F 6 12h4v1h2v1h1v1h1v1hN2vNh1vNh1vNh2vN"/ D 10 12h2v1hTvN"/ D 3 13h1v1hNvN"/ D 12 13h1v1hNvN"/ D 2 14h1v1hNvN"/ D 13 14h1v1hNvN"/ D 0 15h2v1hTvN"/ D 14 15h2v1hTvN"/`
-  }
-
-  const roofTopBottomCorner = subColor =>{
-    return `D 0 0h1v2hNvT"/ F 1 0h15v15hN1vNhTvNhNvThNv-3hNvTh1vThNvTh1vT"/ D 0 4h1v2hNvT"/ D 0 8h1v3hNv-3"/ <path fill="${subColor || 'white'}" d="M 0 11h1v2h1v1h1v1h2v1h-5v-5"/ D 1 11h1v2hNvT"/ D 2 13h1v1hNvN"/ D 3 14h2v1hTvN"/ D 5 15h11v1hN1vN"/`
-  }
-
-  const river = () =>{
-    const main = '#58d3d8'
-    const sub = '#a2fcf0'
-
-    return `<path fill="${main}" d="M 0 0h2v7h2v-7h19v4h2v-4h7v16h-7v-5hTv5h-9v-7hTv7hN2vN6"/ <path fill="${sub}" d="M 2 0h2v7hTv-7"/ <path fill="${sub}" d="M 23 0h2v4hTv-4"/ <path fill="${sub}" d="M 28 3h2v9hTv-9"/ <path fill="${sub}" d="M 7 4h2v8hTv-8"/ <path fill="${sub}" d="M 18 4h2v9hTv-9"/ <path fill="${sub}" d="M 12 9h2v7hTv-7"/ <path fill="${sub}" d="M 23 11h2v5hTv-5"/`
-  }
-
-  const riverCurve = () =>{
-    const main = '#58d3d8'
-    const sub = '#a2fcf0'
-    return `
-    <path fill="${main}" d="M 8 0h8v8h1vTh1vTh1vNh1vNh2vNh2vNh8v2h-3v1h-4v2h4vNh3v8hTv1hTv3h-8v-5h1vThTv2hNv5h-9v-4h1vTh1vNh2vThTv1hNv1hNv1hNv2hNv4h-7v-8h1vTh1vTh1vNh1vNh2vNh2vN"/ <path fill="${sub}" d="M 10 2h5v2h-5v1hTv1hNv1hTvTh2vNh1vNh2vN"/ <path fill="${sub}" d="M 29 2h3v2h-3v1h-4vTh4vN"/ <path fill="${sub}" d="M 11 7h2v2hTv1hNv2hNv4hTv-4h1vTh1vNh1vNh1vN"/ <path fill="${sub}" d="M 26 7h3v2h-3v1hNv1hTvTh1vNh2vN"/ <path fill="${sub}" d="M 19 9h2v2hNv5hTv-5h1vT"/ <path fill="${sub}" d="M 30 12h2v2hTv2hTv-3h2vN"/ <path fill="${main}" d="M 30 14h2v2hTvT"/`
-  }
-
-  const ladder = subColor =>{
-    return `<path fill="${subColor || 'white'}" d="M 0 0h16v16hN6vN6"/ D 3 1h1v1hNvN"/ D 12 1h1v1hNvN"/ D 4 2h8v1h-8vN"/ D 3 5h1v1hNvN"/ D 12 5h1v1hNvN"/ D 4 6h8v1h-8vN"/ D 3 9h1v1hNvN"/ D 12 9h1v1hNvN"/ D 4 10h8v1h-8vN"/ D 3 13h1v1hNvN"/ D 12 13h1v1hNvN"/ D 4 14h8v1h-8vN"/`
-  }
-
-  const ladderHole = subColor =>{
-    return `D 0 0h16v1hNv10hNv2hTv1hTv1h-4vNhTvNhTvThNvN0hNvN"/ F 0 1h1v10h1v2h2v1h2v1h4vNh2vNh2vTh1vN0h1v15hN6vN5"/ <path fill="${subColor}" d="M 3 1h1v1hNvN"/ <path fill="${subColor}" d="M 12 1h1v1hNvN"/ <path fill="${subColor}" d="M 4 2h8v1h-8vN"/ <path fill="${subColor}" d="M 3 5h1v1hNvN"/ <path fill="${subColor}" d="M 12 5h1v1hNvN"/ <path fill="${subColor}" d="M 4 6h8v1h-8vN"/ <path fill="${subColor}" d="M 3 9h1v1hNvN"/ <path fill="${subColor}" d="M 12 9h1v1hNvN"/ <path fill="${subColor}" d="M 4 10h8v1h-8vN"/`
-  } 
-
-  const exit = subColor =>{
-    return `<path fill="${subColor}" d="M 0 0h16v4hTv2hTvThTv2hTvThTv2hTvThTv2hTv-6"/ D 2 4h2v2hTvT"/ D 6 4h2v2hTvT"/ D 10 4h2v2hTvT"/ D 14 4h2v2hTvT"/ D 0 6h2v2h2vTh2v2h2vTh2v2h2vTh2v2h2v8hN6vN0"/ <path fill="${subColor}" d="M 2 6h2v2hTvT"/ <path fill="${subColor}" d="M 6 6h2v2hTvT"/ <path fill="${subColor}" d="M 10 6h2v2hTvT"/ <path fill="${subColor}" d="M 14 6h2v2hTvT"/`
-  }
-
-  // const sub = '#f9ede5'
-  const sub = '#58d3d8'
-  const main = '#74645a'
-
-  const svgData = {
-    'ta': { svg: treeOne },
-    'tb': { svg: treeTwo },
-    'tc': { svg: treeThree },
-    'td': { svg: treeFour },
-    't': { svg: tree, color: '#0d8799' },
-    'w': { svg: tree, color: '#0d8799' },
-    'o': { svg: flowers, color: randomColor },
-    'd': { svg: buildingCorner, color: main, subColor: sub },
-    's': { svg: buildingCorner, color: main, subColor: sub, rotate: 90 },
-    'bt': { svg: buildingCorner, color: main },
-    'br': { svg: buildingCorner, color: main, rotate: 90 },
-    'bb': { svg: buildingCorner, color: main, rotate: 180 },
-    'bl': { svg: buildingCorner, color: main, rotate: 270 },
-    'bx': { svg: roofTopBottomCorner, color: main, subColor: '#0d8799' },
-    'by': { svg: roofTopBottomCorner, color: main, subColor: '#0d8799', flip: 'h' },
-    'rr': { svg: roofTopBottomCorner, color: main, subColor: sub },
-    'rl': { svg: roofTopBottomCorner, color: main, subColor: sub, flip: 'h' },
-    'rt': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub },
-    'ry': { svg: roofTopBottomCorner, rotate: 180, color: main, subColor: sub, flip: 'h' },
-    'g': { svg: roofCorner, color: main, subColor: sub },
-    'y': { svg: roofCorner, color: main, subColor: sub, flip: 'h' },
-    'p': { svg: plain },
-    'rp': { svg: plain, subColor: sub },
-    'do': { svg: door, color: main },
-    'wi': { svg: roundWindow, color: main },
-    'sw': { svg: squareWindow, color: main },
-    'sl': { svg: sideSquareWindow, color: main },
-    'sr': { svg: sideSquareWindow, color: main, flip: 'h' },
-    'nw': { svg: noSideWindow, color: main },
-    'nr': { svg: noSideWindow, color: main, flip: 'h' },
-    'at': { svg: plainEdge, color: main  },
-    'ar': { svg: plainEdge, color: main, rotate: 90 },
-    'ab': { svg: plainEdge, color: main, rotate: 180 },
-    'al': { svg: plainEdge, color: main, rotate: 270 },
-    'rc': { svg: roofCurve, color: main, subColor: sub },
-    'pt': { svg: plainEdge, color: main, subColor: sub },
-    'pr': { svg: plainEdge, color: main, subColor: sub, rotate: 90 },
-    'pb': { svg: plainEdge, color: main, subColor: sub, rotate: 180 },
-    'pu': { svg: plainEdge, color: main, subColor: sub, rotate: 270 },
-    'b': { svg: plain, subColor: '#a2fcf0' },
-    'bd': { svg: plain, subColor: '#0d8799' },
-    'r': { svg: river, frameNo: 2, speed: 1000 },
-    'rh': { svg: river, rotate: 90, frameNo: 2, speed: 1000 },
-    'ra': { svg: riverCurve, frameNo: 2, speed: 1000 },
-    'rb': { svg: riverCurve, rotate: 90, frameNo: 2, speed: 1000 },
-    'rd': { svg: riverCurve, rotate: 180, frameNo: 2, speed: 1000 },
-    're': { svg: riverCurve, rotate: 270, frameNo: 2, speed: 1000 },
-    'la': { svg: ladder, color: main, subColor: sub },
-    'c': { svg: checkered, color: '#a2e8fc' },
-    'e': { svg: exit, color: '#0d8799', subColor: '#fff' },
-    'lh': { svg: ladderHole, color: '#bba293', subColor: sub }
-  }
-
-    
-  const mapData = {
-    one: {
-      iWidth: 30,
-      iHeight: 20,
-      characters: [
-        { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio' },
-        { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon' },
-        { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo' },
-      ],
-      events: {
-        5: { event: transport, gateway: 'portal3'},
-        6: { event: transport, gateway: 'portal3'},
-        419: { event: transport, gateway: 'portal4'},
-        449: { event: transport, gateway: 'portal4'},
-        253: { event: transport, gateway: 'portal7'},
-        288: { event: transport, gateway: 'portal6'},
-        167: { event: transport, gateway: 'portal13'},
-      },
-      map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nr1,sr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,sl1,p1,nr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,sl1,p1,sr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
-      eventContents: {
-        hello: { first:{ text:['hello!'], }, },
-        tomato: {
-          first:{ 
-            text:['hello!', 'test'], 
-            face:['happy', 'sad'], 
-          },
-        },
-        apple: {
-          first:{ 
-              text:['how are you?', 'test'], 
-              choice: {
-                'okay': 's_1',
-                'not so good': 's_2',
-                'banana' : 'banana'
-              }
-            },
-          s_1: {
-            text: ['yeah!'], 
-              choice: {
-                'yes': 's_3',
-                'no': 's_4'
-              }
-            },
-          s_2: {
-            text: ['really?'], 
-              choice: {
-                'yes': 's_3',
-                'no': 's_4'
-              }
-            },
-          s_3: { text: ['cool!','cool two'] },
-          s_4: { 
-            text: ['whatever'],
-            face: ['sad'] 
-          },  
-          banana: { text: ['banana!', 'bananananana!'] }  
-        }
-      },
-      entry: {
-        start: {
-          // map: 'one',
-          // cell: 313,
-          map: 'three',
-          cell: 188,
-        },
-        portal3: {
-          map: 'three',
-          cell: 224,
-          direction: 'up'
-        },
-        portal4: {
-          map: 'four',
-          cell: 81,
-          direction: 'right'
-        },
-        portal7: {
-          map: 'house_one_0',
-          cell: 62,
-          direction: 'up',
-          noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
-        },
-        portal6: {
-          map: 'house_one_0',
-          cell: 79,
-          direction: 'up',
-          noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
-        },
-        portal13: {
-          map: 'house_one_1',
-          cell: 26,
-          direction: 'up',
-          noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
-        },
-      },
-    },
-    two: {
-      iWidth: 40,
-      iHeight: 30,
-      characters: [
-        { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot' },
-      ],
-      events: {
-        1178: { event: transport, gateway: 'portal1'},
-        1179: { event: transport, gateway: 'portal1'},
-        1180: { event: transport, gateway: 'portal1'},
-      },
-      map: 'v18,b3,v20,w17,b3,w12,v8,w1,b30,w1,v2,t1,v5,w1,b11,t1,b18,w1,v8,w1,b6,t1,b19,t1,b3,w1,v5,t1,v2,w1,b2,t1,b27,w1,v8,w1,b18,t1,b2,t1,b8,w7,v2,w1,b36,w1,v2,w1,b11,t1,b24,w1,v2,w1,b33,t1,b2,w1,v2,w1,b6,t1,b29,w1,v2,w1,b2,t1,b20,o8,b5,w1,v2,w1,b23,o8,b5,w1,v2,w1,b16,t1,b6,o8,b5,w1,v2,w1,b23,o8,b2,t1,b2,w1,v2,w1,b23,o8,b5,w1,v2,w1,b3,t1,b8,t1,b10,o8,b5,w1,v2,w1,b36,w1,v2,w1,b36,w1,v2,w1,b7,t1,b25,t1,b2,w1,v2,w1,b36,w1,v2,w13,b24,w1,v14,w1,b4,t1,b4,t1,b9,t1,b4,w1,v4,t1,v4,t1,v4,w1,b24,w1,v14,w1,b24,w1,v6,t1,v7,w1,b1,t1,b22,w1,v12,t1,v1,w1,b12,t1,b3,t1,b2,t1,b4,w1,v14,w1,b24,w1,v4,t1,v5,t1,v3,w5,b3,w18,v19,b3,v19',
-      eventPoints: {
-        hello: { text: ['hello!'] },
-      },
-      entry: {
-        portal1: {
-          map: 'one',
-          cell: 35,
-          direction: 'down',
-        },
-      }
-    },
-    three: {
-      iWidth: 18,
-      iHeight: 14,
-      characters: [
-        { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala' },
-        { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira' },
-        { pos: 165, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko' },
-      ],
-      events: {
-        241: { event: transport, gateway: 'portal1'},
-        242: { event: transport, gateway: 'portal1'},
-        243: { event: transport, gateway: 'portal1'},
-        62: { event: check, index: 'tree1'},
-        112: { event: check, index: 'bunny1'},
-      },
-      map: 'v19,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,o1,b10,o1,ta1,tb1,v2,tc1,td1,o1,b6,ta1,tb1,b2,o1,tc1,td1,v2,ta1,tb1,o1,b6,tc1,td1,b2,o1,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,ta1,tb1,ta1,tb1,b2,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,b2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v8,b2,v9',
-      eventContents: {
-        hello: { 
-          first:{ 
-            text:['hello!'], 
-          }, 
-        },
-        tree1: {
-          text: [
-            'hello! I\'m a tree!',
-            'yeah!'
-          ],
-          art: 'http://masahito.co.uk/img/icecream_bunny.png',
-          // item: null,
-          direction: 'up'
-        },
-        bunny1: {
-          text: ['hello! Bunny!'],
-          // item: null,
-          direction: 'left'
-        },
-      },
-      entry: {
-        portal1: {
-          map: 'one',
-          cell: 35,
-          direction: 'down',
-        },
-      }
-    },
-    four: {
-      iWidth: 20,
-      iHeight: 10,
-      events: {
-        80: { event: transport, gateway: 'portal5'},
-        100: { event: transport, gateway: 'portal5'},
-      },
-      map: 'v21,w14,v6,w1,b12,w1,v6,w1,b2,o3,b7,w5,v1,b18,w1,v1,b18,w1,v2,w1,b12,o3,b1,w1,v2,w1,b16,w1,v2,w18,v21',
-      entry: {
-        portal5: {
-          map: 'one',
-          cell: 418,
-          direction: 'left'
-        },
-      }
-    },
-    house_one_0: {
-      name: 'house_one_0',
-      iWidth: 12,
-      iHeight: 9,
-      events: {
-        74: { event: transport, gateway: 'portal8'},
-        91: { event: transport, gateway: 'portal9'},
-        5: { event: transport, gateway: 'portal10'},
-      },
-      map: 'bd4,rp1,la1,rp5,bd5,rp1,la1,rp5,bd2,rp4,la1,rp5,bd2,rp3,ry1,at5,rt1,bd2,ry1,at2,p6,ar1,bd2,bx1,p1,ab1,p6,ar1,bd3,e1,bd1,bx1,ab2,p1,ab2,by1,bd8,e1,bd16',
-      entry: {
-        portal8: {
-          map: 'one',
-          cell: 283,
-          direction: 'down',
-        },
-        portal9: {
-          map: 'one',
-          cell: 318,
-          direction: 'down',
-        },
-        portal10: {
-          map: 'house_one_1',
-          cell: 21,
-          direction: 'down',
-          noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
-        }, 
-      }
-    },
-    house_one_1: {
-      iWidth: 6,
-      iHeight: 6,
-      events: {
-        20: { event: transport, gateway: 'portal11'},
-        32: { event: transport, gateway: 'portal12'},
-      },
-      map: 'bd7,rp4,bd2,rp1,la1,rp2,bd2,ry1,lh1,at1,rt1,bd2,bx1,p1,ab1,by1,bd3,e1,bd3',
-      entry: {
-        portal11: {
-          map: 'house_one_0',
-          cell: 5,
-          direction: 'up',
-          noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
-        },
-        portal12: {
-          map: 'one',
-          cell: 197,
-          direction: 'down',
-          noWall: ['d','pt','s','pu','rp','pr','g','pb','y','do']
-        },
-      }
-    }
-  }
-
 
   const transitionCover = document.querySelector('.transition_cover')
   const touchToggle = document.querySelector('.touch_toggle')
@@ -632,37 +188,7 @@ function init() {
     } 
   }
 
-  const animateCell = ({ target, start, end, interval, speed }) => {
-    const startFrame = start || 0
-    let i = startFrame
-    clearInterval(interval)
-    interval = setInterval(()=> {
-      target.style.marginLeft = `${-(i * 100)}%`
-      i = i >= end
-        ? startFrame
-        : i + 1
-    }, speed || 200)
-  }
 
-
-  const animateCells = cells => {
-    animInterval = setInterval(()=> {
-      cells.forEach( cell =>{
-        const current =  cell.style.marginLeft.replace('%','') / -100
-        // console.log('anim', animInterval)
-        const next = current >= cell.dataset.frame_no - 1
-          ? 0
-          : current + 1
-        cell.style.marginLeft = `${-(next * 100)}%`  
-      })
-    }, 500)
-  }
-
-  const startCellAnimations = () =>{
-    clearInterval(animInterval)
-    const cells = document.querySelectorAll('.svg_anim')
-    animateCells(cells)
-  }
 
   const setUpWalls = target =>{
     const decompressedMap = decompress(mapData[mapKey].map)
@@ -921,7 +447,7 @@ function init() {
   }
 
 
-  function check(count){
+  const check = count =>{
     const event = mapData[mapKey].events[bear.pos]
     if (event) {
       const eventPoint = mapData[mapKey].eventContents[event.index]
@@ -948,7 +474,7 @@ function init() {
     turnSprite(bear.facingDirection, bear, sprite, false)
     setTimeout(()=>turnSprite(entryPoint.direction, bear, sprite, false), 150)
     spawnCharacter()
-    startCellAnimations()
+    startCellAnimations(animInterval)
 
     setTimeout(()=> {
       mapImage.classList.remove('transition')
@@ -1021,7 +547,10 @@ function init() {
     // trigger event based on bear position
     if (!spawn && mapData[mapKey].events[bear.pos]) {
       const { event, gateway } = mapData[mapKey].events[bear.pos]
-      if (gateway) setTimeout(()=> event(gateway),200)
+      if (gateway) setTimeout(()=> {
+        event === 'transport' && transport(gateway)
+        event === 'check' && check(gateway)
+      },200)
     } 
 
     const { x: dataX, y: dataY } = mapImageTiles[bear.pos].dataset
@@ -1153,7 +682,7 @@ function init() {
   transport('start')
 
 
-  testButton = document.querySelector('.test_button')
+  const testButton = document.querySelector('.test_button')
   testButton.addEventListener('click', ()=>{
     const tontokoData = spawnData.filter(s => s.name === 'tontoko')[0]
     tontokoData.spawn.style.backgroundColor = 'yellow'
