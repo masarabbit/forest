@@ -13,7 +13,7 @@ import svgData from './data/svgData.js'
 import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
 import { decode, decompress } from './utils/compression.js'
-import { setTargetSize, setTargetPos, adjustRectSize, centerOfMap } from './utils/utils.js'
+import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap } from './utils/utils.js'
 
 function init() {
 
@@ -86,18 +86,9 @@ function init() {
     0: 'down',
   }
 
-
-  const setWidthAndHeight = ()=>{
-    const { offsetWidth: w, offsetHeight:h } = wrapper
-    const pWidth = w < 800 ? w : 800
-    map.width = 2 * Math.floor((pWidth / map.cellD) / 2)
-    const pHeight = h < 600 ? h : 600
-    map.height = 2 * Math.floor((pHeight / map.cellD) / 2)
-  }
-
   const setLocation = key => {
     map.key = key
-    setWidthAndHeight()
+    setWidthAndHeight(map, wrapper)
     
     const { iWidth:w, iHeight:h } = mapData[map.key]   
     // TODO where does this get used?
@@ -169,24 +160,19 @@ function init() {
     })
   }
 
-  const spawnWalk = (actor, para, m) =>{
-    actor[para] += m
-    actor.spawn.parentNode.style[para] = `${actor[para]}px`
-  }
-  
   const spawnMotion = i =>{
     const { spawnData, sprites } = map
     if (spawnData[i].pause || !windowActive) return
-    spawnSpriteWalk({
+    spriteWalk({
       dir: ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)],
       actor: spawnData[i], 
       sprite: sprites[i], 
     })
   }
 
-  const setPos = (key, num, dir) =>{
-    map.mapXY[key] = num
-    mapImage.style[dir] = `${num}px`
+  const setPos = (para, num) =>{
+    map.mapXY[para === 'left' ? 'x' : 'y'] = num
+    mapImage.style[para] = `${num}px`
   }
 
   const setSpritePos = (num, actor, sprite) =>{
@@ -308,7 +294,6 @@ function init() {
     } 
   }
   
-
   
   // displays multiple choice
   const displayAnswer = prev =>{ 
@@ -452,68 +437,63 @@ function init() {
   
 
   const turnSprite = (e = 'down', actor, sprite, animate) => {
-    const { cellD } = map
-    let m = -cellD
     actor.facingDirection = e
-    const animateWalk = (a, b, c, turn) =>{
-      actor.animationTimer.forEach(timer=> clearTimeout(timer))
-      m = animate ? m * a : m * c
-      if (turn) sprite.parentNode.classList.toggle('right') 
-      if (animate){
-        actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * b, actor, sprite), 100)
-        actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * c, actor, sprite), 200) 
-      }   
+    const { cellD } = map
+    const frames = {
+      right: [4, 6, 5, 'add'],
+      left: [4, 6, 5,'remove'],
+      up: [2, 2, 3,'toggle'],
+      down: [0, 0, 1, 'toggle']
     }
-    const spriteChange = { // TODO can refactor this bit?
-      right: ()=> { 
-        sprite.parentNode.classList.add('right')
-        animateWalk(4, 6, 5, false)
-      },
-      left: ()=> { 
-        sprite.parentNode.classList.remove('right')
-        animateWalk(4, 6, 5, false)
-      },
-      up: ()=> animateWalk(2, 2, 3, true), 
-      down: ()=> animateWalk(0, 0, 1, true)
-    }
-    spriteChange[e]()
+    let m = -cellD
+    m = animate ? m * frames[e][0] : m * frames[e][2]
+    sprite.parentNode.classList[frames[e][3]]('right') 
+    actor.animationTimer.forEach(timer=> clearTimeout(timer))
+    if (animate){
+      actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * frames[e][1], actor, sprite), 100)
+      actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * frames[e][2], actor, sprite), 200) 
+    }   
     setSpritePos(m, actor, sprite)
+  }
+
+  const dirTranslations = () =>{
+    const { iWidth, cellD } = map
+    return {
+      right: { diff: 1, para: 'left', dist: -cellD },
+      left: { diff: -1, para: 'left', dist: cellD },
+      up: { diff: -iWidth, para: 'top', dist: cellD },
+      down: { diff: iWidth, para: 'top', dist: -cellD }
+    }  
   }
 
   const spriteWalk = ({ dir, actor, sprite }) =>{
     if (!dir || !bear.motion) return
-    map.locationTiles[actor.pos].classList.remove('mark')
-    const { iWidth, cellD, mapImageTiles: mTiles } = map
+    const isBear = actor === bear
+
+    if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
+    const { mapImageTiles: mTiles } = map
     const { x, y } = map.mapXY
 
     // prevents bear from turning away from ladder
-    mTiles[bear.pos].classList.contains('la') || 
-    mTiles?.[bear.pos - iWidth].classList.contains('la')
-    && dir === 'down'
-      ? turnSprite('up', actor, sprite, true)
-      : turnSprite(dir, actor, sprite, true)
+    turnSprite(
+      isBear && mTiles[bear.pos].classList.contains('la') ? 'up' : dir,
+      actor, sprite, true
+    )
+    const { diff, para, dist } = dirTranslations()[dir]
+    if (noWall(actor.pos + diff)) { 
+      if (isBear) {
+        setPos(para, (para === 'left' ? x : y ) + dist)
+      } else {
+        actor[para] -= dist // note that dist needs to be flipped around
+        actor.spawn.parentNode.style[para] = `${actor[para]}px`
+      } 
+      actor.pos += diff
+    }  
       
-    if (dir === 'right' && noWall(actor.pos + 1)) {
-      setPos('x', x - cellD, 'left')
-      actor.pos += 1 
-    }
-    if (dir === 'left' && noWall(actor.pos - 1)) {
-      setPos('x', x + cellD, 'left')
-      actor.pos -= 1 
-    }
-    if (dir === 'up' && noWall(actor.pos - iWidth)) {
-      setPos('y', y + cellD, 'top')
-      actor.pos -= iWidth 
-    }
-    if (dir === 'down' && noWall(actor.pos + iWidth)) {
-      setPos('y', y - cellD, 'top')
-      actor.pos += iWidth 
-    }
-      
-    map.locationTiles[actor.pos].classList.add('mark')
+    if (isBear) map.locationTiles[actor.pos].classList.add('mark')
     
     // trigger event based on bear position
-    if (mapData[map.key].events[bear.pos]) {
+    if (isBear && mapData[map.key].events[bear.pos]) {
       const { event, gateway } = mapData[map.key].events[bear.pos]
       if (gateway) setTimeout(()=> {
         event === 'transport' && transport(gateway)
@@ -523,29 +503,6 @@ function init() {
 
     const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset
     indicator.innerHTML = `x:${x} y:${y} pos:${map.locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
-  }
-
-  const spawnSpriteWalk = ({ dir, actor, sprite }) =>{
-    if (!dir || !bear.motion) return
-    const { iWidth, cellD } = map
-    turnSprite(dir, actor, sprite, true)
-      
-    if (dir === 'right' && noWall(actor.pos + 1)) {
-      spawnWalk(actor, 'left', cellD)
-      actor.pos += 1 
-    }
-    if (dir === 'left' && noWall(actor.pos - 1)) {
-      spawnWalk(actor, 'left', -cellD)
-      actor.pos -= 1 
-    }
-    if (dir === 'up' && noWall(actor.pos - iWidth)) {
-      spawnWalk(actor, 'top', -cellD)
-      actor.pos -= iWidth 
-    }
-    if (dir === 'down' && noWall(actor.pos + iWidth)) {
-      spawnWalk(actor, 'top', cellD)
-      actor.pos += iWidth 
-    }
   }
 
   const select = () =>{
@@ -619,8 +576,8 @@ function init() {
     const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset
     const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
     const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
-    setPos('x', xMargin, 'left')  
-    setPos('y', yMargin, 'top')
+    setPos('left', xMargin)  
+    setPos('top', yMargin)
 
     // adjust sprite
     setSpritePos(-cellD, bear, sprite)
@@ -648,7 +605,7 @@ function init() {
   }
   
   const setWidthAndHeightAndResize = () =>{
-    setWidthAndHeight()
+    setWidthAndHeight(map, wrapper)
     map.start = centerOfMap(map.width, map.height)
     resize()
   }
@@ -682,7 +639,7 @@ function init() {
 
     console.log('sprite',tontokoData.spawn.parentNode)
 
-    spawnSpriteWalk({
+    spriteWalk({
       dir: 'right', 
       actor: tontokoData, 
       sprite: tontokoData.spawn.childNodes[1],
