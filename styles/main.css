@@ -71,6 +71,7 @@ body {
   width: 800px;
   z-index: 1;
   pointer-events: none;
+  border: hotpink 1px solid;
 }
 
 .sprite_container {
@@ -91,7 +92,7 @@ body {
   width: 224px;
   transform-origin: center bottom;
   animation: squish infinite 1s;
-  background-color: hotpink;
+  /* background-color: hotpink; */
 }
 
 @keyframes squish {
@@ -137,7 +138,7 @@ a:hover {
   width: 800px;
   overflow: hidden;
   background-color: transparent;
-  /* border: hotpink solid 1px; */
+  /* border: green solid 1px; */
 }
 
 .map_image {
@@ -148,6 +149,7 @@ a:hover {
   justify-content: flex-start;
   flex-wrap: wrap;
   transition: 0.5s;
+  /* border: green solid 1px; */
 }
 
 .map_image.transition {
@@ -167,7 +169,7 @@ a:hover {
   /* transition:0.5s; */
   cursor: pointer;
   /* background-color: rgb(180, 255, 245); */
-  /* border: rgb(252, 65, 196) 1px solid; */
+  border: rgb(252, 65, 196) 1px solid;
   /* overflow: hidden; */
 }
 
@@ -307,7 +309,6 @@ a:hover {
   /* transition: 1s; */
 }
 
-
 .face {
   position: absolute;
   width: 70px;
@@ -326,7 +327,6 @@ a:hover {
   transition: 0.4s;
   /* border: pink 1px solid; */
 }
-
 
 .text_display {
   position: fixed;
@@ -383,7 +383,6 @@ a:hover {
   pointer-events: none;
 }
 
-
 .option {
   color: white;
   background-color: transparent;
@@ -401,13 +400,11 @@ a:hover {
   background-color: rgb(255, 255, 255);
 }
 
-
 @keyframes slide-in-from-left {
   0% { left: -100vh; }
   95% { left: 30px; }
   100% { left: 20px; }
 }
-
 
 @keyframes slide-in-from-right {
   0% { right: -100vh; }
@@ -461,7 +458,6 @@ a:hover {
 .control :nth-child(4) {
   margin: 10px 10px 10px 30px;
 }
-
 
 .toggle_wrapper {
   position: fixed;
@@ -536,7 +532,6 @@ input:checked + .slider:before {
   background-color: #a2fcf0;
 }
 
-
 .svg_wrap {
   transform-origin: center;
   height: 100%;
@@ -544,7 +539,6 @@ input:checked + .slider:before {
   pointer-events: none;
   /* border: green 1px solid; */
 }
-
 
 .svg_output {
   margin: 100px 0 0 0;

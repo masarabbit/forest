@@ -10,46 +10,25 @@
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
 import svgData from './data/svgData.js'
+import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
-
+import { decode, decompress } from './utils/compression.js'
+import { setTargetSize, setTargetPos, adjustRectSize, centerOfMap } from './utils/utils.js'
 
 function init() {
-  
-  
+
   //* stops intervals firing while window is inactive
   let windowActive
   window.addEventListener('focus', ()=> windowActive = true)
   window.addEventListener('blur', ()=> windowActive = false)
 
-  const decode = arr =>{
-    return arr.split('').map(c=>{
-      if (c === 'D') return '<path d="M'
-      if (c === 'F') return '<path fill="#fff" d="M'
-      if (c === '/') return '/>'
-      if (c === 'N') return '-1' 
-      if (c === 'T') return '-2'
-      return c
-    }).join('')
-  }
-
-  const decompress = arr =>{
-    const output = []
-    arr.split(',').forEach(x=>{
-      const letter = x.split('').filter(y=>y * 0 !== 0).join('')
-      const repeat = x.split('').filter(y=>y * 0 === 0).join('')
-      for (let i = 0; i < repeat; i++){
-        output.push(letter)
-      }
-    })
-    return output
-  }
 
   const transitionCover = document.querySelector('.transition_cover')
   const touchToggle = document.querySelector('.touch_toggle')
   const control = document.querySelector('.control')
   const controlButtons = document.querySelectorAll('.control_button')
   const wrapper = document.querySelector('.wrapper')
-  const map = document.querySelector('.map')
+  const mapDisplay = document.querySelector('.map')
   const mapImageContainer = document.querySelector('.map_image_container')
   const mapCover = document.querySelector('.map_cover')
   const mapImage = document.querySelector('.map_image')
@@ -59,30 +38,30 @@ function init() {
   const sprite = document.querySelector('.sprite')
   const indicator = document.querySelector('.indicator')
   const spriteFace = document.querySelector('.face')
-  let sprites
 
-  
-  // map related variables
-  let height
-  let width
-  let iHeight
-  let iWidth
-  let start
-  const cellD = 32
-  let minicellD 
-  const mapXY = {
-    x: null,
-    y: null
+
+  const map = {
+    height: 0, width: 0,
+    iHeight: 0, iWidth: 0,
+    start: 0,
+    cellD: 32,
+    minicellD: 0, 
+    mapXY: {
+      x: null,
+      y: null
+    },
+    mapTiles: null,
+    locationTiles: null,
+    mapImageTiles: null,
+    animInterval: null,
+    noWallList: ['b','do'],
+    noLeftEdgeList: ['pu','g'],
+    key: 'one',
+    spawnData: [],
+    sprites: null
   }
-  let mapTiles
-  let locationTiles
-  let mapImageTiles
-
-  let animInterval
 
   // gameplay related variables
-  let mapKey = 'one'
-  const spawnData = []
   const bear = {
     spritePos: null,
     facingDirection: 'down',
@@ -94,7 +73,6 @@ function init() {
     choice: 0,
     prevChoices: {}, 
     animationTimer: [],
-    //? could this be renamed to something else?
     dialog: {},
     dialogKey: null,
     dialogHistory: [],
@@ -112,31 +90,26 @@ function init() {
   const setWidthAndHeight = ()=>{
     const { offsetWidth: w, offsetHeight:h } = wrapper
     const pWidth = w < 800 ? w : 800
-    width = 2 * Math.floor((pWidth / cellD) / 2)
+    map.width = 2 * Math.floor((pWidth / map.cellD) / 2)
     const pHeight = h < 600 ? h : 600
-    height = 2 * Math.floor((pHeight / cellD) / 2)
+    map.height = 2 * Math.floor((pHeight / map.cellD) / 2)
   }
 
   const setLocation = key => {
-    mapKey = key
+    map.key = key
     setWidthAndHeight()
     
-    const { iWidth:w, iHeight:h } = mapData[mapKey]   
+    const { iWidth:w, iHeight:h } = mapData[map.key]   
     // TODO where does this get used?
-    iHeight = h
-    iWidth = w
+    map.iHeight = h
+    map.iWidth = w
     location.innerHTML = mapMap(w, h,'location_indicator_tile')
-    locationTiles = document.querySelectorAll('.location_indicator_tile')
-    mapImage.innerHTML = mapMap(w, h,'map_image_tile', mapImageTiles)
-    mapImageTiles = document.querySelectorAll('.map_image_tile')
+    map.locationTiles = document.querySelectorAll('.location_indicator_tile')
+
+    mapImage.innerHTML = mapMap(w, h,'map_image_tile', map.mapImageTiles)
+    map.mapImageTiles = document.querySelectorAll('.map_image_tile')
   }
 
-  const setTargetSize = (target, w, h) => Object.assign(target.style, { width: `${w}px`, height: `${h}px` })
-  const setTargetPos = (target, x, y) => Object.assign(target.style, { left: `${x}px`, top: `${y}px` })
-
-  const placeInCenterOfMap = () =>{
-    start = Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
-  }
 
   const mapMap = (w, h, classToAdd)=>{
     const mapArr = new Array(w * h).fill('').map((_ele, i)=>i)
@@ -151,20 +124,14 @@ function init() {
     }).join('')
   }
 
-  const adjustRectSize = (target, w, h, cellD, cells) =>{
-    setTargetSize(target, w * cellD, h * cellD) 
-    cells && cells.forEach(cell=>{ setTargetSize(cell, cellD, cellD) })
-  }
-
-  let noWallList = ['b','do'] //! maybe switch this depending on the map?
-  const noLeftEdgeList = ['pu','g']
 
   const noWall = pos =>{    
-    if (!mapImageTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
+    const { mapImageTiles:mTiles, spawnData } = map
+    if (!mTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
 
     // prevents sprite walking beyond edge
-    if (bear.facingDirection === 'left' && noLeftEdgeList.filter(w => mapImageTiles[pos + 1].classList.contains(w)).length) return false
-    return noWallList.filter(w => mapImageTiles[pos].classList.contains(w)).length
+    if (bear.facingDirection === 'left' && map.noLeftEdgeList.filter(w => mTiles[pos + 1].classList.contains(w)).length) return false
+    return map.noWallList.filter(w => mTiles[pos].classList.contains(w)).length
   }
 
   const populateWithSvg = (key, target) =>{
@@ -188,39 +155,37 @@ function init() {
     } 
   }
 
-
-
   const setUpWalls = target =>{
-    const decompressedMap = decompress(mapData[mapKey].map)
+    const decompressedMap = decompress(mapData[map.key].map)
     target.forEach((tile,i)=>{
       const letterCode = decompressedMap[i]
       tile.classList.add(letterCode)
 
       if (svgData[letterCode])  {
-        target !== locationTiles
+        target !== map.locationTiles
           ? populateWithSvg(letterCode, tile) 
           : populateWithSvg(letterCode, tile) // TODO change this logic to change map appearance
       }
     })
   }
 
-  const spawnWalk = (actor, para, m, spawn) =>{
+  const spawnWalk = (actor, para, m) =>{
     actor[para] += m
-    spawn.style[para] = `${actor[para]}px`
+    actor.spawn.parentNode.style[para] = `${actor[para]}px`
   }
   
-  const spawnMotion = (spawn, i) =>{
+  const spawnMotion = i =>{
+    const { spawnData, sprites } = map
     if (spawnData[i].pause || !windowActive) return
-    spriteWalk({
+    spawnSpriteWalk({
       dir: ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)],
       actor: spawnData[i], 
       sprite: sprites[i], 
-      spawn
     })
   }
 
   const setPos = (key, num, dir) =>{
-    mapXY[key] = num
+    map.mapXY[key] = num
     mapImage.style[dir] = `${num}px`
   }
 
@@ -230,6 +195,7 @@ function init() {
   }
 
   const positionSprite = pos =>{
+    const { width, cellD } = map
     setTargetPos(
       spriteContainer, 
       pos % width * cellD, 
@@ -238,14 +204,15 @@ function init() {
   }
   
   const spawnCharacter = () =>{
-    if (spawnData.length) spawnData.forEach(m=>clearInterval(m.interval))
-    spawnData.length = 0
+    if (map.spawnData.length) map.spawnData.forEach(m=>clearInterval(m.interval))
+    map.spawnData.length = 0
+    const { iWidth, cellD } = map 
 
-    mapData[mapKey].characters?.forEach((c, i)=>{
+    mapData[map.key].characters?.forEach((c, i)=>{
       const { pos, avatar, spritePos, event, name } = c
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
-      spawnData[i] = {
+      map.spawnData[i] = {
         interval: null,
         left: sx,
         top: sy,
@@ -278,17 +245,17 @@ function init() {
       spawn.style.fill = '#74645a'
       spawnContainer.appendChild(spawn)    
       mapImage.appendChild(spawnContainer)   
-      spawnData[i].spawn = spawn
-      spawnData[i].interval = setInterval(()=>{
-        spawnMotion(spawnContainer, i)
+      map.spawnData[i].spawn = spawn
+      map.spawnData[i].interval = setInterval(()=>{
+        spawnMotion(i)
       }, avatars[avatar].speed)
     })
 
-    sprites = document.querySelectorAll('.sprite')
-    sprites.forEach((sprite, i)=>{
-      if (i === sprites.length - 1) return
-      sprites[i].style.animationDelay = `${i * 0.1}s`
-      turnSprite(directionKey[spawnData[i].spritePos], spawnData[i], sprite, false)
+    map.sprites = document.querySelectorAll('.sprite')
+    map.sprites.forEach((sprite, i)=>{
+      if (i === map.sprites.length - 1) return
+      map.sprites[i].style.animationDelay = `${i * 0.1}s`
+      turnSprite(directionKey[map.spawnData[i].spritePos], map.spawnData[i], sprite, false)
     })
   }
 
@@ -314,7 +281,8 @@ function init() {
   }
 
   const talk = () => {
-    const key = { right: 1, left: -1, up: -iWidth, down: iWidth }
+    const key = { right: 1, left: -1, up: -map.iWidth, down: map.iWidth }
+    const { spawnData, sprites } = map
     const targetDirection = key[bear.facingDirection]
     const talkTargetIndex = spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)
     if (talkTargetIndex !== -1) {
@@ -326,7 +294,7 @@ function init() {
       turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
       
       if (!bear.dialogKey) {
-        bear.dialog = mapData[mapKey].eventContents[talkTarget.event]
+        bear.dialog = mapData[map.key].eventContents[talkTarget.event]
         bear.dialogKey = 'first',
         bear.talkTarget = {
           face: talkTarget.face,
@@ -448,9 +416,9 @@ function init() {
 
 
   const check = count =>{
-    const event = mapData[mapKey].events[bear.pos]
+    const event = mapData[map.key].events[bear.pos]
     if (event) {
-      const eventPoint = mapData[mapKey].eventContents[event.index]
+      const eventPoint = mapData[map.key].eventContents[event.index]
       if (eventPoint && bear.facingDirection === eventPoint.direction) {
         investigate(count, eventPoint)
         return
@@ -459,31 +427,32 @@ function init() {
     talk()
   }
 
-  function transport(key){
+  const transport = key =>{
     // console.log('transport')
     transition()
     mapImage.classList.add('transition')
-    const entryPoint = mapData[mapKey].entry[key]
+    const entryPoint = mapData[map.key].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
     
-    noWallList = entryPoint.noWall || ['b','do']
+    map.noWallList = entryPoint.noWall || ['b','do']
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
-    setUpWalls(mapImageTiles)
+    setUpWalls(map.mapImageTiles)
     turnSprite(bear.facingDirection, bear, sprite, false)
     setTimeout(()=>turnSprite(entryPoint.direction, bear, sprite, false), 150)
     spawnCharacter()
-    startCellAnimations(animInterval)
+    startCellAnimations(map.animInterval)
 
     setTimeout(()=> {
       mapImage.classList.remove('transition')
-      setUpWalls(locationTiles)
+      setUpWalls(map.locationTiles)
     },400)
   }
   
 
   const turnSprite = (e = 'down', actor, sprite, animate) => {
+    const { cellD } = map
     let m = -cellD
     actor.facingDirection = e
     const animateWalk = (a, b, c, turn) =>{
@@ -511,50 +480,72 @@ function init() {
     setSpritePos(m, actor, sprite)
   }
 
-  const spriteWalk = ({ dir, actor, sprite, spawn }) =>{
-    // when spawn is true, this function is used by spawn
-
+  const spriteWalk = ({ dir, actor, sprite }) =>{
     if (!dir || !bear.motion) return
-    if (!spawn) locationTiles[actor.pos].classList.remove('mark')
-    const { x, y } = mapXY
+    map.locationTiles[actor.pos].classList.remove('mark')
+    const { iWidth, cellD, mapImageTiles: mTiles } = map
+    const { x, y } = map.mapXY
 
     // prevents bear from turning away from ladder
-    mapImageTiles[bear.pos].classList.contains('la') || 
-    (mapImageTiles[bear.pos - iWidth] && mapImageTiles[bear.pos - iWidth].classList.contains('la') 
-    && dir === 'down')
+    mTiles[bear.pos].classList.contains('la') || 
+    mTiles?.[bear.pos - iWidth].classList.contains('la')
+    && dir === 'down'
       ? turnSprite('up', actor, sprite, true)
       : turnSprite(dir, actor, sprite, true)
       
     if (dir === 'right' && noWall(actor.pos + 1)) {
-      spawn ? spawnWalk(actor, 'left', cellD, spawn) : setPos('x', x - cellD, 'left')
+      setPos('x', x - cellD, 'left')
       actor.pos += 1 
     }
     if (dir === 'left' && noWall(actor.pos - 1)) {
-      spawn ? spawnWalk(actor, 'left', -cellD, spawn) : setPos('x', x + cellD, 'left')
+      setPos('x', x + cellD, 'left')
       actor.pos -= 1 
     }
     if (dir === 'up' && noWall(actor.pos - iWidth)) {
-      spawn ? spawnWalk(actor, 'top', -cellD, spawn) : setPos('y', y + cellD, 'top')
+      setPos('y', y + cellD, 'top')
       actor.pos -= iWidth 
     }
     if (dir === 'down' && noWall(actor.pos + iWidth)) {
-      spawn ? spawnWalk(actor, 'top', cellD, spawn) : setPos('y', y - cellD, 'top')
+      setPos('y', y - cellD, 'top')
       actor.pos += iWidth 
     }
       
-    if (!spawn) locationTiles[actor.pos].classList.add('mark')
+    map.locationTiles[actor.pos].classList.add('mark')
     
     // trigger event based on bear position
-    if (!spawn && mapData[mapKey].events[bear.pos]) {
-      const { event, gateway } = mapData[mapKey].events[bear.pos]
+    if (mapData[map.key].events[bear.pos]) {
+      const { event, gateway } = mapData[map.key].events[bear.pos]
       if (gateway) setTimeout(()=> {
         event === 'transport' && transport(gateway)
         event === 'check' && check(gateway)
       },200)
     } 
 
-    const { x: dataX, y: dataY } = mapImageTiles[bear.pos].dataset
-    indicator.innerHTML = `x:${x} y:${y} pos:${locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
+    const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset
+    indicator.innerHTML = `x:${x} y:${y} pos:${map.locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
+  }
+
+  const spawnSpriteWalk = ({ dir, actor, sprite }) =>{
+    if (!dir || !bear.motion) return
+    const { iWidth, cellD } = map
+    turnSprite(dir, actor, sprite, true)
+      
+    if (dir === 'right' && noWall(actor.pos + 1)) {
+      spawnWalk(actor, 'left', cellD)
+      actor.pos += 1 
+    }
+    if (dir === 'left' && noWall(actor.pos - 1)) {
+      spawnWalk(actor, 'left', -cellD)
+      actor.pos -= 1 
+    }
+    if (dir === 'up' && noWall(actor.pos - iWidth)) {
+      spawnWalk(actor, 'top', -cellD)
+      actor.pos -= iWidth 
+    }
+    if (dir === 'down' && noWall(actor.pos + iWidth)) {
+      spawnWalk(actor, 'top', cellD)
+      actor.pos += iWidth 
+    }
   }
 
   const select = () =>{
@@ -562,7 +553,6 @@ function init() {
     texts[1].innerHTML = ''
     bear.pause = false
     bear.prevChoices[dialogKey] = bear.choice
-    
     bear.textCount = 0
     const eventPoint = bear.dialog[dialogKey]
     bear.dialogHistory.push(dialogKey)
@@ -594,6 +584,7 @@ function init() {
 
   const handleKeyAction = e =>{
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
+    const { sprites } = map
     if (bear.isTalking) {
       if (bear.pause) {
         bear.options.forEach(option=>option.classList.remove('selected'))
@@ -621,10 +612,11 @@ function init() {
 
 
   const resize = () =>{
-    positionSprite(start)
+    positionSprite(map.start)
+    const { width, height, iWidth, iHeight, cellD, } = map
 
     // update offset margins
-    const { x: dataX, y: dataY } = mapImageTiles[bear.pos].dataset
+    const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset
     const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
     const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
     setPos('x', xMargin, 'left')  
@@ -639,17 +631,17 @@ function init() {
     adjustRectSize(mapImageContainer, width, height, cellD)
     
     // resize map
-    map.innerHTML = mapMap(width,height,'map_tile', mapTiles)
-    mapTiles = document.querySelectorAll('.map_tile')
-    adjustRectSize(map, width, height, cellD, mapTiles)
+    mapDisplay.innerHTML = mapMap(width, height,'map_tile', map.mapTiles)
+    map.mapTiles = document.querySelectorAll('.map_tile')
+    adjustRectSize(mapDisplay, width, height, cellD, map.mapTiles)
     
     // setup location indicator
-    minicellD = Math.floor(cellD / 8)
-    adjustRectSize(location, iWidth, iHeight, minicellD, locationTiles)
-    locationTiles[bear.pos].classList.add('mark')
+    map.minicellD = Math.floor(cellD / 8)
+    adjustRectSize(location, iWidth, iHeight, map.minicellD, map.locationTiles)
+    map.locationTiles[bear.pos].classList.add('mark')
   
     // setup map image
-    adjustRectSize(mapImage, iWidth, iHeight, cellD, mapImageTiles)
+    adjustRectSize(mapImage, iWidth, iHeight, cellD, map.mapImageTiles)
     
     // setup mapcover
     adjustRectSize(mapCover, width, height, cellD)
@@ -657,7 +649,7 @@ function init() {
   
   const setWidthAndHeightAndResize = () =>{
     setWidthAndHeight()
-    placeInCenterOfMap()
+    map.start = centerOfMap(map.width, map.height)
     resize()
   }
   
@@ -684,17 +676,17 @@ function init() {
 
   const testButton = document.querySelector('.test_button')
   testButton.addEventListener('click', ()=>{
-    const tontokoData = spawnData.filter(s => s.name === 'tontoko')[0]
+    const tontokoData =map.spawnData.filter(s => s.name === 'tontoko')[0]
     tontokoData.spawn.style.backgroundColor = 'yellow'
     tontokoData.pause = true
 
     console.log('sprite',tontokoData.spawn.parentNode)
 
-    spriteWalk({
+    spawnSpriteWalk({
       dir: 'right', 
       actor: tontokoData, 
       sprite: tontokoData.spawn.childNodes[1],
-      spawn: tontokoData.spawn.parentNode
+      // spawn: tontokoData.spawn.parentNode
     })
   })
 
@@ -715,4 +707,3 @@ window.addEventListener('DOMContentLoaded', init)
 //   'y',y,
 //   'los',bear.pos
 //   )
-  

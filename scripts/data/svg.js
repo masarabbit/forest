@@ -131,3 +131,31 @@ const ladderHole = subColor =>{
 const exit = subColor =>{
   return `<path fill="${subColor}" d="M 0 0h16v4hTv2hTvThTv2hTvThTv2hTvThTv2hTv-6"/ D 2 4h2v2hTvT"/ D 6 4h2v2hTvT"/ D 10 4h2v2hTvT"/ D 14 4h2v2hTvT"/ D 0 6h2v2h2vTh2v2h2vTh2v2h2vTh2v2h2v8hN6vN0"/ <path fill="${subColor}" d="M 2 6h2v2hTvT"/ <path fill="${subColor}" d="M 6 6h2v2hTvT"/ <path fill="${subColor}" d="M 10 6h2v2hTvT"/ <path fill="${subColor}" d="M 14 6h2v2hTvT"/`
 }
+
+export {
+  svgWrapper,
+  randomColor,
+  treeOne,
+  treeTwo,
+  treeThree,
+  treeFour,
+  tree,
+  flowers,
+  buildingCorner,
+  roofCorner,
+  checkered,
+  plain,
+  plainEdge,
+  door,
+  roundWindow,
+  squareWindow,
+  sideSquareWindow,
+  noSideWindow,
+  roofCurve,
+  roofTopBottomCorner,
+  river,
+  riverCurve,
+  ladder,
+  ladderHole,
+  exit 
+}

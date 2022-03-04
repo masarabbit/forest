@@ -1,4 +1,32 @@
 // const sub = '#f9ede5'
+import {
+  randomColor,
+  treeOne,
+  treeTwo,
+  treeThree,
+  treeFour,
+  tree,
+  flowers,
+  buildingCorner,
+  roofCorner,
+  checkered,
+  plain,
+  plainEdge,
+  door,
+  roundWindow,
+  squareWindow,
+  sideSquareWindow,
+  noSideWindow,
+  roofCurve,
+  roofTopBottomCorner,
+  river,
+  riverCurve,
+  ladder,
+  ladderHole,
+  exit 
+} from '../data/svg.js'
+
+
 const sub = '#58d3d8'
 const main = '#74645a'
 
