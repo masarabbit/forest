@@ -105,24 +105,24 @@ function init() {
   const mapMap = (w, h, classToAdd)=>{
     const mapArr = new Array(w * h).fill('').map((_ele, i)=>i)
     return mapArr.map((_ele,i)=>{
-      const dataX = i % w
-      const dataY = Math.floor(i / w)
       return `
-        <div class=${classToAdd} data-index=${i} data-x=${dataX} data-y=${dataY}>
+        <div class=${classToAdd} data-index=${i}>
           ${i}
         </div>  
       `
     }).join('')
   }
-
+  
+  const mapX = () => bear.pos % map.iWidth  
+  const mapY = () => Math.floor(bear.pos / map.iWidth)
 
   const noWall = pos =>{    
-    const { mapImageTiles:mTiles, spawnData } = map
-    if (!mTiles[pos] || bear.pos === pos || spawnData.filter(s=>s.pos === pos).length) return false
+    const { mapImageTiles:mTiles, spawnData, noLeftEdgeList, noWallList } = map
+    if (!mTiles[pos] || bear.pos === pos || spawnData.some(s=>s.pos === pos)) return false
 
     // prevents sprite walking beyond edge
-    if (bear.facingDirection === 'left' && map.noLeftEdgeList.filter(w => mTiles[pos + 1].classList.contains(w)).length) return false
-    return map.noWallList.filter(w => mTiles[pos].classList.contains(w)).length
+    if (bear.facingDirection === 'left' && noLeftEdgeList.filter(w => mTiles[pos + 1].classList.contains(w)).length) return false
+    return noWallList.filter(w => mTiles[pos].classList.contains(w)).length
   }
 
   const populateWithSvg = (key, target) =>{
@@ -146,6 +146,10 @@ function init() {
     } 
   }
 
+  // const populateWithMarker = (key, target) =>{
+  //   !map.noWallList.includes(key) && target.classList.add('wall')
+  // }
+
   const setUpWalls = target =>{
     const decompressedMap = decompress(mapData[map.key].map)
     map.map = decompressedMap
@@ -156,7 +160,7 @@ function init() {
       if (svgData[letterCode])  {
         target !== map.locationTiles
           ? populateWithSvg(letterCode, tile) 
-          : populateWithSvg(letterCode, tile) // TODO change this logic to change map appearance (and simplify)
+          : !map.noWallList.includes(letterCode) && tile.classList.add('wall') 
       }
     })
   }
@@ -241,7 +245,10 @@ function init() {
     map.sprites.forEach((sprite, i)=>{
       if (i === map.sprites.length - 1) return
       map.sprites[i].style.animationDelay = `${i * 0.1}s`
-      turnSprite(directionKey[map.spawnData[i].spritePos], map.spawnData[i], sprite, false)
+      turnSprite({
+        e: directionKey[map.spawnData[i].spritePos], 
+        actor: map.spawnData[i], sprite,
+      })
     })
   }
 
@@ -266,18 +273,20 @@ function init() {
       ` )
   }
 
-  const talk = () => {
-    const key = { right: 1, left: -1, up: -map.iWidth, down: map.iWidth }
-    const { spawnData, sprites } = map
-    const targetDirection = key[bear.facingDirection]
-    const talkTargetIndex = spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)
-    if (talkTargetIndex !== -1) {
+  const talk = () => {   
+    const { spawnData, iWidth } = map
+    const targetDirection = { r: 1, l: -1, u: -iWidth, d: iWidth }[bear.facingDirection[0]]
+    const talkTarget = spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
+
+    if (talkTarget) {
       bear.isTalking = true
-      texts[0].parentNode.classList.remove('hidden')
-      const talkTarget = spawnData[talkTargetIndex]
       talkTarget.pause = true
-      const opposite = Object.keys(key).find(k => key[k] === targetDirection * -1)
-      turnSprite(opposite, talkTarget, sprites[talkTargetIndex], false)
+      texts[0].parentNode.classList.remove('hidden')
+      turnSprite({
+        e: { r: 'left', l: 'right', u: 'down', d: 'up' }[bear.facingDirection[0]],
+        actor: talkTarget, 
+        sprite: talkTarget.spawn.childNodes[1]
+      })
       
       if (!bear.dialogKey) {
         bear.dialog = mapData[map.key].eventContents[talkTarget.event]
@@ -425,8 +434,17 @@ function init() {
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
     setUpWalls(map.mapImageTiles)
-    turnSprite(bear.facingDirection, bear, sprite, false)
-    setTimeout(()=>turnSprite(entryPoint.direction, bear, sprite, false), 150)
+    turnSprite({
+      e: bear.facingDirection, 
+      actor: bear, sprite
+    })
+
+    setTimeout(()=> {
+      turnSprite({ 
+        e: entryPoint.direction, 
+        actor: bear, sprite
+      })
+    }, 150)
     spawnCharacter()
     startCellAnimations(map.animInterval)
 
@@ -446,8 +464,9 @@ function init() {
   }
   
 
-  const turnSprite = (e = 'down', actor, sprite, animate) => {
-    actor.facingDirection = e
+  const turnSprite = ({e, actor, sprite, animate}) => {
+    const dir = e || 'down'
+    actor.facingDirection = dir
     const { cellD } = map
     const frames = {
       right: [4, 6, 5, 'add'],
@@ -456,24 +475,14 @@ function init() {
       down: [0, 0, 1, 'toggle']
     }
     let m = -cellD
-    m = animate ? m * frames[e][0] : m * frames[e][2]
-    sprite.parentNode.classList[frames[e][3]]('right') 
+    m = animate ? m * frames[dir][0] : m * frames[dir][2]
+    sprite.parentNode.classList[frames[dir][3]]('right') 
     actor.animationTimer.forEach(timer=> clearTimeout(timer))
     if (animate){
-      actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * frames[e][1], actor, sprite), 100)
-      actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * frames[e][2], actor, sprite), 200) 
+      actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * frames[dir][1], actor, sprite), 100)
+      actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * frames[dir][2], actor, sprite), 200) 
     }   
     setSpritePos(m, actor, sprite)
-  }
-
-  const dirTranslations = () =>{
-    const { iWidth, cellD } = map
-    return {
-      right: { diff: 1, para: 'left', dist: -cellD },
-      left: { diff: -1, para: 'left', dist: cellD },
-      up: { diff: -iWidth, para: 'top', dist: cellD },
-      down: { diff: iWidth, para: 'top', dist: -cellD }
-    }  
   }
 
   const spriteWalk = ({ dir, actor, sprite }) =>{
@@ -481,15 +490,22 @@ function init() {
     const isBear = actor === bear
 
     if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
-    const { mapImageTiles: mTiles } = map
+    const { mapImageTiles: mTiles, key, iWidth, cellD } = map
     const { x, y } = map.mapXY
 
     // prevents bear from turning away from ladder
-    turnSprite(
-      isBear && mTiles[bear.pos].classList.contains('la') ? 'up' : dir,
-      actor, sprite, true
-    )
-    const { diff, para, dist } = dirTranslations()[dir]
+    turnSprite({
+      e: isBear && mTiles[bear.pos].classList.contains('la') ? 'up' : dir,
+      actor, sprite, animate: true
+    })
+
+    const { diff, para, dist } = {
+      right: { diff: 1, para: 'left', dist: -cellD },
+      left: { diff: -1, para: 'left', dist: cellD },
+      up: { diff: -iWidth, para: 'top', dist: cellD },
+      down: { diff: iWidth, para: 'top', dist: -cellD }
+    }[dir] 
+
     if (noWall(actor.pos + diff)) { 
       if (isBear) {
         setPos(para, (para === 'left' ? x : y ) + dist)
@@ -503,7 +519,7 @@ function init() {
     if (isBear) map.locationTiles[actor.pos].classList.add('mark')
     
     // trigger event based on bear position
-    if (isBear && mapData[map.key].events[bear.pos]) {
+    if (isBear && mapData[key].events[bear.pos]) {
       const { event, gateway } = mapData[map.key].events[bear.pos]
       if (gateway) setTimeout(()=> {
         event === 'transport' && transport(gateway)
@@ -511,8 +527,7 @@ function init() {
       },200)
     } 
 
-    const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset
-    indicator.innerHTML = `x:${x} y:${y} pos:${map.locationTiles[bear.pos].dataset.index} dataX:${dataX} dataY:${dataY}`
+    indicator.innerHTML = `x:${x} y:${y} pos:${map.locationTiles[bear.pos].dataset.index} dataX:${mapX()} dataY:${mapY()}`
   }
 
   const select = () =>{
@@ -521,9 +536,8 @@ function init() {
     bear.pause = false
     bear.prevChoices[dialogKey] = bear.choice
     bear.textCount = 0
-    const eventPoint = bear.dialog[dialogKey]
     bear.dialogHistory.push(dialogKey)
-    bear.dialogKey = eventPoint.choice[bear.optionTexts[bear.choice]]
+    bear.dialogKey = bear.dialog[dialogKey].choice[bear.optionTexts[bear.choice]]
     displayText(bear.textCount, false)
   }
 
@@ -554,10 +568,10 @@ function init() {
     const { sprites } = map
     if (bear.isTalking) {
       if (bear.pause) {
-        bear.options.forEach(option=>option.classList.remove('selected'))
+        bear.options.forEach(option => option.classList.remove('selected'))
         if (key === 'up' && bear.choice > 0) bear.choice--
         if (key === 'down' && bear.choice < bear.options.length - 1) bear.choice++
-        if ([' ', 'enter', 'right'].some(k => k === key)) select()
+        if ([' ', 'enter', 'right'].includes(key)) select()
         if (key === 'left') prevText()
         displayChoiceDetails()
         bear.options[bear.choice].classList.add('selected')
@@ -565,7 +579,7 @@ function init() {
       }
       if (key === 'left' && texts[0].innerHTML) prevText()
     }
-    if (key === ' ' || key === 'enter' || (key === 'right' && bear.isTalking)) {
+    if ([' ', 'enter'].includes(key) || (key === 'right' && bear.isTalking)) {
       check(bear.textCount)
       return
     }
@@ -583,17 +597,13 @@ function init() {
     const { width, height, iWidth, iHeight, cellD, } = map
 
     // update offset margins
-    const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset // TODO could x and y be calculated differently?
-    const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
-    const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
-    setPos('left', xMargin)  
-    setPos('top', yMargin)
+    setPos('left', mapX() * -cellD + ((Math.floor(width / 2) - 1) * cellD))  
+    setPos('top', mapY() * -cellD + ((Math.floor(height / 2) - 1) * cellD))
 
     // adjust sprite
     setSpritePos(-cellD, bear, sprite)
     setTargetSize(sprite, cellD * 7, cellD)
     setTargetSize(spriteContainer, cellD, cellD)
-
 
     // resize mapImageContainer
     adjustRectSize({
@@ -676,15 +686,3 @@ function init() {
 
 window.addEventListener('DOMContentLoaded', init)
 
-
-//*indicator
-
-
-// console.log(
-//   'cellD',cellD,
-//   'dataX',dataX,
-//   'dataY',dataY,
-//   'x',x,
-//   'y',y,
-//   'los',bear.pos
-//   )

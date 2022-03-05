@@ -152,7 +152,7 @@ a:hover {
   overflow: hidden;
   background-color: transparent;
   /* opacity: 0.5; */
-  background-color: rgba(0, 217, 255, 0.452);
+  /* background-color: rgba(0, 217, 255, 0.452); */
   /* border: green solid 1px; */
 }
 
@@ -188,7 +188,7 @@ a:hover {
   /* overflow: hidden; */
 }
 
-.wall { background-color: rgb(6, 6, 87); }
+.wall { background-color: #a2fcf0; }
 
 
 .map_image_tile.w,
