@@ -77,13 +77,13 @@ const mapData = {
         map: 'house_one_0',
         cell: 62,
         direction: 'up',
-        noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
+        noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e', 'ry', 'rt']
       },
       portal6: {
         map: 'house_one_0',
         cell: 79,
         direction: 'up',
-        noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
+        noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e', 'ry', 'rt']
       },
       portal13: {
         map: 'house_one_1',
@@ -219,7 +219,7 @@ const mapData = {
         map: 'house_one_0',
         cell: 5,
         direction: 'up',
-        noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e']
+        noWall: ['bt','at','rtl','rtr','ar','bx','ab','by','p','la','e', 'ry', 'rt']
       },
       portal12: {
         map: 'one',

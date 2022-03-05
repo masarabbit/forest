@@ -33,13 +33,25 @@ body {
   z-index: -9;
 }
 
-.map {
-  height: 400px;
-  width: 800px;
+.no_wall_show {
+  /* position: absolute; */
+  /* border: 1px solid cyan !important; */
+  filter: invert();
+}
+
+.no_wall_show::before {
+  background-color: rgba(138, 168, 2, 0.486);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 32px;
+  width: 32px;
+  z-index: 999;
+  color: black;
   display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  /* border:rgb(209, 255, 6) solid 1px; */
+  align-items: center;
+  justify-content: center;
+  content: attr(letter_code);
 }
 
 .inner_map {
@@ -71,7 +83,8 @@ body {
   width: 800px;
   z-index: 1;
   pointer-events: none;
-  border: hotpink 1px solid;
+  /* border: hotpink 1px solid; */
+  /* background-color: rgba(255, 0, 0, 0.377); */
 }
 
 .sprite_container {
@@ -138,6 +151,8 @@ a:hover {
   width: 800px;
   overflow: hidden;
   background-color: transparent;
+  /* opacity: 0.5; */
+  background-color: rgba(0, 217, 255, 0.452);
   /* border: green solid 1px; */
 }
 

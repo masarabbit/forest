@@ -28,8 +28,7 @@ function init() {
   const control = document.querySelector('.control')
   const controlButtons = document.querySelectorAll('.control_button')
   const wrapper = document.querySelector('.wrapper')
-  const mapDisplay = document.querySelector('.map')
-  const mapImageContainer = document.querySelector('.map_image_container')
+  const mapImageContainer = document.querySelector('.map_image_container') // TODO possibly rename
   const mapCover = document.querySelector('.map_cover')
   const mapImage = document.querySelector('.map_image')
   const location = document.querySelector('.location_indicator')
@@ -58,7 +57,8 @@ function init() {
     noLeftEdgeList: ['pu','g'],
     key: 'one',
     spawnData: [],
-    sprites: null
+    sprites: null,
+    map: []
   }
 
   // gameplay related variables
@@ -148,6 +148,7 @@ function init() {
 
   const setUpWalls = target =>{
     const decompressedMap = decompress(mapData[map.key].map)
+    map.map = decompressedMap
     target.forEach((tile,i)=>{
       const letterCode = decompressedMap[i]
       tile.classList.add(letterCode)
@@ -155,7 +156,7 @@ function init() {
       if (svgData[letterCode])  {
         target !== map.locationTiles
           ? populateWithSvg(letterCode, tile) 
-          : populateWithSvg(letterCode, tile) // TODO change this logic to change map appearance
+          : populateWithSvg(letterCode, tile) // TODO change this logic to change map appearance (and simplify)
       }
     })
   }
@@ -225,7 +226,6 @@ function init() {
       }
 
       spawn.innerHTML = sprite()
-      // spawn.innerHTML = spriteContainer.innerHTML //! this needs to be changed to whatever defined in avatar object
       spawn.classList.add('spawn')
       // spawn.style.fill = randomColor()
       spawn.style.fill = '#74645a'
@@ -420,6 +420,7 @@ function init() {
     if (!entryPoint) return // this added to prevent error when user walks too fast
     
     map.noWallList = entryPoint.noWall || ['b','do']
+
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
@@ -432,6 +433,15 @@ function init() {
     setTimeout(()=> {
       mapImage.classList.remove('transition')
       setUpWalls(map.locationTiles)
+      
+      // TODO indicate where the walls are
+      map.map.forEach((c, i) =>{
+      if (map.noWallList.includes(c)) {
+        map.mapImageTiles[i].classList.add('no_wall_show')
+        map.mapImageTiles[i].setAttribute('letter_code', c)
+      }  
+
+    })
     },400)
   }
   
@@ -573,7 +583,7 @@ function init() {
     const { width, height, iWidth, iHeight, cellD, } = map
 
     // update offset margins
-    const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset
+    const { x: dataX, y: dataY } = map.mapImageTiles[bear.pos].dataset // TODO could x and y be calculated differently?
     const xMargin = dataX * -cellD + ((Math.floor(width / 2) - 1) * cellD)
     const yMargin = dataY * -cellD + ((Math.floor(height / 2) - 1) * cellD) 
     setPos('left', xMargin)  
@@ -584,24 +594,38 @@ function init() {
     setTargetSize(sprite, cellD * 7, cellD)
     setTargetSize(spriteContainer, cellD, cellD)
 
+
     // resize mapImageContainer
-    adjustRectSize(mapImageContainer, width, height, cellD)
-    
-    // resize map
-    mapDisplay.innerHTML = mapMap(width, height,'map_tile', map.mapTiles)
-    map.mapTiles = document.querySelectorAll('.map_tile')
-    adjustRectSize(mapDisplay, width, height, cellD, map.mapTiles)
+    adjustRectSize({
+      target: mapImageContainer, 
+      w: width, h: height, 
+      cellD
+    })
     
     // setup location indicator
     map.minicellD = Math.floor(cellD / 8)
-    adjustRectSize(location, iWidth, iHeight, map.minicellD, map.locationTiles)
+    adjustRectSize({
+      target: location, 
+      w: iWidth, h: iHeight, 
+      cellD: map.minicellD, 
+      cells: map.locationTiles
+    })
     map.locationTiles[bear.pos].classList.add('mark')
   
     // setup map image
-    adjustRectSize(mapImage, iWidth, iHeight, cellD, map.mapImageTiles)
+    adjustRectSize({ 
+      target: mapImage, 
+      w: iWidth, h: iHeight, 
+      cellD, 
+      cells: map.mapImageTiles
+    })
     
     // setup mapcover
-    adjustRectSize(mapCover, width, height, cellD)
+    adjustRectSize({
+      target: mapCover, 
+      w: width, h: height, 
+      cellD
+    })
   }
   
   const setWidthAndHeightAndResize = () =>{
