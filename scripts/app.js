@@ -5,8 +5,6 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
-// TODO draw bunny face and animation function to populate .face during dialog
-// Refactor before proceeding
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
 import svgData from './data/svgData.js'
@@ -14,6 +12,8 @@ import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
 import { decode, decompress } from './utils/compression.js'
 import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap } from './utils/utils.js'
+import { map, bear, directionKey } from './constant.js'
+
 
 function init() {
 
@@ -28,7 +28,7 @@ function init() {
   const control = document.querySelector('.control')
   const controlButtons = document.querySelectorAll('.control_button')
   const wrapper = document.querySelector('.wrapper')
-  const mapImageContainer = document.querySelector('.map_image_container') // TODO possibly rename
+  const mapContainer = document.querySelector('.map_container') // TODO possibly rename
   const mapCover = document.querySelector('.map_cover')
   const mapImage = document.querySelector('.map_image')
   const location = document.querySelector('.location_indicator')
@@ -39,77 +39,24 @@ function init() {
   const spriteFace = document.querySelector('.face')
 
 
-  const map = {
-    height: 0, width: 0,
-    iHeight: 0, iWidth: 0,
-    start: 0,
-    cellD: 32,
-    minicellD: 0, 
-    mapXY: {
-      x: null,
-      y: null
-    },
-    mapTiles: null,
-    locationTiles: null,
-    mapImageTiles: null,
-    animInterval: null,
-    noWallList: ['b','do'],
-    noLeftEdgeList: ['pu','g'],
-    key: 'one',
-    spawnData: [],
-    sprites: null,
-    map: []
-  }
-
-  // gameplay related variables
-  const bear = {
-    spritePos: null,
-    facingDirection: 'down',
-    pos: null,
-    motion: true,
-    textCount: 0,
-    pause: false,
-    option: 0,
-    choice: 0,
-    prevChoices: {}, 
-    animationTimer: [],
-    dialog: {},
-    dialogKey: null,
-    dialogHistory: [],
-    isTalking: false,
-  }
-
-  const directionKey = {
-    9: 'right',
-    6: 'left',
-    3: 'up',
-    0: 'down',
-  }
-
   const setLocation = key => {
     map.key = key
     setWidthAndHeight(map, wrapper)
     
-    const { iWidth:w, iHeight:h } = mapData[map.key]   
-    // TODO where does this get used?
-    map.iHeight = h
-    map.iWidth = w
-    location.innerHTML = mapMap(w, h,'location_indicator_tile')
+    const { iWidth, iHeight } = mapData[map.key]   
+    map.iHeight = iHeight
+    map.iWidth = iWidth
+    location.innerHTML = mapMap(iWidth, iHeight,'location_indicator_tile')
     map.locationTiles = document.querySelectorAll('.location_indicator_tile')
 
-    mapImage.innerHTML = mapMap(w, h,'map_image_tile', map.mapImageTiles)
+    mapImage.innerHTML = mapMap(iWidth, iHeight,'map_image_tile', map.mapImageTiles)
     map.mapImageTiles = document.querySelectorAll('.map_image_tile')
   }
 
-
   const mapMap = (w, h, classToAdd)=>{
     const mapArr = new Array(w * h).fill('').map((_ele, i)=>i)
-    return mapArr.map((_ele,i)=>{
-      return `
-        <div class=${classToAdd} data-index=${i}>
-          ${i}
-        </div>  
-      `
+    return mapArr.map((_ele, i)=>{
+      return `<div class=${classToAdd} data-index=${i}>${i}</div>`
     }).join('')
   }
   
@@ -117,12 +64,12 @@ function init() {
   const mapY = () => Math.floor(bear.pos / map.iWidth)
 
   const noWall = pos =>{    
-    const { mapImageTiles:mTiles, spawnData, noLeftEdgeList, noWallList } = map
-    if (!mTiles[pos] || bear.pos === pos || spawnData.some(s=>s.pos === pos)) return false
+    const { spawnData, noLeftEdgeList, noWallList, map:mapcode } = map
+    if (!mapcode[pos] || bear.pos === pos || spawnData.some(s => s.pos === pos)) return false
 
     // prevents sprite walking beyond edge
-    if (bear.facingDirection === 'left' && noLeftEdgeList.filter(w => mTiles[pos + 1].classList.contains(w)).length) return false
-    return noWallList.filter(w => mTiles[pos].classList.contains(w)).length
+    if (bear.facingDirection === 'left' && noLeftEdgeList.some(c => mapcode[pos + 1] === c)) return false
+    return noWallList.some(c => mapcode[pos] === c)
   }
 
   const populateWithSvg = (key, target) =>{
@@ -146,16 +93,11 @@ function init() {
     } 
   }
 
-  // const populateWithMarker = (key, target) =>{
-  //   !map.noWallList.includes(key) && target.classList.add('wall')
-  // }
-
   const setUpWalls = target =>{
-    const decompressedMap = decompress(mapData[map.key].map)
-    map.map = decompressedMap
-    target.forEach((tile,i)=>{
-      const letterCode = decompressedMap[i]
-      tile.classList.add(letterCode)
+    map.map = decompress(mapData[map.key].map)
+    target.forEach((tile, i)=>{
+      const letterCode = map.map[i]
+      letterCode === 'v' && tile.classList.add(letterCode)
 
       if (svgData[letterCode])  {
         target !== map.locationTiles
@@ -216,26 +158,20 @@ function init() {
         name
       }
 
-      const spawnContainer = document.createElement('div')
-      spawnContainer.classList.add('spawn_container')
-      setTargetPos(spawnContainer, sx, sy)
-
       const spawn = document.createElement('div')
-      const sprite = () =>{
-        return `
-        <svg class="sprite" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 112 16" style="height: ${cellD}px; width: ${cellD * 7}px;">
+      spawn.classList.add('spawn_container')
+      setTargetPos(spawn, sx, sy)
+      
+      const fill = '#74645a'
+      spawn.innerHTML = `
+      <div class="spawn">
+        <svg class="sprite" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 112 16" style="height: ${cellD}px; width: ${cellD * 7}px; fill: ${fill};">
           ${decode(avatars[avatar].sprite)}
-        </svg>  
-        `
-      }
+        </svg>
+      </div>`  
 
-      spawn.innerHTML = sprite()
-      spawn.classList.add('spawn')
-      // spawn.style.fill = randomColor()
-      spawn.style.fill = '#74645a'
-      spawnContainer.appendChild(spawn)    
-      mapImage.appendChild(spawnContainer)   
-      map.spawnData[i].spawn = spawn
+      mapImage.appendChild(spawn)   
+      map.spawnData[i].spawn = spawn.childNodes[1]
       map.spawnData[i].interval = setInterval(()=>{
         spawnMotion(i)
       }, avatars[avatar].speed)
@@ -252,7 +188,6 @@ function init() {
     })
   }
 
-
   const transition = () =>{
     transitionCover.classList.add('transition')
     bear.motion = false
@@ -264,13 +199,12 @@ function init() {
 
   const displayChoiceDetails = () =>{
     indicator.innerHTML = (   
-      `
-        <div>
-          <p>bear textCount: ${bear.textCount}</p>
-          <p>bear choice: ${bear.choice}</p>
-          <p>bear prevchoice: ${bear.prevChoice}</p>
-        </div>
-      ` )
+      `<div>
+        <p>bear textCount: ${bear.textCount}</p>
+        <p>bear choice: ${bear.choice}</p>
+        <p>bear prevchoice: ${bear.prevChoice}</p>
+      </div>`
+    )
   }
 
   const talk = () => {   
@@ -311,10 +245,7 @@ function init() {
     bear.choice = prev ? bear.prevChoices[bear.dialogKey] : 0 
     bear.optionTexts = Object.keys(eventPoint.choice)
     texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
-      return `
-        <div class="option ${i === bear.choice && 'selected'}">
-          ${qu}
-        </div>`
+      return `<div class="option ${i === bear.choice && 'selected'}">${qu}</div>`
     }).join('')
     
     // makes multiple choice clickable
@@ -335,7 +266,7 @@ function init() {
     if (i < t.length) {
       setTimeout(()=>{
         displayTextGradual(t, i + 1)
-      },30)
+      }, 30)
     }
   }
 
@@ -398,16 +329,11 @@ function init() {
       bear.textCount++
       bear.motion = false
       displayTextGradual(text, 0)
-      if (eventPoint.art) transitionCover.innerHTML = `
-        <div>
-          <img src=${eventPoint.art} />
-        </div>
-      `
+      if (eventPoint.art) transitionCover.innerHTML = `<div><img src=${eventPoint.art} /></div>`
       return
     }
     clearText()
   }
-
 
   const check = count =>{
     const event = mapData[map.key].events[bear.pos]
@@ -422,7 +348,6 @@ function init() {
   }
 
   const transport = key =>{
-    // console.log('transport')
     transition()
     mapImage.classList.add('transition')
     const entryPoint = mapData[map.key].entry[key]
@@ -453,13 +378,13 @@ function init() {
       setUpWalls(map.locationTiles)
       
       // TODO indicate where the walls are
-      map.map.forEach((c, i) =>{
-      if (map.noWallList.includes(c)) {
-        map.mapImageTiles[i].classList.add('no_wall_show')
-        map.mapImageTiles[i].setAttribute('letter_code', c)
-      }  
+      // map.map.forEach((c, i) =>{
+      //   if (map.noWallList.includes(c)) {
+      //     map.mapImageTiles[i].classList.add('no_wall_show')
+      //     map.mapImageTiles[i].setAttribute('letter_code', c)
+      //   }  
+      // })
 
-    })
     },400)
   }
   
@@ -527,7 +452,7 @@ function init() {
       },200)
     } 
 
-    indicator.innerHTML = `x:${x} y:${y} pos:${map.locationTiles[bear.pos].dataset.index} dataX:${mapX()} dataY:${mapY()}`
+    if(isBear) indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
   }
 
   const select = () =>{
@@ -565,25 +490,26 @@ function init() {
 
   const handleKeyAction = e =>{
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
+    const { pause, options, choice, isTalking, textCount } = bear
     const { sprites } = map
-    if (bear.isTalking) {
-      if (bear.pause) {
-        bear.options.forEach(option => option.classList.remove('selected'))
-        if (key === 'up' && bear.choice > 0) bear.choice--
-        if (key === 'down' && bear.choice < bear.options.length - 1) bear.choice++
+
+    if (isTalking) {
+      if (pause) {
+        options.forEach(option => option.classList.remove('selected'))
+        if (key === 'up' && choice > 0) bear.choice--
+        if (key === 'down' && choice < options.length - 1) bear.choice++
         if ([' ', 'enter', 'right'].includes(key)) select()
         if (key === 'left') prevText()
         displayChoiceDetails()
-        bear.options[bear.choice].classList.add('selected')
+        options[bear.choice].classList.add('selected')
         return
       }
       if (key === 'left' && texts[0].innerHTML) prevText()
     }
-    if ([' ', 'enter'].includes(key) || (key === 'right' && bear.isTalking)) {
-      check(bear.textCount)
+    if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
+      check(textCount)
       return
     }
-    
     spriteWalk({
       dir: key, 
       actor: bear, 
@@ -593,9 +519,9 @@ function init() {
 
 
   const resize = () =>{
-    positionSprite(map.start)
-    const { width, height, iWidth, iHeight, cellD, } = map
-
+    const { width, height, iWidth, iHeight, cellD, start } = map
+    positionSprite(start)
+    
     // update offset margins
     setPos('left', mapX() * -cellD + ((Math.floor(width / 2) - 1) * cellD))  
     setPos('top', mapY() * -cellD + ((Math.floor(height / 2) - 1) * cellD))
@@ -605,9 +531,9 @@ function init() {
     setTargetSize(sprite, cellD * 7, cellD)
     setTargetSize(spriteContainer, cellD, cellD)
 
-    // resize mapImageContainer
+    // resize mapContainer
     adjustRectSize({
-      target: mapImageContainer, 
+      target: mapContainer, 
       w: width, h: height, 
       cellD
     })
@@ -649,7 +575,6 @@ function init() {
 
   // key control
   window.addEventListener('keyup', (e)=>handleKeyAction(e))
-
   window.addEventListener('resize', setWidthAndHeightAndResize)
 
   controlButtons.forEach(c=>{

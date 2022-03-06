@@ -1,3 +1,5 @@
+// TODO nowall list probably has excess code so need to tidy.
+
 const mapData = {
   one: {
     iWidth: 30,
@@ -89,7 +91,7 @@ const mapData = {
         map: 'house_one_1',
         cell: 26,
         direction: 'up',
-        noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
+        noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e', 'rt']
       },
     },
   },
@@ -202,7 +204,7 @@ const mapData = {
         map: 'house_one_1',
         cell: 21,
         direction: 'down',
-        noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e']
+        noWall: ['ry','bt','at','rtl','rtr','ar','bx','ab','by','p','la','lh','e','rt']
       }, 
     }
   },

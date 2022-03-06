@@ -14,28 +14,12 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
+  height: 100%;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* flex-direction: column; */
   overflow: hidden;
-  /* border: red 1px solid; */
-}
-
-.cover {
-  z-index: 3;
-  /* pointer-events: none; */
-}
-
-.wrapper.overlap {
-  z-index: -9;
 }
 
 .no_wall_show {
-  /* position: absolute; */
-  /* border: 1px solid cyan !important; */
   filter: invert();
 }
 
@@ -44,13 +28,7 @@ body {
   position: absolute;
   top: 0px;
   left: 0px;
-  height: 32px;
-  width: 32px;
-  z-index: 999;
   color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   content: attr(letter_code);
 }
 
@@ -64,34 +42,18 @@ body {
 }
 
 .map_tile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
   font-size: 10px;
   color: transparent;
-  /* color: rgba(9, 66, 7, 0.281); */
-  /* transition:0.5s; */
   cursor: pointer;
-  
-  /* border: rgb(15, 253, 154) 1px solid; */
 }
 
 .map_cover {
   height: 400px;
   width: 800px;
-  z-index: 1;
-  pointer-events: none;
-  /* border: hotpink 1px solid; */
-  /* background-color: rgba(255, 0, 0, 0.377); */
 }
 
 .sprite_container {
   position: relative;
-  width: 32px;
-  height: 32px;
-  /* transition: 0.3s; */
   overflow: hidden;
 }
 
@@ -105,15 +67,7 @@ body {
   width: 224px;
   transform-origin: center bottom;
   animation: squish infinite 1s;
-  /* background-color: hotpink; */
 }
-
-@keyframes squish {
-  0% {transform: scale(1);}
-  50% {transform: scale(1,0.93);}
-  100% {transform: scale(1);}
-}
-
 
 .sign {
   position: absolute;
@@ -142,18 +96,11 @@ a:hover {
   transition: 1s;
 }
 
-.instruction.hide {
-  opacity: 0;
-}
-
-.map_image_container {
+.map_container {
   height: 400px;
   width: 800px;
   overflow: hidden;
   background-color: transparent;
-  /* opacity: 0.5; */
-  /* background-color: rgba(0, 217, 255, 0.452); */
-  /* border: green solid 1px; */
 }
 
 .map_image {
@@ -164,43 +111,19 @@ a:hover {
   justify-content: flex-start;
   flex-wrap: wrap;
   transition: 0.5s;
-  /* border: green solid 1px; */
 }
 
 .map_image.transition {
   transition: 0s;
-  opacity: 0;
 }
 
 .map_image_tile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
   font-size: 10px;
-  /* color: rgb(1, 92, 24); */
   color: transparent;
-  /* transition:0.5s; */
   cursor: pointer;
-  /* background-color: rgb(180, 255, 245); */
-  border: rgb(252, 65, 196) 1px solid;
-  /* overflow: hidden; */
 }
 
 .wall { background-color: #a2fcf0; }
-
-
-.map_image_tile.w,
-.map_image_tile.b,
-.map_image_tile.t {
-  background-color: #a2fcf0;
-  fill: black;
-}
-
-.map_image_tile.o {
-  background-color: #a2fcf0;
-}
 
 .map_image_tile.v { background-color: transparent; }
 
@@ -209,9 +132,7 @@ a:hover {
   bottom: 10px;
   left: 10px;
   color: white;
-  z-index: 999999;
 }
-
 
 .location_indicator {
   position: absolute;
@@ -223,29 +144,10 @@ a:hover {
 }
 
 .location_indicator_tile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 8px;
   height: 8px;
   font-size: 4px;
   color: transparent;
-}
-
-.location_indicator_tile img,
-.location_indicator_tile.b svg{
-  /* width: 100%;
-  height: 100%; */
-  opacity: 0;
-}
-
-.location_indicator_tile.w {
-  background-color: cyan;
-}
-
-.location_indicator_tile.w svg,
-.location_indicator_tile.t svg{
-  fill: cyan;
 }
 
 .mark {
@@ -257,7 +159,6 @@ a:hover {
   position: fixed;
   bottom: 40px;
   right: 20px;
-  z-index: 999;
   display: flex;
 }
 
@@ -281,13 +182,7 @@ a:hover {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
-  pointer-events: none;
   transition: 0.2s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .transition_cover > div {
@@ -300,9 +195,6 @@ a:hover {
   height: auto;
 }
 
-.stage { z-index: 998; }
-.transition_cover { z-index: 999; }
-
 .transition_cover.transition {
   background-color: rgb(4, 4, 59);
   transition: 0.3s;
@@ -310,18 +202,8 @@ a:hover {
 
 .spawn_container {
   position: absolute;
-  width: 32px;
-  height: 32px;
   overflow: hidden;
   transition: 1s;
-}
-.spawn {
-  /* position: absolute; */
-  width: 32px;
-  height: 32px;
-  /* border: red 1px solid; */
-  /* overflow: hidden; */
-  /* transition: 1s; */
 }
 
 .face {
@@ -332,7 +214,6 @@ a:hover {
   background-color: #a2fcf0;
   top: -20px;
   left: 20px;
-  z-index: 999;
   overflow: hidden;
 }
 
@@ -340,7 +221,6 @@ a:hover {
 .text {
   color: white;
   transition: 0.4s;
-  /* border: pink 1px solid; */
 }
 
 .text_display {
@@ -348,7 +228,6 @@ a:hover {
   bottom: 0;
   width: 100%;
   height: 200px;
-  z-index: 999;
 }
 
 /** big window */
@@ -357,7 +236,6 @@ a:hover {
   height: 100%;
   padding: 20px 20px 0 110px;
   background-color: rgba(3, 31, 92, 0.753);
-  /* border: cyan 1px solid; */
 }
 
 /** multiple choice selection */
@@ -365,17 +243,12 @@ a:hover {
   position: absolute;
   right: 100vh;
   top: -20px;
-  /* width: 200px;
-  height: 100px; */
   background-color: rgb(3, 31, 92);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* animation: none; */
   animation: slide-in-from-right forwards ease 0.5s;
-  /* padding: 10px 20px; */
-  /* border: hotpink 1px solid; */
 }
 
 .face {
@@ -392,12 +265,6 @@ a:hover {
   animation: none;
 }
 
-.text_display.hidden .text {
-  opacity: 0;
-  /* background-color: pink !important; */
-  pointer-events: none;
-}
-
 .option {
   color: white;
   background-color: transparent;
@@ -410,27 +277,12 @@ a:hover {
 }
 
 .option.selected {
-  /* font-size: 18px; */
   color:rgb(3, 31, 92);
   background-color: rgb(255, 255, 255);
 }
 
-@keyframes slide-in-from-left {
-  0% { left: -100vh; }
-  95% { left: 30px; }
-  100% { left: 20px; }
-}
-
-@keyframes slide-in-from-right {
-  0% { right: -100vh; }
-  95% { right: 60px; }
-  100% { right: 50px; }
-}
-
 .control {
   position: fixed;
-  /* height: 100px; */
-  z-index: 99999;
   bottom: 10px;
   left: 10px;
   display: flex;
@@ -438,14 +290,7 @@ a:hover {
   transition: 0.3s;
 }
 
-.control.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .control > div {
-  /* border: red 1px solid; */
-  /* height: 100%; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -465,8 +310,6 @@ a:hover {
 }
 
 .control button:hover {
-  /* opacity: 0.5; */
-  /* color:rgb(89, 92, 114); */
   color: rgb(148, 253, 116);
 }
 
@@ -482,7 +325,6 @@ a:hover {
   display: flex;
   align-items: center;
   color: white;
-  z-index: 99999;
 }
 
 .switch {
@@ -529,10 +371,6 @@ input:checked + .slider {
   border: rgb(148, 253, 116) 1px solid;
 }
 
-/* input:checked + .slider:before {
-  background-color: rgb(140, 255, 106);
-} */
-
 input:focus + .slider {
   box-shadow: 0 0 1px white;
 }
@@ -549,57 +387,14 @@ input:checked + .slider:before {
 
 .svg_wrap {
   transform-origin: center;
-  height: 100%;
-  width: 100%;
-  pointer-events: none;
-  /* border: green 1px solid; */
 }
 
 .svg_output {
   margin: 100px 0 0 0;
 }
 
-.sprite_face,
-.anim_wrapper {
-  width: 100%;
-  height: 100%;
-  /* border: pink 1px solid; */
-  pointer-events: none;
-}
-
 .anim_wrapper { 
   overflow: hidden;
-}
-
-.svg_anim {
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  /* border: blue 1px solid; */
-}
-/* 
-.svg_anim_wrap {
-  transform-origin: center;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  border: blue 1px solid;
-  animation: blink infinite 1.5s;
-  margin-right: -100%;
-  z-index: 50;
-} */
-
-/* .palette_cell .svg_anim_wrap {
-  margin-right: 0;
-  margin-bottom: -100%;
-  position: relative;
-} */
-
-@keyframes blink {
-  0% {opacity: 0;}
-  49% {opacity: 0;}
-  50% {opacity: 1;}
-  100% {opacity: 1;}
 }
 
 .test_button {
@@ -609,14 +404,99 @@ input:checked + .slider:before {
   width: 100px;
   height: 30px;
   background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99999;
   cursor: pointer;
 }
 
 .test_button:hover {
   background-color: black;
   color: white;
+}
+
+.stage,
+.transition_cover,
+.svg_wrap,
+.svg_anim,
+.sprite_face,
+.anim_wrapper {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.map_image_tile,
+.map_tile,
+.no_wall_show::before,
+.sprite_container,
+.spawn_container,
+.spawn {
+  width: 32px;
+  height: 32px;
+}
+
+.control.hide,
+.text_display.hidden .text,
+.map_cover {
+  pointer-events: none;
+}
+
+.wrapper,
+.no_wall_show::before,
+.map_tile,
+.map_image_tile,
+.test_button,
+.stage,
+.transition_cover,
+.location_indicator_tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map_image.transition,
+.text_display.hidden .text,
+.control.hide,
+.instruction.hide {
+  opacity: 0;
+}
+
+.face { z-index: 999; }
+.text_display { z-index: 999; }
+.control { z-index: 99999; }
+.toggle_wrapper { z-index: 99999; }
+.test_button { z-index: 99999; }
+.no_wall_show::before { z-index: 999; }
+.map_cover { z-index: 1; }
+.button { z-index: 999; }
+.stage { z-index: 998; }
+.transition_cover { z-index: 999; }
+.cover { z-index: 3; }
+.wrapper.overlap { z-index: -9; }
+.indicator { z-index: 999999; }
+
+
+/* keyframes */
+
+@keyframes squish {
+  0% {transform: scale(1);}
+  50% {transform: scale(1,0.93);}
+  100% {transform: scale(1);}
+}
+
+@keyframes blink {
+  0% {opacity: 0;}
+  49% {opacity: 0;}
+  50% {opacity: 1;}
+  100% {opacity: 1;}
+}
+
+@keyframes slide-in-from-left {
+  0% { left: -100vh; }
+  95% { left: 30px; }
+  100% { left: 20px; }
+}
+
+@keyframes slide-in-from-right {
+  0% { right: -100vh; }
+  95% { right: 60px; }
+  100% { right: 50px; }
 }
