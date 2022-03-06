@@ -389,7 +389,7 @@ function init() {
   }
   
 
-  const turnSprite = ({e, actor, sprite, animate}) => {
+  const turnSprite = ({ e, actor, sprite, animate }) => {
     const dir = e || 'down'
     actor.facingDirection = dir
     const { cellD } = map
