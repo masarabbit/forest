@@ -12,7 +12,7 @@ import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
 import { decode, decompress } from './utils/compression.js'
 import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap } from './utils/utils.js'
-import { map, bear, directionKey } from './constant.js'
+import { map, bear, directionKey } from './state.js'
 
 
 function init() {
