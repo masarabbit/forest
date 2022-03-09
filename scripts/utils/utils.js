@@ -1,4 +1,8 @@
-const setWidthAndHeight = (map, wrapper) =>{
+import { map } from '../state.js'
+import { wrapper } from '../elements.js'
+
+
+const setWidthAndHeight = () =>{
   const { offsetWidth: w, offsetHeight:h } = wrapper
   const pWidth = w < 800 ? w : 800
   map.width = 2 * Math.floor((pWidth / map.cellD) / 2)

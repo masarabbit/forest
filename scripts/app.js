@@ -14,6 +14,21 @@ import { decode, decompress } from './utils/compression.js'
 import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap } from './utils/utils.js'
 import { map, bear, directionKey } from './state.js'
 
+import {
+  transitionCover,
+  touchToggle,
+  control,
+  controlButtons,
+  mapContainer,
+  mapCover,
+  mapImage,
+  location,
+  spriteContainer,
+  texts,
+  sprite,
+  indicator,
+  spriteFace
+} from './elements.js'
 
 function init() {
 
@@ -23,25 +38,9 @@ function init() {
   window.addEventListener('blur', ()=> windowActive = false)
 
 
-  const transitionCover = document.querySelector('.transition_cover')
-  const touchToggle = document.querySelector('.touch_toggle')
-  const control = document.querySelector('.control')
-  const controlButtons = document.querySelectorAll('.control_button')
-  const wrapper = document.querySelector('.wrapper')
-  const mapContainer = document.querySelector('.map_container') // TODO possibly rename
-  const mapCover = document.querySelector('.map_cover')
-  const mapImage = document.querySelector('.map_image')
-  const location = document.querySelector('.location_indicator')
-  const spriteContainer = document.querySelector('.sprite_container')
-  const texts = document.querySelectorAll('.text')
-  const sprite = document.querySelector('.sprite')
-  const indicator = document.querySelector('.indicator')
-  const spriteFace = document.querySelector('.face')
-
-
   const setLocation = key => {
     map.key = key
-    setWidthAndHeight(map, wrapper)
+    setWidthAndHeight()
     
     const { iWidth, iHeight } = mapData[map.key]   
     map.iHeight = iHeight
@@ -565,7 +564,7 @@ function init() {
   }
   
   const setWidthAndHeightAndResize = () =>{
-    setWidthAndHeight(map, wrapper)
+    setWidthAndHeight()
     map.start = centerOfMap(map.width, map.height)
     resize()
   }
