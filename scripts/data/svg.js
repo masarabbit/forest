@@ -7,7 +7,7 @@ const svgWrapper = ( {content, color, rotate, flip, wrapper, frameNo, speed, fra
   const size = frameSize || 16
   return `
     <div class="${wrapper}" style="transform: rotate(${rotate}deg) scale(${scale}); ">
-      ${frameNo ? `<div class="svg_anim" style="width:${100 * (frameNo || 1)}%;" ${frameNo ? `data-frame_no="${frameNo}"` : ''}  ${speed ? `data-speed="${speed}"` : ''}>` : ''}
+      ${frameNo ? `<div class="svg_anim" style="width:${100 * (frameNo || 1)}%;" ${frameNo ? `data-frame_no="${frameNo}" data-current="0"` : ''}  ${speed ? `data-speed="${speed}"` : ''}>` : ''}
       <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 ${size * (frameNo || 1)} ${size}" fill="${color ? color : 'black'}">${content}</svg>
       ${frameNo ? '</div>' : ''}
     </div>

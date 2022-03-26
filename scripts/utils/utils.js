@@ -13,6 +13,7 @@ const setWidthAndHeight = () =>{
 const setTargetSize = (target, w, h) => Object.assign(target.style, { width: `${w}px`, height: `${h}px` })
 
 const setTargetPos = (target, x, y) => Object.assign(target.style, { left: `${x}px`, top: `${y}px` })
+// const setTargetPos = (target, x, y) => target.style.transform = `translate(${x}px, ${y}px)` // this doesn't work too well with spawn
 
 const adjustRectSize = ({ target, w, h, cellD, cells }) =>{
   setTargetSize(target, w * cellD, h * cellD) 

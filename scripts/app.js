@@ -118,11 +118,13 @@ function init() {
 
   const setPos = (para, num) =>{
     map.mapXY[para === 'left' ? 'x' : 'y'] = num
-    mapImage.style[para] = `${num}px`
+    const { x, y } = map.mapXY
+    mapImage.style.transform = `translate(${x}px,${y}px)`
   }
 
   const setSpritePos = (num, actor, sprite) =>{
     actor.spritePos = num
+    // this can't be set with translate, because translate is used to flip sprites too.
     sprite.style.marginLeft = `${num}px`
   }
 
@@ -489,31 +491,33 @@ function init() {
 
   const handleKeyAction = e =>{
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
-    const { pause, options, choice, isTalking, textCount } = bear
-    const { sprites } = map
-
-    if (isTalking) {
-      if (pause) {
-        options.forEach(option => option.classList.remove('selected'))
-        if (key === 'up' && choice > 0) bear.choice--
-        if (key === 'down' && choice < options.length - 1) bear.choice++
-        if ([' ', 'enter', 'right'].includes(key)) select()
-        if (key === 'left') prevText()
-        displayChoiceDetails()
-        options[bear.choice].classList.add('selected')
+    if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
+      const { pause, options, choice, isTalking, textCount } = bear
+      const { sprites } = map
+  
+      if (isTalking) {
+        if (pause) {
+          options.forEach(option => option.classList.remove('selected'))
+          if (key === 'up' && choice > 0) bear.choice--
+          if (key === 'down' && choice < options.length - 1) bear.choice++
+          if ([' ', 'enter', 'right'].includes(key)) select()
+          if (key === 'left') prevText()
+          displayChoiceDetails()
+          options[bear.choice].classList.add('selected')
+          return
+        }
+        if (key === 'left' && texts[0].innerHTML) prevText()
+      }
+      if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
+        check(textCount)
         return
       }
-      if (key === 'left' && texts[0].innerHTML) prevText()
+      spriteWalk({
+        dir: key, 
+        actor: bear, 
+        sprite: sprites[sprites.length - 1]
+      })
     }
-    if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
-      check(textCount)
-      return
-    }
-    spriteWalk({
-      dir: key, 
-      actor: bear, 
-      sprite: sprites[sprites.length - 1]
-    })
   }
 
 

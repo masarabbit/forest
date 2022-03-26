@@ -1,4 +1,6 @@
 const avatars = {
+  // frames are right to left
+  // TODO possible refactor, change it left to right?
   avatar: {
     sprite: `
     <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 87.64 87.64">

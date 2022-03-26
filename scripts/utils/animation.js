@@ -1,9 +1,11 @@
+import { map } from '../state.js'
+
 const animateCell = ({ target, start, end, interval, speed }) => {
   const startFrame = start || 0
   let i = startFrame
   clearInterval(interval)
   interval = setInterval(()=> {
-    target.style.marginLeft = `${-(i * 100)}%`
+    target.style.transform = `translateX(${-(i * 100)}%)`
     i = i >= end
       ? startFrame
       : i + 1
@@ -13,12 +15,13 @@ const animateCell = ({ target, start, end, interval, speed }) => {
 const animateCells = (interval, cells) => {
   interval = setInterval(()=> {
     cells.forEach( cell =>{
-      const current =  cell.style.marginLeft.replace('%','') / -100
+      const { current, frame_no }  =  cell.dataset
       // console.log('anim', animInterval)
-      const next = current >= cell.dataset.frame_no - 1
+      const next = current >= frame_no - 1
         ? 0
-        : current + 1
-      cell.style.marginLeft = `${-(next * 100)}%`  
+        : +current + 1
+      cell.style.transform = `translateX(${-(next * map.cellD)}px)`
+      cell.dataset.current = next
     })
   }, 500)
 }
