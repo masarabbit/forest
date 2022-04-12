@@ -12,16 +12,22 @@ function init() {
   const setTargetSize = (target, w, h) => {
     target.setAttribute('style', `width:${w}px; height:${h}px; --width:${w}px; --height: ${h}px;`)  
   }
+
+  const gridToMap = (w, h)=> new Array(w * h).fill('')
+  const cellSize = d => `width:${d}px; height:${d}px`
+
   
   const createGrid = () =>{
-    const { width, height, cellD } = mapData
-    setTargetSize(mapData.grid, width * cellD, height * cellD)
-    mapData.grid.innerHTML = new Array(width * height).fill('').map(()=> {
-      return `<div class="cell" style="width:${cellD}px; height:${cellD}px"></div>`
+    const { width: w, height: h, cellD: d, grid } = mapData
+    setTargetSize(grid, w * d, h * d)
+    grid.innerHTML = gridToMap(w, h).map((_m, i)=> {
+      return `<div class="cell" style="${cellSize(d)}">${i}</div>`
     }).join('')
   }
 
   createGrid()
+
+  // const createBaseArea = () =>
 
 
 }
