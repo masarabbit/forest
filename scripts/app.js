@@ -208,34 +208,35 @@ function init() {
     )
   }
 
-  const talk = () => {   
-    const { spawnData, iWidth } = map
-    const targetDirection = { r: 1, l: -1, u: -iWidth, d: iWidth }[bear.facingDirection[0]]
-    const talkTarget = spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
-
-    if (talkTarget) {
-      bear.isTalking = true
+  const dialog = ({ talkTarget, facingDirection }) =>{
+    bear.isTalking = true
       talkTarget.pause = true
       texts[0].parentNode.classList.remove('hidden')
-      turnSprite({
-        e: { r: 'left', l: 'right', u: 'down', d: 'up' }[bear.facingDirection[0]],
+      if (facingDirection) turnSprite({
+        e: facingDirection,
         actor: talkTarget, 
         sprite: talkTarget.spawn.childNodes[1]
       })
       
       if (!bear.dialogKey) {
         bear.dialog = mapData[map.key].eventContents[talkTarget.event]
-        bear.dialogKey = 'first',
-        bear.talkTarget = {
-          face: talkTarget.face,
-          interval: null
-        }
+        bear.dialogKey = 'first'
+        bear.talkTarget = talkTarget
       }
 
       bear.dialog[bear.dialogKey].text.length !== bear.textCount
         ? displayText(bear.textCount, false)
         : clearText()
-    } 
+  }
+
+  const talk = talkTarget => {   
+    console.log(talkTarget) //TODO extract this to trigger talk event
+    console.log(bear.facingDirection)
+
+    if (talkTarget) dialog({
+      talkTarget, 
+      facingDirection: { r: 'left', l: 'right', u: 'down', d: 'up' }[bear.facingDirection[0]]
+    })
   }
   
   
@@ -345,7 +346,12 @@ function init() {
         return
       }
     }
-    talk()
+    const { spawnData, iWidth } = map
+    const targetDirection = { r: 1, l: -1, u: -iWidth, d: iWidth }[bear.facingDirection[0]]
+    // TODO maybe save talkTarget so it can be referenced, in case dialog is happening through eventCode?
+    const talkTarget = bear.talkTarget || spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
+    talk(talkTarget)
+    console.log(spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection))
   }
 
   const transport = key =>{
@@ -592,21 +598,66 @@ function init() {
 
   transport('start')
 
+  const walkDirections = {
+    u: 'up',
+    d: 'down',
+    r: 'right',
+    l: 'left',
+    s: 'stop',
+    tu: 'up',
+    td: 'down',
+    tr: 'right',
+    tl: 'left',
+    tk: 'talk',
+  }
+
+  const eventAnimation = ({ actor, sprite, instruction, index }) =>{
+    const eventCode = walkDirections[instruction[index]]
+    
+    if (eventCode === 'stop') console.log('hey')
+    if (['u', 'd', 'r', 'l'].includes(instruction[index])) spriteWalk({
+      dir: eventCode, 
+      actor, sprite,
+    })
+    if (['tu', 'td', 'tr', 'tl'].includes(instruction[index])) turnSprite({
+      e: eventCode,
+      actor, sprite,
+    })
+    if (eventCode === 'talk') dialog({
+      // talkTarget: map.spawnData[2],
+      talkTarget: bear.talkTarget
+    }) 
+    // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
+    // TODO also, multiple choice isn't appearing
+
+
+    if (index < instruction.length) {
+      setTimeout(()=>{
+        eventAnimation({
+          actor,
+          sprite,
+          instruction, 
+          index: index + 1
+        })
+      }, 600)
+    }
+  }
+
 
   const testButton = document.querySelector('.test_button')
-  testButton.addEventListener('click', ()=>{
-    const tontokoData =map.spawnData.filter(s => s.name === 'tontoko')[0]
+  testButton.addEventListener('click', ()=> {
+    const tontokoData = map.spawnData.find(s => s.name === 'usabon')
     tontokoData.spawn.style.backgroundColor = 'yellow'
     tontokoData.pause = true
-
-    console.log('sprite',tontokoData.spawn.parentNode)
-
-    spriteWalk({
-      dir: 'right', 
-      actor: tontokoData, 
+    
+    bear.talkTarget = map.spawnData[2]
+    eventAnimation({
+      actor: tontokoData,
       sprite: tontokoData.spawn.childNodes[1],
-      // spawn: tontokoData.spawn.parentNode
+      instruction: ['r', 'r', 'r', 'r', 'td', 'tk'],
+      index: 0
     })
+
   })
 
 

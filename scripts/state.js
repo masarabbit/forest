@@ -44,7 +44,6 @@ const directionKey = {
   0: 'down',
 }
 
-
 export {
   map,
   bear,
