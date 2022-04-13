@@ -628,7 +628,7 @@ function init() {
       talkTarget: bear.talkTarget
     }) 
     // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
-    // TODO also, multiple choice isn't appearing
+    // TODO  diable turn if dialog initiated via event?
 
 
     if (index < instruction.length) {
@@ -650,11 +650,11 @@ function init() {
     tontokoData.spawn.style.backgroundColor = 'yellow'
     tontokoData.pause = true
     
-    bear.talkTarget = map.spawnData[2]
+    bear.talkTarget = tontokoData
     eventAnimation({
       actor: tontokoData,
       sprite: tontokoData.spawn.childNodes[1],
-      instruction: ['r', 'r', 'r', 'r', 'td', 'tk'],
+      instruction: ['r', 'r', 'td', 'tk'],
       index: 0
     })
 
