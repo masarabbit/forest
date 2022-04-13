@@ -651,12 +651,35 @@ function init() {
     tontokoData.pause = true
     
     bear.talkTarget = tontokoData
+    console.log('talktarget', bear.talkTarget)
     eventAnimation({
       actor: tontokoData,
       sprite: tontokoData.spawn.childNodes[1],
-      instruction: ['r', 'r', 'td', 'tk'],
+      instruction: ['r', 'r', 'td', 'tk'], // TODO when there's a tk, all sprites stop
       index: 0
     })
+
+    const tentekoData = map.spawnData.find(s => s.name === 'bunnio')
+    tentekoData.spawn.style.backgroundColor = 'red'
+    tentekoData.pause = true
+    eventAnimation({
+      actor: tentekoData,
+      sprite: tentekoData.spawn.childNodes[1],
+      instruction: ['r', 'r', 'td', 'u', 'r', 'r'],
+      index: 0
+    })
+
+    // TODO will need something else to animate bear.
+    // will need something else to restart bunny motion
+    // maybe have event to reposition actors
+    // should the animation be recoreded as a scenario which houses all motions? array of acts?
+    // const act = [
+    //   {
+    //     usabon: 'r',
+    //     bunnio: {talk: 'text_1'},
+    //     bear: 'tr'
+    //   }
+    // ]
 
   })
 

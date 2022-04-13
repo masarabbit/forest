@@ -132,6 +132,7 @@ a:hover {
   bottom: 10px;
   left: 10px;
   color: white;
+  pointer-events: none;
 }
 
 .location_indicator {
@@ -400,7 +401,7 @@ input:checked + .slider:before {
 .test_button {
   position: absolute;
   bottom: 40px;
-  left: 20px;
+  right: 20px;
   width: 100px;
   height: 30px;
   background-color: white;
