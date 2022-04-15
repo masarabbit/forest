@@ -208,7 +208,7 @@ function init() {
     )
   }
 
-  const dialog = ({ talkTarget, facingDirection }) =>{
+  const startDialog = ({ talkTarget, facingDirection }) =>{
     bear.isTalking = true
       talkTarget.pause = true
       texts[0].parentNode.classList.remove('hidden')
@@ -233,7 +233,7 @@ function init() {
     console.log(talkTarget) //TODO extract this to trigger talk event
     console.log(bear.facingDirection)
 
-    if (talkTarget) dialog({
+    if (talkTarget) startDialog({
       talkTarget, 
       facingDirection: { r: 'left', l: 'right', u: 'down', d: 'up' }[bear.facingDirection[0]]
     })
@@ -422,12 +422,12 @@ function init() {
     const isBear = actor === bear
 
     if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
-    const { mapImageTiles: mTiles, key, iWidth, cellD } = map
+    const { key, iWidth, cellD, map:mapcode } = map
     const { x, y } = map.mapXY
 
     // prevents bear from turning away from ladder
     turnSprite({
-      e: isBear && mTiles[bear.pos].classList.contains('la') ? 'up' : dir,
+      e: isBear && mapcode[bear.pos] === 'la' ? 'up' : dir,
       actor, sprite, animate: true
     })
 
@@ -475,17 +475,17 @@ function init() {
 
   const prevText = () =>{
     const { dialog, dialogKey, dialogHistory } = bear
-    const currentdialogLength = dialog[dialogKey].text.length
+    const currentDialogLength = dialog[dialogKey].text.length
     
     if (!dialogHistory.length && bear.textCount === 1) {
       // if beginning of dialog, end conversation
       clearText()
       return
-    } else if ( currentdialogLength === 1 || (currentdialogLength > 1 && bear.textCount === 1)) {
+    } else if ( currentDialogLength === 1 || (currentDialogLength > 1 && bear.textCount === 1)) {
       // return to previous dialog
       bear.dialogKey = bear.dialogHistory.pop()
-      const previousdialog = dialog[bear.dialogKey].text
-      bear.textCount = previousdialog.length - 1
+      const previousDialog = dialog[bear.dialogKey].text
+      bear.textCount = previousDialog.length - 1
     } else {
       // return within same dialog
       bear.textCount -= 2
@@ -609,80 +609,105 @@ function init() {
     tr: 'right',
     tl: 'left',
     tk: 'talk',
+    re: 'resume',
   }
 
-  const eventAnimation = ({ actor, sprite, instruction, index }) =>{
-    const eventCode = walkDirections[instruction[index]]
+  const eventAnimation = ({ act, index }) =>{
+    Object.keys(act[index]).forEach(actor =>{
+      const eventCode = walkDirections[act[index][actor]]
+      if (actor === 'bear'){
+        console.log('bear', act[index][actor], 'sprite:', sprite)
+        if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({
+          dir: eventCode, 
+          actor: bear, 
+          sprite,
+        })
+        
+        if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({
+          e: eventCode,
+          actor: bear,
+          sprite,
+        })
+
+      } else {
+        // console.log(act[index], index)
+        const actorData = map.spawnData.find(s => s.name === actor)
+        actorData.spawn.style.backgroundColor = 'red'
+        actorData.pause = true
+      
+        if (eventCode === 'stop') console.log('hey')
+        if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({
+          dir: eventCode, 
+          actor: actorData,
+          sprite: actorData.spawn.childNodes[1],
+        })
+        if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({
+          e: eventCode,
+          actor: actorData,
+          sprite: actorData.spawn.childNodes[1],
+        })
+        if (eventCode === 'talk') startDialog({
+          // TODO this needs to be refactored
+          //? (bear.talkTarget needs to be set somewhere else? maybe here)
+          talkTarget: bear.talkTarget
+        }) 
+        if (eventCode === 'resume') actorData.pause = false
+        // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
+        // TODO  disable turn if dialog initiated via event?
+      }
+    })
     
-    if (eventCode === 'stop') console.log('hey')
-    if (['u', 'd', 'r', 'l'].includes(instruction[index])) spriteWalk({
-      dir: eventCode, 
-      actor, sprite,
-    })
-    if (['tu', 'td', 'tr', 'tl'].includes(instruction[index])) turnSprite({
-      e: eventCode,
-      actor, sprite,
-    })
-    if (eventCode === 'talk') dialog({
-      // talkTarget: map.spawnData[2],
-      talkTarget: bear.talkTarget
-    }) 
-    // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
-    // TODO  diable turn if dialog initiated via event?
-
-
-    if (index < instruction.length) {
+    if (index < act.length - 1) {
       setTimeout(()=>{
         eventAnimation({
-          actor,
-          sprite,
-          instruction, 
+          act,
           index: index + 1
         })
       }, 600)
     }
   }
 
+  const testAct = [
+    {
+      usabon: 'r',
+      bunnio: 'l',
+      bear: 'tr'
+    },
+    {
+      usabon: 'r',
+      bunnio: 'u',
+      bear: 'r'
+    },
+    {
+      usabon: 'r',
+      bunnio: 'd',
+      // bunnio: {talk: 'text_1'},
+      bear: 'u'
+    },
+    {
+      usabon: 're',
+      bunnio: 're',
+      // bunnio: {talk: 'text_1'},
+      bear: 'l'
+    }
+  ]
+
 
   const testButton = document.querySelector('.test_button')
   testButton.addEventListener('click', ()=> {
-    const tontokoData = map.spawnData.find(s => s.name === 'usabon')
-    tontokoData.spawn.style.backgroundColor = 'yellow'
-    tontokoData.pause = true
-    
-    bear.talkTarget = tontokoData
-    console.log('talktarget', bear.talkTarget)
     eventAnimation({
-      actor: tontokoData,
-      sprite: tontokoData.spawn.childNodes[1],
-      instruction: ['r', 'r', 'td', 'tk'], // TODO when there's a tk, all sprites stop
+      act: testAct,
       index: 0
     })
 
-    const tentekoData = map.spawnData.find(s => s.name === 'bunnio')
-    tentekoData.spawn.style.backgroundColor = 'red'
-    tentekoData.pause = true
-    eventAnimation({
-      actor: tentekoData,
-      sprite: tentekoData.spawn.childNodes[1],
-      instruction: ['r', 'r', 'td', 'u', 'r', 'r'],
-      index: 0
-    })
 
     // TODO will need something else to animate bear.
     // will need something else to restart bunny motion
     // maybe have event to reposition actors
     // should the animation be recoreded as a scenario which houses all motions? array of acts?
-    // const act = [
-    //   {
-    //     usabon: 'r',
-    //     bunnio: {talk: 'text_1'},
-    //     bear: 'tr'
-    //   }
-    // ]
-
+    
+    //TODO add ways to move the bear
   })
-
 
 }
 
