@@ -3,6 +3,11 @@
   box-sizing: border-box;
 }
 
+:root {
+  --navy: '#031f5C';
+  --dark-navy: rgb(3, 31, 92);
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -231,6 +236,32 @@ a:hover {
   height: 200px;
 }
 
+.next {
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  border: 0px;
+  padding: 10px;
+  font-size: 16px;
+  color: var(--navy);
+  background-color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  /* animation: slide-in-from-bottom forwards ease 0.5s; */
+}
+
+.next:hover {
+  color: white;
+  background-color: var(--dark-navy);
+}
+
+.text_display.hidden .next {
+  /* pointer-events: none;
+  animation: none;
+  opacity: 0; */
+  bottom: -100px;
+}
+
 /** big window */
 .dialog_box {
   width: 100%;
@@ -400,7 +431,7 @@ input:checked + .slider:before {
 
 .test_button {
   position: absolute;
-  bottom: 40px;
+  bottom: 10px;
   right: 20px;
   width: 100px;
   height: 30px;
@@ -464,7 +495,7 @@ input:checked + .slider:before {
 .text_display { z-index: 999; }
 .control { z-index: 99999; }
 .toggle_wrapper { z-index: 99999; }
-.test_button { z-index: 99999; }
+.test_button { z-index: 999; }
 .no_wall_show::before { z-index: 999; }
 .map_cover { z-index: 1; }
 .button { z-index: 999; }
@@ -500,4 +531,10 @@ input:checked + .slider:before {
   0% { right: -100vh; }
   95% { right: 60px; }
   100% { right: 50px; }
+}
+
+@keyframes slide-in-from-bottom {
+  0% { bottom: -100px; }
+  95% { bottom: 50px; }
+  100% { bottom: 40px; }
 }

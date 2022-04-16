@@ -20,14 +20,15 @@ const adjustRectSize = ({ target, w, h, cellD, cells }) =>{
   cells && cells.forEach(cell=>{ setTargetSize(cell, cellD, cellD) })
 }
 
-const centerOfMap = (width, height) =>{
-  return Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
-}
+const centerOfMap = (width, height) => Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
+
+const isObject = target => Object.prototype.toString.call(target) === '[object Object]'
 
 export {
   setWidthAndHeight,
   setTargetSize,
   setTargetPos,
   adjustRectSize,
-  centerOfMap
+  centerOfMap,
+  isObject
 }

@@ -11,8 +11,9 @@ import svgData from './data/svgData.js'
 import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
 import { decode, decompress } from './utils/compression.js'
-import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap } from './utils/utils.js'
-import { map, bear, directionKey } from './state.js'
+import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject } from './utils/utils.js'
+import { map, bear, directionKey, walkDirections, testAct } from './state.js'
+import { setSpritePos, turnSprite } from './utils/sprite.js'
 
 import {
   transitionCover,
@@ -122,11 +123,6 @@ function init() {
     mapImage.style.transform = `translate(${x}px,${y}px)`
   }
 
-  const setSpritePos = (num, actor, sprite) =>{
-    actor.spritePos = num
-    // this can't be set with translate, because translate is used to flip sprites too.
-    sprite.style.marginLeft = `${num}px`
-  }
 
   const positionSprite = pos =>{
     const { width, cellD } = map
@@ -208,32 +204,29 @@ function init() {
     )
   }
 
-  const startDialog = ({ talkTarget, facingDirection }) =>{
+  const showDialog = ({ talkTarget, facingDirection, event }) =>{
     bear.isTalking = true
-      talkTarget.pause = true
-      texts[0].parentNode.classList.remove('hidden')
-      if (facingDirection) turnSprite({
-        e: facingDirection,
-        actor: talkTarget, 
-        sprite: talkTarget.spawn.childNodes[1]
-      })
-      
-      if (!bear.dialogKey) {
-        bear.dialog = mapData[map.key].eventContents[talkTarget.event]
-        bear.dialogKey = 'first'
-        bear.talkTarget = talkTarget
-      }
+    talkTarget.pause = true
+    texts[0].parentNode.classList.remove('hidden')
+    if (facingDirection) turnSprite({
+      e: facingDirection,
+      actor: talkTarget, 
+      sprite: talkTarget.spawn.childNodes[1]
+    })
+    
+    if (!bear.dialogKey) {
+      bear.dialog = mapData[map.key].eventContents[event || talkTarget.event]
+      bear.dialogKey = 'first'
+      bear.talkTarget = talkTarget
+    }
 
-      bear.dialog[bear.dialogKey].text.length !== bear.textCount
-        ? displayText(bear.textCount, false)
-        : clearText()
+    bear.dialog[bear.dialogKey].text.length !== bear.textCount
+      ? displayText(bear.textCount, false)
+      : clearText()
   }
 
   const talk = talkTarget => {   
-    console.log(talkTarget) //TODO extract this to trigger talk event
-    console.log(bear.facingDirection)
-
-    if (talkTarget) startDialog({
+    if (talkTarget) showDialog({
       talkTarget, 
       facingDirection: { r: 'left', l: 'right', u: 'down', d: 'up' }[bear.facingDirection[0]]
     })
@@ -273,6 +266,9 @@ function init() {
   }
 
   const clearText = () =>{
+    console.log('clearText', bear.dialog[bear.dialogKey])
+    // TODO can trigger continue from here
+
     Object.assign(bear, {
       textCount: 0,
       prevChoices: {},
@@ -292,6 +288,9 @@ function init() {
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
+    console.log('bear', bear)
+    console.log('eventPoint', eventPoint)
+    console.log('count', count)
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
@@ -351,7 +350,7 @@ function init() {
     // TODO maybe save talkTarget so it can be referenced, in case dialog is happening through eventCode?
     const talkTarget = bear.talkTarget || spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
     talk(talkTarget)
-    console.log(spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection))
+    // console.log(spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection))
   }
 
   const transport = key =>{
@@ -395,28 +394,6 @@ function init() {
     },400)
   }
   
-
-  const turnSprite = ({ e, actor, sprite, animate }) => {
-    const dir = e || 'down'
-    actor.facingDirection = dir
-    const { cellD } = map
-    const frames = {
-      right: [4, 6, 5, 'add'],
-      left: [4, 6, 5,'remove'],
-      up: [2, 2, 3,'toggle'],
-      down: [0, 0, 1, 'toggle']
-    }
-    let m = -cellD
-    m = animate ? m * frames[dir][0] : m * frames[dir][2]
-    sprite.parentNode.classList[frames[dir][3]]('right') 
-    actor.animationTimer.forEach(timer=> clearTimeout(timer))
-    if (animate){
-      actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * frames[dir][1], actor, sprite), 100)
-      actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * frames[dir][2], actor, sprite), 200) 
-    }   
-    setSpritePos(m, actor, sprite)
-  }
-
   const spriteWalk = ({ dir, actor, sprite }) =>{
     if (!dir || !bear.motion) return
     const isBear = actor === bear
@@ -578,6 +555,46 @@ function init() {
     map.start = centerOfMap(map.width, map.height)
     resize()
   }
+
+  const eventAnimation = ({ act, index, map }) =>{
+    Object.keys(act[index]).forEach(actor =>{
+      const eventCode = walkDirections[act[index][actor]]
+      if (actor === 'bear'){
+        if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({ dir: eventCode, actor: bear, sprite })
+        if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({ e: eventCode, actor: bear, sprite })
+      } else {
+        const actorData = map.spawnData.find(s => s.name === actor)
+        actorData.spawn.style.backgroundColor = 'red'
+        actorData.pause = true
+        const key = act[index][actor]
+        const sprite = actorData.spawn.childNodes[1]
+      
+        if (eventCode === 'stop') console.log('hey')
+        if (['u', 'd', 'r', 'l'].includes(key)) spriteWalk({ dir: eventCode, actor: actorData, sprite })
+        if (['tu', 'td', 'tr', 'tl'].includes(key)) turnSprite({ e: eventCode, actor: actorData, sprite })
+        if (eventCode === 'resume') actorData.pause = false
+        // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
+        // TODO  disable turn if dialog initiated via event?
+
+        if (isObject(key)) showDialog({ talkTarget: actorData, event: key.event }) 
+      }
+    })
+    if (!Object.keys(act[index]).some(k => isObject(k))){
+      if (index < act.length - 1) {
+        setTimeout(()=>{
+          eventAnimation({
+            act,
+            index: index + 1,
+            map
+          })
+        }, 600)
+      } else {
+        console.log('test trigger')
+        // TODO trigger something here so that event can be carried on?
+        map.eventActive = false
+      }
+    }
+  }
   
 
   // set up
@@ -598,115 +615,16 @@ function init() {
 
   transport('start')
 
-  const walkDirections = {
-    u: 'up',
-    d: 'down',
-    r: 'right',
-    l: 'left',
-    s: 'stop',
-    tu: 'up',
-    td: 'down',
-    tr: 'right',
-    tl: 'left',
-    tk: 'talk',
-    re: 'resume',
-  }
-
-  const eventAnimation = ({ act, index }) =>{
-    Object.keys(act[index]).forEach(actor =>{
-      const eventCode = walkDirections[act[index][actor]]
-      if (actor === 'bear'){
-        console.log('bear', act[index][actor], 'sprite:', sprite)
-        if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({
-          dir: eventCode, 
-          actor: bear, 
-          sprite,
-        })
-        
-        if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({
-          e: eventCode,
-          actor: bear,
-          sprite,
-        })
-
-      } else {
-        // console.log(act[index], index)
-        const actorData = map.spawnData.find(s => s.name === actor)
-        actorData.spawn.style.backgroundColor = 'red'
-        actorData.pause = true
-      
-        if (eventCode === 'stop') console.log('hey')
-        if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({
-          dir: eventCode, 
-          actor: actorData,
-          sprite: actorData.spawn.childNodes[1],
-        })
-        if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({
-          e: eventCode,
-          actor: actorData,
-          sprite: actorData.spawn.childNodes[1],
-        })
-        if (eventCode === 'talk') startDialog({
-          // TODO this needs to be refactored
-          //? (bear.talkTarget needs to be set somewhere else? maybe here)
-          talkTarget: bear.talkTarget
-        }) 
-        if (eventCode === 'resume') actorData.pause = false
-        // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
-        // TODO  disable turn if dialog initiated via event?
-      }
-    })
-    
-    if (index < act.length - 1) {
-      setTimeout(()=>{
-        eventAnimation({
-          act,
-          index: index + 1
-        })
-      }, 600)
-    }
-  }
-
-  const testAct = [
-    {
-      usabon: 'r',
-      bunnio: 'l',
-      bear: 'tr'
-    },
-    {
-      usabon: 'r',
-      bunnio: 'u',
-      bear: 'r'
-    },
-    {
-      usabon: 'r',
-      bunnio: 'd',
-      // bunnio: {talk: 'text_1'},
-      bear: 'u'
-    },
-    {
-      usabon: 're',
-      bunnio: 're',
-      // bunnio: {talk: 'text_1'},
-      bear: 'l'
-    }
-  ]
-
 
   const testButton = document.querySelector('.test_button')
   testButton.addEventListener('click', ()=> {
-    eventAnimation({
-      act: testAct,
-      index: 0
-    })
+    if (!map.eventActive) {
+      map.eventActive = true
+      eventAnimation({ act: testAct, index: 0, map })
+    }  
 
-
-    // TODO will need something else to animate bear.
-    // will need something else to restart bunny motion
-    // maybe have event to reposition actors
-    // should the animation be recoreded as a scenario which houses all motions? array of acts?
+    //? should the animation be recoreded as a scenario which houses all motions? array of acts?
     
-    //TODO add ways to move the bear
   })
 
 }

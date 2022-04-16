@@ -30,5 +30,5 @@
     texts,
     sprite,
     indicator,
-    spriteFace
+    spriteFace,
   }

@@ -17,7 +17,8 @@ const map = {
   key: 'one',
   spawnData: [],
   sprites: null,
-  map: []
+  map: [],
+  eventActive: false,
 }
 
 const bear = {
@@ -44,8 +45,47 @@ const directionKey = {
   0: 'down',
 }
 
+const walkDirections = {
+  u: 'up',
+  d: 'down',
+  r: 'right',
+  l: 'left',
+  s: 'stop',
+  tu: 'up',
+  td: 'down',
+  tr: 'right',
+  tl: 'left',
+  tk: 'talk',
+  re: 'resume',
+}
+
+const testAct = [
+  {
+    usabon: 'r',
+    bunnio: 'l',
+    bear: 'tr'
+  },
+  {
+    usabon: 'r',
+    bunnio: 'u',
+    bear: 'r'
+  },
+  {
+    usabon: 'r',
+    bunnio: { event: 'test_event' },
+    bear: 'u'
+  },
+  {
+    usabon: 're',
+    // bunnio: {talk: 'text_1'},
+    bear: 'l'
+  }
+]
+
 export {
   map,
   bear,
-  directionKey
+  directionKey,
+  walkDirections,
+  testAct,
 }

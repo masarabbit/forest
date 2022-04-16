@@ -56,9 +56,26 @@ const mapData = {
           face: ['sad'] 
         },  
         banana: { text: ['banana!', 'bananananana!'] }  
+      },
+      test_event: {
+        first:{ 
+          text:['this is a test event', 'test test test'], 
+          choice: {
+            'yeah!': 's_1',
+            'yo!': 's_2',
+          },
+        },
+        s_1: {
+          text: ['ho!'], 
+          event: 'continue',
+        },
+        s_2: {
+          text: ['takoyaki!'], 
+        },  
       }
     },
     entry: {
+      //* change this to set where bear starts
       start: {
         map: 'one',
         cell: 313,
