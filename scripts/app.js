@@ -11,7 +11,7 @@ import svgData from './data/svgData.js'
 import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
 import { decode, decompress } from './utils/compression.js'
-import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject } from './utils/utils.js'
+import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection } from './utils/utils.js'
 import { map, bear, directionKey, walkDirections, testAct } from './state.js'
 import { setSpritePos, turnSprite } from './utils/sprite.js'
 
@@ -109,12 +109,28 @@ function init() {
 
   const spawnMotion = i =>{
     const { spawnData, sprites } = map
-    if (spawnData[i].pause || !windowActive) return
-    spriteWalk({
-      dir: ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)],
-      actor: spawnData[i], 
-      sprite: sprites[i], 
-    })
+    const { pause, motion, motionIndex: index } = spawnData[i]
+    if (pause || !windowActive) return
+    if (motion === 'randomWalk') {
+      spriteWalk({
+        dir: randomDirection(),
+        actor: spawnData[i], sprite: sprites[i], 
+      })
+    } else if (motion === 'randomTurn') {
+      if (Math.random() < 0.5)
+      turnSprite({
+        e: randomDirection(), 
+        actor: spawnData[i], sprite: sprites[i],
+      })
+    } else if (Array.isArray(motion)) {
+      // if motion[index] is 0, it would be falsy so spriteWalk is skipped
+      if (motion[index]) spriteWalk({
+        dir: walkDirections[motion[index]],
+        actor: spawnData[i], sprite: sprites[i], 
+      })
+      spawnData[i].motionIndex = index === motion.length - 1 ? 0 : index + 1
+    }
+    
   }
 
   const setPos = (para, num) =>{
@@ -134,12 +150,12 @@ function init() {
   }
   
   const spawnCharacter = () =>{
-    if (map.spawnData.length) map.spawnData.forEach(m=>clearInterval(m.interval))
+    if (map.spawnData.length) map.spawnData.forEach(m => clearInterval(m.interval))
     map.spawnData.length = 0
     const { iWidth, cellD } = map 
 
     mapData[map.key].characters?.forEach((c, i)=>{
-      const { pos, avatar, spritePos, event, name } = c
+      const { pos, avatar, spritePos, event, name, motion } = c
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
       map.spawnData[i] = {
@@ -152,7 +168,9 @@ function init() {
         event,
         pos,
         spawn: null,
-        name
+        name,
+        motion,
+        motionIndex: Array.isArray(motion) ? 0 : null
       }
 
       const spawn = document.createElement('div')
@@ -266,7 +284,6 @@ function init() {
   }
 
   const clearText = () =>{
-    console.log(bear.dialogKey)
     const event = bear.dialogKey && bear.dialog[bear.dialogKey].event
 
     Object.assign(bear, {
@@ -281,6 +298,7 @@ function init() {
       isTalking: false
     })
     texts[0].parentNode.classList.add('hidden')
+    texts[0].classList.remove('face_displayed')
     texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
     spriteFace.innerHTML = ''
@@ -301,9 +319,7 @@ function init() {
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
     const nextButton = controlButtons[5]
-    // console.log('bear', bear)
-    console.log('eventPoint', eventPoint)
-    // console.log('count', count)
+    texts[0].classList.add('face_displayed')
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
@@ -369,7 +385,6 @@ function init() {
     // TODO maybe save talkTarget so it can be referenced, in case dialog is happening through eventCode?
     const talkTarget = bear.talkTarget || spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
     talk(talkTarget)
-    // console.log(spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection))
   }
 
   const transport = key =>{
@@ -577,7 +592,6 @@ function init() {
 
   const eventAnimation = ({ act, index }) =>{
     if (index === act.length - 1){
-      console.log('end')
       map.eventIndex = 0
     } else {
       Object.keys(act[index]).forEach(actor =>{

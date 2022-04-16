@@ -24,11 +24,14 @@ const centerOfMap = (width, height) => Math.floor((width * height) / 2) - Math.f
 
 const isObject = target => Object.prototype.toString.call(target) === '[object Object]'
 
+const randomDirection = () => ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)]
+
 export {
   setWidthAndHeight,
   setTargetSize,
   setTargetPos,
   adjustRectSize,
   centerOfMap,
-  isObject
+  isObject,
+  randomDirection
 }

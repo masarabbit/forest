@@ -7,9 +7,9 @@ const mapData = {
     iWidth: 30,
     iHeight: 20,
     characters: [
-      { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio' },
-      { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon' },
-      { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo' },
+      { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio', motion: 'randomWalk' },
+      { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon', motion: 'randomWalk' },
+      { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo', motion: 'randomWalk' },
     ],
     events: {
       5: { event: 'transport', gateway: 'portal3'},
@@ -120,7 +120,7 @@ const mapData = {
     iWidth: 40,
     iHeight: 30,
     characters: [
-      { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot' },
+      { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot', motion: 'randomWalk' },
     ],
     events: {
       1178: { event: 'transport', gateway: 'portal1'},
@@ -143,9 +143,9 @@ const mapData = {
     iWidth: 18,
     iHeight: 14,
     characters: [
-      { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala' },
-      { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira' },
-      { pos: 165, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko' },
+      { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala', motion: ['r', 0, 0, 'd', 'l', 'u'] },
+      { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira', motion: 'randomTurn' },
+      { pos: 165, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko', motion: 'randomTurn' },
     ],
     events: {
       241: { event: 'transport', gateway: 'portal1'},
