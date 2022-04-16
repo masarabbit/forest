@@ -266,8 +266,7 @@ function init() {
   }
 
   const clearText = () =>{
-    console.log('clearText', bear.dialog[bear.dialogKey])
-    // TODO can trigger continue from here
+    const { event } = bear.dialog[bear.dialogKey]
 
     Object.assign(bear, {
       textCount: 0,
@@ -284,13 +283,23 @@ function init() {
     texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
     spriteFace.innerHTML = ''
+
+    if (event){
+      map.eventActive = true
+      eventAnimation({
+        act: event.act,
+        index: map.eventIndex + 1
+      })
+    } else {
+      map.eventIndex = 0
+    }
   }
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
-    console.log('bear', bear)
-    console.log('eventPoint', eventPoint)
-    console.log('count', count)
+    // console.log('bear', bear)
+    // console.log('eventPoint', eventPoint)
+    // console.log('count', count)
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
@@ -556,41 +565,39 @@ function init() {
     resize()
   }
 
-  const eventAnimation = ({ act, index, map }) =>{
-    Object.keys(act[index]).forEach(actor =>{
-      const eventCode = walkDirections[act[index][actor]]
-      if (actor === 'bear'){
-        if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({ dir: eventCode, actor: bear, sprite })
-        if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({ e: eventCode, actor: bear, sprite })
-      } else {
-        const actorData = map.spawnData.find(s => s.name === actor)
-        actorData.spawn.style.backgroundColor = 'red'
-        actorData.pause = true
-        const key = act[index][actor]
-        const sprite = actorData.spawn.childNodes[1]
-      
-        if (eventCode === 'stop') console.log('hey')
-        if (['u', 'd', 'r', 'l'].includes(key)) spriteWalk({ dir: eventCode, actor: actorData, sprite })
-        if (['tu', 'td', 'tr', 'tl'].includes(key)) turnSprite({ e: eventCode, actor: actorData, sprite })
-        if (eventCode === 'resume') actorData.pause = false
-        // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
-        // TODO  disable turn if dialog initiated via event?
-
-        if (isObject(key)) showDialog({ talkTarget: actorData, event: key.event }) 
-      }
-    })
-    if (!Object.keys(act[index]).some(k => isObject(k))){
-      if (index < act.length - 1) {
+  const eventAnimation = ({ act, index }) =>{
+    if (index === act.length - 1){
+      console.log('end')
+      map.eventIndex = 0
+    } else {
+      Object.keys(act[index]).forEach(actor =>{
+        const eventCode = walkDirections[act[index][actor]]
+        if (actor === 'bear'){
+          if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({ dir: eventCode, actor: bear, sprite })
+          if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({ e: eventCode, actor: bear, sprite })
+        } else {
+          const actorData = map.spawnData.find(s => s.name === actor)
+          actorData.spawn.style.backgroundColor = 'red'
+          actorData.pause = true
+          const key = act[index][actor]
+          const sprite = actorData.spawn.childNodes[1]
+        
+          if (eventCode === 'stop') console.log('hey')
+          if (['u', 'd', 'r', 'l'].includes(key)) spriteWalk({ dir: eventCode, actor: actorData, sprite })
+          if (['tu', 'td', 'tr', 'tl'].includes(key)) turnSprite({ e: eventCode, actor: actorData, sprite })
+          if (eventCode === 'resume') actorData.pause = false
+          // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
+          // TODO  disable turn if dialog initiated via event?
+          if (isObject(key)) showDialog({ talkTarget: actorData, event: key.event }) 
+        }
+      })
+      if (!Object.keys(act[index]).some(k => isObject(act[index][k])) && index < act.length - 1 && map.eventActive){
+        map.eventIndex = index + 1
         setTimeout(()=>{
-          eventAnimation({
-            act,
-            index: index + 1,
-            map
-          })
+          eventAnimation({ act, index: map.eventIndex })
         }, 600)
       } else {
-        console.log('test trigger')
-        // TODO trigger something here so that event can be carried on?
+        // stops eventAnimation proceeding
         map.eventActive = false
       }
     }
@@ -603,7 +610,7 @@ function init() {
   window.addEventListener('keyup', (e)=>handleKeyAction(e))
   window.addEventListener('resize', setWidthAndHeightAndResize)
 
-  controlButtons.forEach(c=>{
+  controlButtons.forEach(c =>{
     c.addEventListener('click',()=>handleKeyAction(c.dataset.c))
   })
 
@@ -618,9 +625,9 @@ function init() {
 
   const testButton = document.querySelector('.test_button')
   testButton.addEventListener('click', ()=> {
-    if (!map.eventActive) {
+    if (map.eventIndex === 0) {
       map.eventActive = true
-      eventAnimation({ act: testAct, index: 0, map })
+      eventAnimation({ act: testAct, index: 0 })
     }  
 
     //? should the animation be recoreded as a scenario which houses all motions? array of acts?

@@ -1,5 +1,7 @@
 // TODO nowall list probably has excess code so need to tidy.
 
+import { testAct } from '../state.js'
+
 const mapData = {
   one: {
     iWidth: 30,
@@ -67,7 +69,9 @@ const mapData = {
         },
         s_1: {
           text: ['ho!'], 
-          event: 'continue',
+          event: {
+            act: testAct,
+          },
         },
         s_2: {
           text: ['takoyaki!'], 

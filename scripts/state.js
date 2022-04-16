@@ -18,6 +18,7 @@ const map = {
   spawnData: [],
   sprites: null,
   map: [],
+  eventIndex: 0,
   eventActive: false,
 }
 
@@ -77,9 +78,16 @@ const testAct = [
   },
   {
     usabon: 're',
-    // bunnio: {talk: 'text_1'},
     bear: 'l'
-  }
+  },
+  {
+    usabon: 're',
+    bear: 'l'
+  },
+  {
+    usabon: 're',
+    bear: 'l'
+  },
 ]
 
 export {
