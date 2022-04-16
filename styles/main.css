@@ -262,6 +262,11 @@ a:hover {
   bottom: -100px;
 }
 
+.next.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /** big window */
 .dialog_box {
   width: 100%;

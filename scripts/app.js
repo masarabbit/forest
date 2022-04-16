@@ -297,8 +297,9 @@ function init() {
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
+    const nextButton = controlButtons[5]
     // console.log('bear', bear)
-    // console.log('eventPoint', eventPoint)
+    console.log('eventPoint', eventPoint)
     // console.log('count', count)
 
     if (count < eventPoint.text.length){
@@ -326,7 +327,11 @@ function init() {
       displayTextGradual(text, 0)
       if (eventPoint.choice && count === eventPoint.text.length - 1) {
         displayAnswer(prev)
-      } 
+        nextButton.classList.add('hide')
+      } else {
+        nextButton.classList.remove('hide')
+        nextButton.innerHTML = count === eventPoint.text.length - 1? 'end' : 'next'
+      }
       return
     }
     clearText()
@@ -577,7 +582,7 @@ function init() {
           if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({ e: eventCode, actor: bear, sprite })
         } else {
           const actorData = map.spawnData.find(s => s.name === actor)
-          actorData.spawn.style.backgroundColor = 'red'
+          // actorData.spawn.style.backgroundColor = 'red'
           actorData.pause = true
           const key = act[index][actor]
           const sprite = actorData.spawn.childNodes[1]
