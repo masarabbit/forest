@@ -31,33 +31,38 @@ const mapData = {
       },
       apple: {
         first:{ 
-            text:['how are you?', 'test'], 
-            choice: {
-              'okay': 's_1',
-              'not so good': 's_2',
-              'banana' : 'banana'
-            }
-          },
+          text:['how are you?', 'test'], 
+          choice: {
+            'okay': 's_1',
+            'not so good': 's_2',
+            'banana' : 'banana'
+          }
+        },
         s_1: {
           text: ['yeah!'], 
-            choice: {
-              'yes': 's_3',
-              'no': 's_4'
-            }
-          },
+          choice: {
+            'yes': 's_3',
+            'no': 's_4'
+          }
+        },
         s_2: {
           text: ['really?'], 
-            choice: {
-              'yes': 's_3',
-              'no': 's_4'
-            }
-          },
+          choice: {
+            'yes': 's_3',
+            'no': 's_4'
+          }
+        },
         s_3: { text: ['cool!','cool two'] },
         s_4: { 
           text: ['whatever'],
           face: ['sad'] 
         },  
-        banana: { text: ['banana!', 'bananananana!'] }  
+        banana: { 
+          text: ['banana!', 'bananananana!'],
+          event: {
+            act: testAct,
+          },
+        }  
       },
       test_event: {
         first:{ 

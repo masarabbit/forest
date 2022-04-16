@@ -366,6 +366,7 @@ function init() {
       updateNextButtonText(count, eventPoint.text)
       displayTextGradual(text, 0)
       if (eventPoint.art) transitionCover.innerHTML = `<div><img src=${eventPoint.art} /></div>`
+      // TODO add trigger for event?
       return
     }
     clearText() 
@@ -382,7 +383,6 @@ function init() {
     }
     const { spawnData, iWidth } = map
     const targetDirection = { r: 1, l: -1, u: -iWidth, d: iWidth }[bear.facingDirection[0]]
-    // TODO maybe save talkTarget so it can be referenced, in case dialog is happening through eventCode?
     const talkTarget = bear.talkTarget || spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
     talk(talkTarget)
   }
@@ -466,8 +466,8 @@ function init() {
       const { event, gateway } = mapData[map.key].events[bear.pos]
       if (gateway) setTimeout(()=> {
         event === 'transport' && transport(gateway)
-        event === 'check' && check(gateway)
-      },200)
+      }, 200)
+      // TODO add some way to trigger eventAnimation
     } 
 
     if(isBear) indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
