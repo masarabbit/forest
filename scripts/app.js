@@ -266,7 +266,8 @@ function init() {
   }
 
   const clearText = () =>{
-    const { event } = bear.dialog[bear.dialogKey]
+    console.log(bear.dialogKey)
+    const event = bear.dialogKey && bear.dialog[bear.dialogKey].event
 
     Object.assign(bear, {
       textCount: 0,
@@ -294,6 +295,8 @@ function init() {
       map.eventIndex = 0
     }
   }
+
+  const updateNextButtonText = (count, text) => controlButtons[5].innerHTML = count === text.length - 1? 'end' : 'next'
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
@@ -330,7 +333,7 @@ function init() {
         nextButton.classList.add('hide')
       } else {
         nextButton.classList.remove('hide')
-        nextButton.innerHTML = count === eventPoint.text.length - 1? 'end' : 'next'
+        updateNextButtonText(count, eventPoint.text)
       }
       return
     }
@@ -343,11 +346,13 @@ function init() {
       const text = eventPoint.text[count]
       bear.textCount++
       bear.motion = false
+      texts[0].parentNode.classList.remove('hidden')
+      updateNextButtonText(count, eventPoint.text)
       displayTextGradual(text, 0)
       if (eventPoint.art) transitionCover.innerHTML = `<div><img src=${eventPoint.art} /></div>`
       return
     }
-    clearText()
+    clearText() 
   }
 
   const check = count =>{

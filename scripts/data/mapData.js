@@ -81,10 +81,10 @@ const mapData = {
     entry: {
       //* change this to set where bear starts
       start: {
-        map: 'one',
-        cell: 313,
-        // map: 'three',
-        // cell: 188,
+        // map: 'one',
+        // cell: 313,
+        map: 'three',
+        cell: 188,
       },
       portal3: {
         map: 'three',
