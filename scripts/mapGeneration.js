@@ -6,8 +6,8 @@ import { decode } from './utils/compression.js'
 function init() {
 
   const mapData = {
-    w: 30,
-    h: 20,
+    w: 50,
+    h: 30,
     cellD: 20,
     grid: document.querySelector('.grid'),
     codes: [],
@@ -90,7 +90,25 @@ function init() {
 
   const addEntrances = () =>{
     const randomExitIndexs = ['t', 'l', 'r', 'b'].map(x => randomIndex(cellsWithLetterX(x)))
-    mapData.codes = mapData.codes.map((c, i) => randomExitIndexs.includes(i) ? 'E' : c)
+    
+
+    const path = arr =>{
+      return arr.map(n=> {
+        return paintArea({
+          start: n,
+          defaultWidth: randomNo(2, 3),
+          height: randomNo(3, 5)
+        })
+      }).reduce((a, b) => a.concat(b))
+    }
+    // TODO need some way to make the path connect to each other, and wider than 1 box
+    console.log('r', randomExitIndexs)
+    const randomPaths = path(randomExitIndexs)
+    console.log('p', randomPaths)
+
+    mapData.codes = mapData.codes.map((c, i) => randomPaths.includes(i) ? 'E' : c)
+
+    // mapData.codes = mapData.codes.map((c, i) => randomExitIndexs.includes(i) ? 'E' : c)
   }
 
   const addClasses = () =>{
@@ -103,8 +121,8 @@ function init() {
   const randomNo = (min, max) => min + (Math.floor(Math.random() * (max - min)))
   // console.log(randomNo(4))
 
-  const paintArea = (start, defaultWidth, height) =>{
-    const distanceFromEdge = edge('w') - start % mapData.w
+  const paintArea = ({ start, defaultWidth, height }) =>{
+    const distanceFromEdge = edge('w') - start % mapData.w + 1
     const width = distanceFromEdge < defaultWidth ? distanceFromEdge : defaultWidth
     const x = i => i % width
     const y = i => Math.floor(i / width) * mapData.w
@@ -115,18 +133,18 @@ function init() {
 
   const createLakes = () =>{
     const availableArea = mapData.codes.filter(c => c * 0 === 0)
-    const randomSeeds = new Array(randomNo(2, 5)).fill('').map(() => randomIndex(availableArea))
+    const randomSeeds = new Array(randomNo(2, 8)).fill('').map(() => randomIndex(availableArea))
     console.log(randomSeeds)
     // const randomSeeds = [47, 417, 237, 308]
     // TODO currently lake can block path from entrace, so maybe need to define path first then make sure lake doesn't block it
     
     const lake = arr =>{
       return arr.map(n=> {
-        return paintArea(
-          n,
-          randomNo(2, 10),
-          randomNo(3, 5)
-        )
+        return paintArea({
+          start: n,
+          defaultWidth: randomNo(4, 10),
+          height: randomNo(3, 5)
+        })
       }).reduce((a, b) => a.concat(b))
     }
 
