@@ -6,12 +6,29 @@ import { decode } from './utils/compression.js'
 function init() {
 
   const mapData = {
-    w: 50,
-    h: 30,
+    w: 30,
+    h: 20,
     cellD: 20,
     grid: document.querySelector('.grid'),
+    output: document.querySelector('.codes'),
     codes: [],
     // cells: null,
+    lake: {
+      w: {
+        min: 4,
+        max: 10
+      },
+      h: {
+        min: 3,
+        max: 7
+      } 
+    }
+  }
+
+  const copyText = box =>{
+    box.select()
+    box.setSelectionRange(0, 99999) // For mobile devices 
+    document.execCommand('copy')
   }
 
   const populateWithSvg = (key, target) =>{
@@ -89,8 +106,15 @@ function init() {
   const randomIndex = arr => arr[Math.floor(Math.random() * arr.length)]
 
   const addEntrances = () =>{
+    const indexs = {}
+    const keys = ['t', 'l', 'r', 'b']
+    keys.forEach(k => indexs[k] = randomIndex(cellsWithLetterX(k)))
+    console.log(indexs)
+    // indexs.t - create path from top
+
+
+
     const randomExitIndexs = ['t', 'l', 'r', 'b'].map(x => randomIndex(cellsWithLetterX(x)))
-    
 
     const path = arr =>{
       return arr.map(n=> {
@@ -142,8 +166,8 @@ function init() {
       return arr.map(n=> {
         return paintArea({
           start: n,
-          defaultWidth: randomNo(4, 10),
-          height: randomNo(3, 5)
+          defaultWidth: randomNo(mapData.lake.w.min, mapData.lake.w.max),
+          height: randomNo(mapData.lake.h.min, mapData.lake.h.max)
         })
       }).reduce((a, b) => a.concat(b))
     }
@@ -153,6 +177,8 @@ function init() {
       return randomLakes.includes(i) ? 's' : c
     }) 
     // mapData.codes = mapData.codes.map((c, i) => randomSeeds.includes(i) ? 's' : c) 
+    // console.log(mapData.codes)
+    mapData.output.innerHTML = mapData.codes.join(',')
   }
 
   const triggerPopulateWithSvg = () =>{
@@ -170,7 +196,10 @@ function init() {
 
   // console.log(mapData.height)
   // console.log(edge('height'))
-
+  
+  document.querySelector('.copy').addEventListener('click', ()=>{
+    copyText(mapData.output)
+  })
 
 }
 
