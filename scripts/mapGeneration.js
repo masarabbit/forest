@@ -103,32 +103,36 @@ function init() {
   const randomNo = (min, max) => min + (Math.floor(Math.random() * (max - min)))
   // console.log(randomNo(4))
 
+  const paintArea = (start, defaultWidth, height) =>{
+    const distanceFromEdge = edge('w') - start % mapData.w
+    const width = distanceFromEdge < defaultWidth ? distanceFromEdge : defaultWidth
+    const x = i => i % width
+    const y = i => Math.floor(i / width) * mapData.w
+    return new Array(width * height).fill('').map((_c, i) =>{
+      return start + x(i) + y(i)
+    })
+  }
+
   const createLakes = () =>{
     const availableArea = mapData.codes.filter(c => c * 0 === 0)
     const randomSeeds = new Array(randomNo(2, 5)).fill('').map(() => randomIndex(availableArea))
-    // console.log(randomSeeds)
+    console.log(randomSeeds)
     // const randomSeeds = [47, 417, 237, 308]
     // TODO currently lake can block path from entrace, so maybe need to define path first then make sure lake doesn't block it
-
-    // TODO set this somewhere different so each lake is different (currently always the same)
-    const defaultWidth = randomNo(3, 6)
-    const height = randomNo(3, 6)
-
-    const lake = arr => {
-      return arr.map(n => {
-        const distanceFromEdge = edge('w') - n % mapData.w
-        const width = distanceFromEdge < defaultWidth ? distanceFromEdge : defaultWidth
-        const x = i => i % width
-        const y = i => Math.floor(i / width) * mapData.w
-        return new Array(width * height).fill('').map((_c, i) =>{
-          return n + x(i) + y(i)
-        })
+    
+    const lake = arr =>{
+      return arr.map(n=> {
+        return paintArea(
+          n,
+          randomNo(2, 10),
+          randomNo(3, 5)
+        )
       }).reduce((a, b) => a.concat(b))
     }
-    console.log(lake(randomSeeds))
 
+    const randomLakes = lake(randomSeeds)
     mapData.codes = mapData.codes.map((c, i) => {
-      return lake(randomSeeds).includes(i) ? 's' : c
+      return randomLakes.includes(i) ? 's' : c
     }) 
     // mapData.codes = mapData.codes.map((c, i) => randomSeeds.includes(i) ? 's' : c) 
   }
