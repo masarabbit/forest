@@ -1,16 +1,13 @@
 
 
 function init() {
-  const delay = 20
-
+  const delay = 10
   let start = 31
   let goal = 0
   let carryOn = true
-  let triedAnotherWay = false
-  // let route = []
   let mapTiles
   let displayTimer
-
+  let searchMemory
 
   const mapData = {
     w: 30,
@@ -25,20 +22,17 @@ function init() {
     target.setAttribute('style', `width:${w}px; height:${h}px; --width:${w}px; --height: ${h}px;`)  
   }
 
-  const gridToMap = (w, h)=> new Array(w * h).fill('')
+  const gridToMap = (w, h) => new Array(w * h).fill('')
   const cellSize = d => `width:${d}px; height:${d}px`
-  
+  const distance = (a, b) => Math.abs(x(a) - x(b)) + Math.abs(y(a) - y(b))
   const y = i => Math.floor(i / mapData.w)
   const x = i => i % mapData.w
-  // const edge = key => (mapData[key] - 1)
   
-  // console.log(y(599))
   const createGrid = () =>{
     const { w, h, cellD: d, grid } = mapData
     setTargetSize(grid, w * d, h * d)
     grid.innerHTML = gridToMap(w, h).map((_m, i)=> {
-      return `<div class="cell" style="${cellSize(d)}" data-index="${i}" data-x=${x(i)}
-      data-y=${y(i)}>${i}</div>`
+      return `<div class="cell" style="${cellSize(d)}" data-index="${i}">${i}</div>`
     }).join('')
   }
 
@@ -46,18 +40,12 @@ function init() {
     mapTiles = document.querySelectorAll('.cell')
     mapTiles.forEach((c, i) =>{
       const code = mapData.codes.split(',')[i]
-      c.classList.add(code)
-      if(code * 0 !== 0)c.classList.add('wall')
+      c.className = (code * 0 !== 0 ? `cell ${code} wall` : 'cell')
       c.innerHTML = code
     })
-    
   }
 
-  createGrid()
-  addClasses()
-
-
-  const searchMemory = new Array(mapData.w * mapData.h).fill('').map(()=>{
+  const defaultMemory = () => gridToMap(mapData.w, mapData.h).map(()=>{
     return {
       path: null,
       searched: false,
@@ -65,149 +53,75 @@ function init() {
     }
   })
 
+  searchMemory = defaultMemory()
+  const isWall = i => mapTiles[i].classList.contains('wall')
+
   const displayPath = current =>{
-    // console.log(mapTiles[current])
     searchMemory[current].path = 'path'
     mapTiles[current].classList.add('path')
-    let prev = searchMemory[current].prev
-    
-    //! when sprite is one square away from start and prev is undefined, prev is corrected.
-    if (current - mapData.w === start ||
-      current + mapData.w === start ||
-      current - 1 === start ||
-      current + 1 === start) prev = start
-
-    // let direction
-    // if (current - mapData.w === prev) direction = 'down'
-    // if (current + mapData.w === prev) direction = 'up'
-    // if (current - 1 === prev) direction = 'right'
-    // if (current + 1 === prev) direction = 'left'
-    
-    // if (prev) route.push(direction)
-
-    if (!prev) {
-      // route.push('reset')
-      start = goal
-      return
-    }
-
-    displayTimer = setTimeout(()=>{
-      displayPath(prev)
-    }, delay)
-
+    // mapData.codes = mapData.codes.split(',').map((c, i) => i === current ? 'p' : c).join(',')
+    searchMemory[current].prev
+      ? displayTimer = setTimeout(()=> displayPath(searchMemory[current].prev), delay)
+      : start = goal
   }
-
-  const distanceBetween = (a, b) => Math.abs(x(a) - x(b)) + Math.abs(y(a) - y(b))
 
   const decideNextMove = (current, count) =>{
     if (!carryOn) return
-    const possibleDestination = [
-      current + 1,
-      current - 1,
-      current - mapData.w,
-      current + mapData.w  
-    ]
-    const mapInfo = []
-    if (possibleDestination.some(cell => cell === goal)) {
-      console.log(possibleDestination)
+    const possibleDestination = [1, -1, -mapData.w, mapData.w].map(d => d + current)
+    if (!possibleDestination.some(c => c === goal)) {
+      const mapInfo = []
+      possibleDestination.forEach(cell =>{  
+        if (!isWall(cell) && !searchMemory[cell].searched && cell !== start) {
+          mapInfo.push({ 
+            cell, 
+            prev: current, 
+            distanceToGoal: distance(goal, cell) 
+          })
+        }
+      })
+      const minValue = Math.min(...mapInfo.map(c => c.distanceToGoal))
+      mapInfo.filter(c => c.distanceToGoal === minValue).forEach(c =>{
+        searchMemory[c.cell].searched = true 
+        searchMemory[c.cell].prev = current
+        mapTiles[c.cell].classList.add('node')   
+        setTimeout(()=> decideNextMove(c.cell, count + 1), delay)
+      })
+    } else {
       carryOn = false
       searchMemory[goal].prev = current
       displayPath(goal)
-      return
-    }
-    possibleDestination.forEach(option=>{  
-      if (mapTiles[option] && 
-          !mapTiles[option].classList.contains('wall') && 
-          !searchMemory[option].searched && 
-          option !== start) {
-        mapInfo.push(
-          { 
-            cell: option,
-            prev: current,
-            distanceFromStart: distanceBetween(start, option),
-            distanceToGoal: distanceBetween(goal, option)
-          }
-        )
-      }
-    })
-    const minValue = Math.min(...mapInfo.map(cell=> cell.distanceFromStart + cell.distanceToGoal))
-    const optionsWithMinValue = mapInfo.filter(cell => (cell.distanceFromStart + cell.distanceToGoal) === minValue)
-
-    mapInfo.filter(cell=> (cell.distanceFromStart + cell.distanceToGoal) !== minValue).forEach(option=>{
-      mapTiles[option.cell].classList.add('sub_node')
-    })
-
-    if (optionsWithMinValue.length === 0 && !triedAnotherWay) {
-      triedAnotherWay = true
-      tryAnotherWay(count)
-    }
-
-    optionsWithMinValue.forEach(option=>{
-      searchMemory[option.cell].searched = true 
-      searchMemory[option.cell].prev = current
-      mapTiles[option.cell].classList.add('node')   
-      setTimeout(()=>{
-        decideNextMove(option.cell, count + 1)
-      },delay)
-    })
+    }  
   }
-
-  const tryAnotherWay = count =>{
-    if (!carryOn) return
-    const possibleDestination = [
-      start + 1,
-      start - 1,
-      start - mapData.w,
-      start + mapData.w  
-    ]
-    possibleDestination.forEach(path=>{
-      if (mapTiles[path] && 
-          !searchMemory[path].searched && 
-          !mapTiles[path].classList.contains('wall')) {
-        decideNextMove(path, count + 1)
-      }
-    })
-  }
-
-  const clearTiles = ()=>{
-    mapTiles[goal].innerHTML = ''
-    mapTiles.forEach(tile=>{
-      tile.className = 'cell'
-    })
-    addClasses()
-  }
-
+  
   const resetMotion = () =>{
     clearTimeout(displayTimer)
-    clearTiles()
-    searchMemory.forEach(memory=>{
-      memory.path = null,
-      memory.searched = false,
-      memory.prev = null
-    })
-    // route = []
+    mapTiles[goal].innerHTML = ''
+    mapTiles.forEach(tile => tile.className = 'cell')
+    addClasses()
+    searchMemory = defaultMemory()
     carryOn = true
-    triedAnotherWay = false
   }
 
   const triggerMotion = e =>{
-    console.log('test')
-    if (+e.target.dataset.index === goal || !e.target.dataset.index) return 
-    mapTiles[goal].innerHTML = ''
-    goal = +e.target.dataset.index
-    if (mapTiles[goal].classList.contains('wall')) return
-    resetMotion()
-    mapTiles[start].classList.add('start')
-    mapTiles[goal].classList.add('goal')
-    searchMemory[start].path = 'start'
-    searchMemory[goal].path = 'goal'
-    decideNextMove(start, 0)
+    if (+e.target.dataset.index !== goal && e.target.dataset.index){
+      mapTiles[goal].innerHTML = ''
+      goal = +e.target.dataset.index
+      if (!isWall(goal)){
+        resetMotion()
+        //* only for demo
+        mapTiles[start].classList.add('start')
+        mapTiles[goal].classList.add('goal')
+        //* -------------
+        decideNextMove(start, 0)
+      }
+    }
   }
+  
+  // setup
+  createGrid()
+  addClasses()
 
-  mapTiles.forEach(mapTile => {
-    mapTile.addEventListener('click', triggerMotion)
-    // mapTile.innerHTML = 't'
-  })
+  mapTiles.forEach(mapTile => mapTile.addEventListener('click', triggerMotion))
 
   // window.addEventListener('resize', resize)
 }

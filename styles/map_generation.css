@@ -110,6 +110,11 @@ a:hover {
   color: black;
 }
 
+.p {
+  background-color: black;
+  color: hotpink;
+}
+
 .node { background-color: rgb(196, 245, 250); }
 .start { background-color: rgb(91, 248, 156); }
 .sub_node { background-color: rgb(196, 255, 247); }
