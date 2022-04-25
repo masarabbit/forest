@@ -21,6 +21,12 @@ function init() {
   const setTargetSize = (target, w, h) => {
     target.setAttribute('style', `width:${w}px; height:${h}px; --width:${w}px; --height: ${h}px;`)  
   }
+  
+
+  // TODO make path fatter by going through array and adding cell underneath or beside the cell
+  // const makePathFatter = (cell, direction) =>{
+  //   something[cell + direction] = 'path'
+  // }
 
   const gridToMap = (w, h) => new Array(w * h).fill('')
   const cellSize = d => `width:${d}px; height:${d}px`
@@ -58,7 +64,13 @@ function init() {
 
   const displayPath = current =>{
     searchMemory[current].path = 'path'
-    mapTiles[current].classList.add('path')
+
+    //? make path fat
+    const fatPath = [1, -1, -mapData.w, mapData.w].map(d => d + current)
+    fatPath.forEach(c => !isWall(c) && mapTiles[c].classList.add('path'))
+
+    // mapTiles[current].classList.add('path')
+    //* add path to code
     // mapData.codes = mapData.codes.split(',').map((c, i) => i === current ? 'p' : c).join(',')
     searchMemory[current].prev
       ? displayTimer = setTimeout(()=> displayPath(searchMemory[current].prev), delay)
