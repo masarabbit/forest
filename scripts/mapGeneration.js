@@ -2,28 +2,10 @@
 import svgData from './data/svgData.js'
 import { svgWrapper } from './data/svg.js'
 import { decode } from './utils/compression.js'
+import mapData from './data/mapGenData.js'
+import { defaultMemory, triggerMotion } from './utils/search.js'
 
 function init() {
-
-  const mapData = {
-    w: 30,
-    h: 20,
-    cellD: 20,
-    grid: document.querySelector('.grid'),
-    output: document.querySelector('.codes'),
-    codes: [],
-    // cells: null,
-    lake: {
-      w: {
-        min: 4,
-        max: 10
-      },
-      h: {
-        min: 3,
-        max: 7
-      } 
-    }
-  }
 
   const copyText = box =>{
     box.select()
@@ -68,7 +50,7 @@ function init() {
     const { w, h, cellD: d, grid } = mapData
     setTargetSize(grid, w * d, h * d)
     grid.innerHTML = gridToMap(w, h).map((_m, i)=> {
-      return `<div class="cell" style="${cellSize(d)}">${i}</div>`
+      return `<div class="cell" style="${cellSize(d)}" data-index="${i}">${i}</div>`
     }).join('')
   }
 
@@ -135,10 +117,19 @@ function init() {
     // mapData.codes = mapData.codes.map((c, i) => randomExitIndexs.includes(i) ? 'E' : c)
   }
 
+  // const addClasses = () =>{
+  //   document.querySelectorAll('.cell').forEach((c, i) =>{
+  //     c.classList.add(mapData.codes[i])
+  //     c.innerHTML = mapData.codes[i]
+  //   })
+  // }
+
   const addClasses = () =>{
-    document.querySelectorAll('.cell').forEach((c, i) =>{
-      c.classList.add(mapData.codes[i])
-      c.innerHTML = mapData.codes[i]
+    mapData.mapTiles = document.querySelectorAll('.cell')
+    mapData.mapTiles.forEach((c, i) =>{
+      const code = mapData.codes[i]
+      c.className = (code * 0 !== 0 ? `cell ${code} wall` : 'cell')
+      c.innerHTML = code
     })
   }
 
@@ -196,10 +187,13 @@ function init() {
 
   // console.log(mapData.height)
   // console.log(edge('height'))
+  mapData.searchMemory = defaultMemory(mapData.w, mapData.h)
   
   document.querySelector('.copy').addEventListener('click', ()=>{
     copyText(mapData.output)
   })
+  mapData.mapTiles = document.querySelectorAll('.cell')
+  mapData.mapTiles.forEach(mapTile => mapTile.addEventListener('click', e =>triggerMotion(e, addClasses)))
 
 }
 
