@@ -65,7 +65,7 @@ function init() {
   let alts = document.querySelectorAll('.alt')
   const copyButtons = document.querySelectorAll('.copy') 
   const indexToggleButton = document.querySelector('.display_index')
-  const buttons = document.querySelectorAll('button')
+  const buttons = document.querySelectorAll('.btn')
 
   // input
   const cellSizeInputs = document.querySelectorAll('.cell_size')

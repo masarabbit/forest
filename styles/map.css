@@ -497,13 +497,13 @@ button.icon:hover {
 }
 
 
-/* .pen_cursor { background: url(/icon/pen_cursor.svg); }
+.pen_cursor { background: url(/icon/pen_cursor.svg); }
 
 .eraser_cursor { background: url(/icon/eraser_cursor.svg); }
 
 .bucket_cursor { background: url(/icon/bucket_cursor.svg); }
 
-.motion_cursor { background: url(/icon/motion_cursor.svg); } */
+.motion_cursor { background: url(/icon/motion_cursor.svg); }
 
 .cursor_none {
   cursor: none !important;
@@ -696,7 +696,7 @@ button.icon:hover {
 }
 
 .crop_selection {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAENJREFUOE9jZKAQMBKp/z8OdYx0MwDdATAXEe2CYWgA3EvExgLO2IYZAA9VItMFhguGkQHoQUAwkNEDkWwDSA18uHoArWAMEaCLWgQAAAAASUVORK5CYII=);
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAE5JREFUOE9jZKAQMJKg/z9ULYqewWkAzKnE+I4RmxeoZgC64UQHIlaFDAwMg9wAkgIOOXpgAUWxAciG4gpErOkCXzogKpnTxABikjBcDQAIoxIRtni11QAAAABJRU5ErkJggg==);
 }
 
 .trace_svg {
