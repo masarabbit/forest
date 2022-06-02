@@ -602,6 +602,7 @@ function init() {
         } else {
           const actorData = map.spawnData.find(s => s.name === actor)
           // actorData.spawn.style.backgroundColor = 'red'
+          console.log(actor)
           actorData.pause = true
           const key = act[index][actor]
           const sprite = actorData.spawn.childNodes[1]

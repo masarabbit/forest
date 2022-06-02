@@ -20,7 +20,8 @@ const mapData = {
       288: { event: 'transport', gateway: 'portal6'},
       167: { event: 'transport', gateway: 'portal13'},
     },
-    map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nr1,sr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,sl1,p1,nr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,sl1,p1,sr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
+    // map: 'v5,b2,v24,w4,b2,w22,v2,w1,b14,d1,pt2,s1,b8,w1,v2,w1,b12,t1,b1,g1,pb2,y1,b6,t1,b1,w1,v2,w1,b2,t1,b10,d1,al1,p1,nr1,sr1,pt1,s1,b6,w1,v2,w1,b10,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b6,w1,v2,w1,b6,t1,b3,g1,rc1,pb1,g1,pb5,y1,b6,w1,v2,w1,b10,sl1,p1,nr1,al1,p5,ar1,b6,w1,v2,w1,b10,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,b1,w1,v2,w1,b13,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,b1,w1,v2,w1,b1,t1,b3,t1,b3,t1,b12,sl1,p1,sr1,b1,w1,v2,w1,b19,t1,b2,bl1,do1,bb1,b1,w1,v2,w1,b2,t1,b6,ra1,rh5,rb1,b10,w1,v2,w1,b5,ra1,rh3,rd1,b5,r1,b12,v1,w1,b5,r1,b7,w1,b1,r1,b7,t1,b4,v1,w1,b1,t1,b3,r1,b1,t1,b7,r1,b4,t1,b5,w1,v2,w1,b5,r1,b5,w1,b3,re1,rh2,rb1,b7,w1,v2,w1,b5,r1,b12,r1,b7,w1,v2,w6,r1,w12,r1,w8,v8,r1,v12,r1,v9',
+    map: 'v5,b2,v24,ta1,tb1,ta1,tb1,b2,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,b2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,d1,pt2,s1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v2,ta1,tb1,b13,g1,pb2,y1,b5,ta1,tb1,ta1,tb1,v2,tc1,td1,b12,d1,al1,p1,nr1,sr1,pt1,s1,b3,tc1,td1,tc1,td1,v2,ta1,tb1,b9,d1,pt2,pu1,rr1,do1,ab1,rl1,rp1,pr1,b5,ta1,tb1,v2,tc1,td1,b4,ta1,tb1,b3,g1,rc1,pb1,g1,pb5,y1,b5,tc1,td1,v2,ta1,tb1,b4,tc1,td1,b3,sl1,p1,nr1,al1,p5,ar1,b5,ta1,tb1,v2,tc1,td1,b9,bl1,do1,ab1,al1,wi1,p1,sw1,p1,wi1,ar1,b2,d1,pt1,s1,tc1,td1,v2,ta1,tb1,b12,bl1,ab2,do1,ab2,bb1,b2,g1,rc1,y1,ta1,tb1,v2,tc1,td1,b21,sl1,p1,sr1,tc1,td1,v2,ta1,tb1,b17,ta1,tb1,b2,bl1,do1,bb1,ta1,tb1,v2,tc1,td1,b8,ra1,rh5,rb1,b2,tc1,td1,b5,tc1,td1,v2,ta1,tb1,b4,ra1,rh3,rd1,b5,r1,b12,v1,tc1,td1,b4,r1,b9,r1,b12,v1,ta1,tb1,b4,r1,b9,r1,b9,ta1,tb1,v2,tc1,td1,b4,r1,b9,re1,rh2,rb1,b6,tc1,td1,v2,ta1,tb1,ta1,tb1,ta1,tb1,r1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,r1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,r1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,r1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v8,r1,v12,r1,v9',
     eventContents: {
       hello: { first:{ text:['hello!'], }, },
       tomato: {
@@ -86,10 +87,10 @@ const mapData = {
     entry: {
       //* change this to set where bear starts
       start: {
-        // map: 'one',
-        // cell: 313,
-        map: 'three',
-        cell: 188,
+        map: 'one',
+        cell: 313,
+        // map: 'three',
+        // cell: 188,
       },
       portal3: {
         map: 'three',
@@ -150,7 +151,7 @@ const mapData = {
     characters: [
       { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala', motion: ['r', 0, 0, 'd', 'l', 'u'] },
       { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira', motion: 'randomTurn' },
-      { pos: 165, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko', motion: 'randomTurn' },
+      { pos: 166, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko', motion: 'randomTurn' },
     ],
     events: {
       241: { event: 'transport', gateway: 'portal1'},
@@ -159,7 +160,8 @@ const mapData = {
       62: { event: 'check', index: 'tree1'},
       112: { event: 'check', index: 'bunny1'},
     },
-    map: 'v19,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,o1,b10,o1,ta1,tb1,v2,tc1,td1,o1,b6,ta1,tb1,b2,o1,tc1,td1,v2,ta1,tb1,o1,b6,tc1,td1,b2,o1,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,ta1,tb1,ta1,tb1,b2,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,b2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v8,b2,v9',
+    // map: 'v19,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,o1,b10,o1,ta1,tb1,v2,tc1,td1,o1,b6,ta1,tb1,b2,o1,tc1,td1,v2,ta1,tb1,o1,b6,tc1,td1,b2,o1,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,b12,ta1,tb1,v2,tc1,td1,b12,tc1,td1,v2,ta1,tb1,ta1,tb1,ta1,tb1,b2,ta1,tb1,ta1,tb1,ta1,tb1,ta1,tb1,v2,tc1,td1,tc1,td1,tc1,td1,b2,tc1,td1,tc1,td1,tc1,td1,tc1,td1,v8,b2,v9',
+    map: 'v19,b2,ta1,tb1,ta1,tb1,ta1,tb1,b4,ta1,tb1,ta1,tb1,v2,b1,t1,tc1,td1,tc1,td1,tc1,td1,t4,tc1,td1,tc1,td1,v2,t1,b13,ta1,tb1,v2,t1,b13,tc1,td1,v2,t1,b1,o1,b10,o1,ta1,tb1,v2,t1,b1,o1,b6,ta1,tb1,b2,o1,tc1,td1,v2,t1,b1,o1,b6,tc1,td1,b2,o1,ta1,tb1,v2,t3,b11,tc1,td1,v2,b2,t1,b11,t1,b1,v2,b2,t1,b11,t1,b1,v2,b2,ta1,tb1,ta1,tb1,b2,ta1,tb1,ta1,tb1,ta1,tb1,t1,b1,v2,b2,tc1,td1,tc1,td1,b2,tc1,td1,tc1,td1,tc1,td1,b2,v8,b2,v9',
     eventContents: {
       hello: { 
         first:{ 
