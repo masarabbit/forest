@@ -34,7 +34,7 @@ import {
 function init() {
 
   //* stops intervals firing while window is inactive
-  let windowActive
+  let windowActive = true
   window.addEventListener('focus', ()=> windowActive = true)
   window.addEventListener('blur', ()=> windowActive = false)
 
