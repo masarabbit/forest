@@ -13,6 +13,7 @@ body {
   margin: 0;
   font-family: sans-serif;
   background-color: rgb(67, 65, 88);
+  overscroll-behavior: contain;
 }
 
 .wrapper {
