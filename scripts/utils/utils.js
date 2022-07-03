@@ -26,6 +26,17 @@ const isObject = target => Object.prototype.toString.call(target) === '[object O
 
 const randomDirection = () => ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)]
 
+const addEvents = (target, event, action, array) =>{
+  array.forEach(a => event === 'remove' ? target.removeEventListener(a, action) : target.addEventListener(a, action))
+}
+const mouse = {
+  up: (t, e, a) => addEvents(t, e, a, ['mouseup', 'touchend']),
+  move: (t, e, a) => addEvents(t, e, a, ['mousemove', 'touchmove']),
+  down: (t, e, a) => addEvents(t, e, a, ['mousedown', 'touchstart']),
+  enter: (t, e, a) => addEvents(t, e, a, ['mouseenter', 'touchstart']),
+  leave: (t, e, a) => addEvents(t, e, a, ['mouseleave', 'touchmove'])
+}
+
 export {
   setWidthAndHeight,
   setTargetSize,
@@ -33,5 +44,6 @@ export {
   adjustRectSize,
   centerOfMap,
   isObject,
-  randomDirection
+  randomDirection,
+  mouse
 }
