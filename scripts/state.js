@@ -12,7 +12,7 @@ const map = {
   locationTiles: null,
   mapImageTiles: null,
   animInterval: null,
-  noWallList: ['b','do'],
+  noWallList: ['b','do','gr'],
   noLeftEdgeList: ['pu','g'],
   key: 'one',
   spawnData: [],

@@ -12,7 +12,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: sans-serif;
-  background-color: rgb(67, 65, 88);
+  background-color: rgb(6, 161, 161);
   overscroll-behavior: contain;
 }
 
@@ -482,7 +482,9 @@ input:checked + .slider:before {
   height: 32px;
 }
 
-.control.hide,
+.touch_control.hide,
+/* .control.hide, */
+.touch_control.deactivate,
 .text_display.hidden .text,
 .map_cover {
   pointer-events: none;
@@ -503,7 +505,9 @@ input:checked + .slider:before {
 
 .map_image.transition,
 .text_display.hidden .text,
-.control.hide,
+/* .control.hide, */
+.touch_control.hide,
+.touch_control.deactivate,
 .instruction.hide {
   opacity: 0;
 }
@@ -556,25 +560,50 @@ input:checked + .slider:before {
   100% { bottom: 40px; }
 }
 
+@keyframes display-artwork {
+  0% { margin-right: -100vh; }
+  100% { margin-right: 0; }
+}
+
+@keyframes display-artwork {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
 .touch_control {
   position: fixed;
   bottom: 10px;
   left: 10px;
-  width: 180px;
-  height: 180px;
+  width: 150px;
+  height: 150px;
   background-color: rgba(8, 8, 73, 0.433);
   border-radius: 50%;
+  transition: 0.3s;
 }
+
+/* .touch_control.deactivate {
+  left: -150px;
+  opacity: 0;
+} */
 
 .touch_circle {
   position: absolute;
   top: 0px;
   left: 0px;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   background-color: rgba(255, 255, 255, 0.709);
-  transform: translate(65px, 65px);
+  transform: translate(25px, 25px);
   cursor: grab;
+}
+
+/* .art_work {
+  border: 1px solid hotpink;
+} */
+
+.art_work img {
+  position: absolute;
+  animation: display-artwork forwards ease 0.3s;
 }
 

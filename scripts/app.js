@@ -1,7 +1,7 @@
 
 
 //*maybe design maps first.
-//! temporal solution for image display added, but 
+//! add control button (enter)
 //! add ways to decorate map further
 //! design other avatars and map
 
@@ -28,7 +28,7 @@ import {
   texts,
   sprite,
   indicator,
-  spriteFace
+  spriteFace,
 } from './elements.js'
 
 function init() {
@@ -302,6 +302,7 @@ function init() {
     texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
     spriteFace.innerHTML = ''
+    control.classList.remove('deactivate')
 
     if (event){
       map.eventActive = true
@@ -314,12 +315,13 @@ function init() {
     }
   }
 
-  const updateNextButtonText = (count, text) => controlButtons[5].innerHTML = count === text.length - 1? 'end' : 'next'
+  const updateNextButtonText = (count, text) => controlButtons[0].innerHTML = count === text.length - 1? 'end' : 'next'
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
-    const nextButton = controlButtons[5]
+    const nextButton = controlButtons[0]
     texts[0].classList.add('face_displayed')
+    control.classList.add('deactivate')
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
@@ -365,7 +367,7 @@ function init() {
       texts[0].parentNode.classList.remove('hidden')
       updateNextButtonText(count, eventPoint.text)
       displayTextGradual(text, 0)
-      if (eventPoint.art) transitionCover.innerHTML = `<div><img src=${eventPoint.art} /></div>`
+      if (eventPoint.art && !transitionCover.innerHTML) transitionCover.innerHTML = `<div class="art_work"><img src=${eventPoint.art} /></div>`
       // TODO add trigger for event?
       return
     }
@@ -393,7 +395,7 @@ function init() {
     const entryPoint = mapData[map.key].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
     
-    map.noWallList = entryPoint.noWall || ['b','do']
+    map.noWallList = entryPoint.noWall || ['b','do', 'gr']
 
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
@@ -666,13 +668,13 @@ function init() {
 
   const distanceBetween = (a, b) => Math.round(Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2)))
 
-  const touchCircle = document.querySelector('.touch_circle')
+
   const drag = (target, pos, x, y) =>{
     pos.a = pos.c - x
     pos.b = pos.d - y
     const newX = target.offsetLeft - pos.a
     const newY = target.offsetTop - pos.b
-    if (distanceBetween({x: 0,y: 0}, {x: newX, y: newY}) < 75) {
+    if (distanceBetween({x: 0,y: 0}, {x: newX, y: newY}) < 40) {
       setTargetPos(target, newX, newY)
       touchControl.direction = Math.abs(newX) < Math.abs(newY)
         ? newY < 0 ? 'up' : 'down'
@@ -717,8 +719,8 @@ function init() {
     }
     mouse.down(target,'add', onGrab)
   }
-
-  addTouchAction(touchCircle)
+  
+  addTouchAction(control.childNodes[1])
   
 }
 

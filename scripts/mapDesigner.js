@@ -198,6 +198,7 @@ function init() {
     const index = e.target.dataset.cell
     const value = erase ? 'b' : letterInput.value
     codes[0][index] = value
+    e.target.setAttribute('data-alt', value)
 
     updateCodesDisplay(codesBox[0],codes[0])
 

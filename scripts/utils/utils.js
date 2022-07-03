@@ -10,6 +10,15 @@ const setWidthAndHeight = () =>{
   map.height = 2 * Math.floor((pHeight / map.cellD) / 2)
 }
 
+// const styleTarget = ({ target, w, h, x, y }) =>{
+//   const t = target.style
+//   if (isNum(w)) t.width = `${w}px`
+//   if (isNum(w) && !isNum(h)) t.height = `${w}px`
+//   if (isNum(h)) t.height = `${h}px`
+//   if (isNum(x)) t.left = `${x}px`
+//   if (isNum(y)) t.top = `${y}px`
+// }
+
 const setTargetSize = (target, w, h) => Object.assign(target.style, { width: `${w}px`, height: `${h}px` })
 
 const setTargetPos = (target, x, y) => Object.assign(target.style, { left: `${x}px`, top: `${y}px` })

@@ -26,11 +26,13 @@ const svgData = {
   'by': { svg: svg.roofTopBottomCorner, color: main, subColor: '#0d8799', flip: 'h' },
   'rr': { svg: svg.roofTopBottomCorner, color: main, subColor: sub },
   'rl': { svg: svg.roofTopBottomCorner, color: main, subColor: sub, flip: 'h' },
-  'rt': { svg: svg.roofTopBottomCorner, rotate: 180, color: main, subColor: sub },
-  'ry': { svg: svg.roofTopBottomCorner, rotate: 180, color: main, subColor: sub, flip: 'h' },
+  'rt': { svg: svg.roofTopBottomCorner, rotate: 180, color: main, },
+  'ry': { svg: svg.roofTopBottomCorner, rotate: 180, color: main, flip: 'h' },
   'g': { svg: svg.roofCorner, color: main, subColor: sub },
   'y': { svg: svg.roofCorner, color: main, subColor: sub, flip: 'h' },
   'p': { svg: svg.plain },
+  // 'iw': { svg: svg.plain },
+  'iw': { svg: svg.brickWall },
   'rp': { svg: svg.plain, subColor: sub },
   'do': { svg: svg.door, color: main },
   'wi': { svg: svg.roundWindow, color: main },
@@ -56,10 +58,12 @@ const svgData = {
   'rb': { svg: svg.riverCurve, rotate: 90, frameNo: 2, speed: 1000 },
   'rd': { svg: svg.riverCurve, rotate: 180, frameNo: 2, speed: 1000 },
   're': { svg: svg.riverCurve, rotate: 270, frameNo: 2, speed: 1000 },
-  'la': { svg: svg.ladder, color: main, subColor: sub },
+  'la': { svg: svg.ladder, color: main, },
   'c': { svg: svg.checkered, color: '#a2e8fc' },
   'e': { svg: svg.exit, color: '#0d8799', subColor: '#fff' },
-  'lh': { svg: svg.ladderHole, color: '#bba293', subColor: sub }
+  'lh': { svg: svg.ladderHole, color: '#bba293', subColor: sub },
+  'gr': { svg: svg.grass },
+  'aa': { svg: svg.artWork }
 }
 
 
