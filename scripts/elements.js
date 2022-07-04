@@ -1,9 +1,9 @@
 
   const transitionCover = document.querySelector('.transition_cover')
   const touchToggle = document.querySelector('.touch_toggle')
-  // const control = document.querySelector('.control')
+  const control = document.querySelector('.control')
   const controlButtons = document.querySelectorAll('.control_button')
-  const control = document.querySelector('.touch_control')
+  // const control = document.querySelector('.touch_control')
   const wrapper = document.querySelector('.wrapper')
   const mapContainer = document.querySelector('.map_container') // TODO possibly rename
   const mapCover = document.querySelector('.map_cover')

@@ -63,7 +63,8 @@ const svgData = {
   'e': { svg: svg.exit, color: '#0d8799', subColor: '#fff' },
   'lh': { svg: svg.ladderHole, color: '#bba293', subColor: sub },
   'gr': { svg: svg.grass },
-  'aa': { svg: svg.artWork }
+  'aa': { svg: svg.artWork },
+  'st': { svg: svg.stair },
 }
 
 

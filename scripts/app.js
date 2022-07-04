@@ -302,7 +302,8 @@ function init() {
     texts.forEach(t => t.innerText = '')
     transitionCover.innerHTML = ''
     spriteFace.innerHTML = ''
-    control.classList.remove('deactivate')
+    // control.classList.remove('deactivate')
+    toggleControl('remove')
 
     if (event){
       map.eventActive = true
@@ -321,7 +322,8 @@ function init() {
     const eventPoint = bear.dialog[bear.dialogKey]
     const nextButton = controlButtons[0]
     texts[0].classList.add('face_displayed')
-    control.classList.add('deactivate')
+    // control.classList.add('deactivate')
+    toggleControl('add')
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
@@ -358,8 +360,16 @@ function init() {
     clearText()
   }
 
+  const toggleControl = action =>{
+    control.classList[action]('deactivate')
+    touchToggle.parentNode.classList[action]('deactivate')
+    console.log('trigger')
+  }
+
   const investigate = (count, eventPoint) =>{
     if (count < eventPoint.text.length){
+      // control.classList.add('deactivate')
+      toggleControl('add')
       // displays text and answer
       const text = eventPoint.text[count]
       bear.textCount++
@@ -634,11 +644,11 @@ function init() {
   // set up
 
   // key control
-  window.addEventListener('keyup', (e)=>handleKeyAction(e))
+  window.addEventListener('keyup', e => handleKeyAction(e))
   window.addEventListener('resize', setWidthAndHeightAndResize)
 
   controlButtons.forEach(c =>{
-    c.addEventListener('click',()=>handleKeyAction(c.dataset.c))
+    c.addEventListener('click', ()=> handleKeyAction(c.dataset.c))
   })
 
   touchToggle.addEventListener('change', ()=>{
@@ -674,7 +684,7 @@ function init() {
     pos.b = pos.d - y
     const newX = target.offsetLeft - pos.a
     const newY = target.offsetTop - pos.b
-    if (distanceBetween({x: 0,y: 0}, {x: newX, y: newY}) < 40) {
+    if (distanceBetween({x: 0,y: 0}, {x: newX, y: newY}) < 35) {
       setTargetPos(target, newX, newY)
       touchControl.direction = Math.abs(newX) < Math.abs(newY)
         ? newY < 0 ? 'up' : 'down'
@@ -719,8 +729,8 @@ function init() {
     }
     mouse.down(target,'add', onGrab)
   }
-  
-  addTouchAction(control.childNodes[1])
+  // console.log(control.childNodes[1].childNodes)
+  addTouchAction(control.childNodes[1].childNodes[1])
   
 }
 
