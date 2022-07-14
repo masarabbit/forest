@@ -475,11 +475,19 @@ function init() {
     
     // trigger event based on bear position
     if (isBear && mapData[key].events[bear.pos]) {
-      const { event, gateway } = mapData[map.key].events[bear.pos]
+      const { gateway, act } = mapData[map.key].events[bear.pos]
       if (gateway) setTimeout(()=> {
-        event === 'transport' && transport(gateway)
+        transport(gateway)
       }, 200)
+      if (act) {
+        map.eventActive = true
+        setTimeout(()=> {
+          eventAnimation({ act: mapData[key].eventContents[act], index: 0 })
+        }, 200)
+      } 
       // TODO add some way to trigger eventAnimation
+      //? need ways to make the event only trigger once
+      //? need ways to enble character to move several times
     } 
 
     if(isBear) indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
@@ -604,8 +612,11 @@ function init() {
 
   const eventAnimation = ({ act, index }) =>{
     if (index === act.length - 1){
+      // TODO perhaps this should not be based on just index but some kind of end flag within the act
+      // (otherwise, triggers when there are only one item in the act array)
       map.eventIndex = 0
     } else {
+      console.log('event animation 1', act[index])
       Object.keys(act[index]).forEach(actor =>{
         const eventCode = walkDirections[act[index][actor]]
         if (actor === 'bear'){
@@ -614,7 +625,6 @@ function init() {
         } else {
           const actorData = map.spawnData.find(s => s.name === actor)
           // actorData.spawn.style.backgroundColor = 'red'
-          console.log(actor)
           actorData.pause = true
           const key = act[index][actor]
           const sprite = actorData.spawn.childNodes[1]

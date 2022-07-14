@@ -274,7 +274,7 @@ const mapData = {
     iHeight: 30,
     characters: [
       { pos: 900, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artio', motion: [0, 'r', 0, 'd', 0, 'l', 0, 'u']  },
-      { pos: 1018, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artion', motion: [0]  },
+      { pos: 967, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artion', motion: [0]  },
     ],
     events: {
       1125: { event: 'transport', gateway: 'portal1'},
@@ -282,6 +282,7 @@ const mapData = {
       966: { event: 'check', index: 'art1'},
       969: { event: 'check', index: 'art1'},
       972: { event: 'check', index: 'art1'},
+      1045: { event: 'event-animation', act: 'galleryTest'},
     },
     eventContents: {
       hello: { 
@@ -298,6 +299,20 @@ const mapData = {
         // item: null,
         direction: 'up'
       },
+      galleryTest: [
+        {
+          artion: 'l',
+          bear: 'r'
+        },
+        {
+          artion: 'r',
+          bear: 'r'
+        },
+        {
+          artion: 'l',
+          bear: 'r'
+        },
+      ],
     },  
     map: 'bd201,iw21,bd6,iw4,bd9,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw3,bd6,iw4,bd9,iw21,bd6,iw4,bd9,ry1,at20,p6,at3,rt1,bd9,al1,p29,ar1,bd9,al1,p29,ar1,bd9,bx1,ab20,p6,ab3,by1,bd30,p6,bd13,iw21,st6,iw4,bd9,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw3,st6,iw4,bd9,iw21,st6,iw1,do1,iw2,bd9,ry1,at20,p6,at3,rt1,bd9,al1,p29,ar1,bd9,al1,p29,ar1,bd9,bx1,ab14,p6,ab9,by1,bd24,al1,p4,ar1,bd19,iw15,st6,bd19,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw3,st6,bd19,iw15,st6,bd19,ry1,at14,p5,ar1,bd19,al1,p19,ar1,bd19,al1,p19,ar1,bd19,bx1,ab3,p1,ab15,by1,bd23,e1,bd74',
     entry: {
