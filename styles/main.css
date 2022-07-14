@@ -4,10 +4,11 @@
   user-select: none;
 }
 
-:root {
-  --navy: '#031f5C';
-  --dark-navy: rgb(3, 31, 92);
-}
+/* :root { */
+  /* #031f5C: '#031f5C'; */
+  /* rgb(3, 31, 92): rgb(3, 31, 92); */
+  /* #a2fcf0ba: '#a2fcf0ba'; */
+/* } */
 
 body {
   padding: 0;
@@ -253,7 +254,7 @@ a:hover {
   border: 0px;
   padding: 10px;
   font-size: 16px;
-  color: var(--navy);
+  color: #031f5C;
   background-color: white;
   cursor: pointer;
   transition: 0.3s;
@@ -262,7 +263,7 @@ a:hover {
 
 .next:hover {
   color: white;
-  /* background-color: var(--dark-navy); */
+  /* background-color: rgb(3, 31, 92); */
   background-color: #a2fcf0ba;
 }
 

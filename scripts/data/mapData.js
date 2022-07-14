@@ -90,7 +90,7 @@ const mapData = {
       //* change this to set where bear starts
       start: {
         map: 'one',
-        cell: 313,
+        cell: 385,
         // map: 'three',
         // cell: 188,
       },
@@ -274,6 +274,7 @@ const mapData = {
     iHeight: 30,
     characters: [
       { pos: 900, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artio', motion: [0, 'r', 0, 'd', 0, 'l', 0, 'u']  },
+      { pos: 1018, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artion', motion: [0]  },
     ],
     events: {
       1125: { event: 'transport', gateway: 'portal1'},
