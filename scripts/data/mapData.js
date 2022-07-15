@@ -301,7 +301,7 @@ const mapData = {
       },
       galleryTest: [
         {
-          artion: 'l',
+          artion: 'l', // maybe this could be an array
           bear: 'r'
         },
         {

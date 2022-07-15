@@ -5,6 +5,9 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
+// TODO tidy up logic relating to bear pause and motion (only need one of them)
+// it breaks dialogue, so check why this is
+
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
 import svgData from './data/svgData.js'
@@ -441,7 +444,7 @@ function init() {
   }
   
   const spriteWalk = ({ dir, actor, sprite }) =>{
-    if (!dir || !bear.motion) return
+    if (!dir || !bear.motion) return //TODO should swap with pause?
     const isBear = actor === bear
 
     if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
@@ -500,6 +503,7 @@ function init() {
     bear.prevChoices[dialogKey] = bear.choice
     bear.textCount = 0
     bear.dialogHistory.push(dialogKey)
+    console.log('bear choice', bear.choice)
     bear.dialogKey = bear.dialog[dialogKey].choice[bear.optionTexts[bear.choice]]
     displayText(bear.textCount, false)
   }
