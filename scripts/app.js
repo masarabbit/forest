@@ -5,7 +5,6 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
-// TODO tidy up logic relating to bear pause and motion (only need one of them)
 // it breaks dialogue, so check why this is
 
 import mapData from './data/mapData.js'
@@ -110,28 +109,28 @@ function init() {
     })
   }
 
-  const spawnMotion = i =>{
+  const spawnAnimation = i =>{
     const { spawnData, sprites } = map
-    const { pause, motion, motionIndex: index } = spawnData[i]
-    if (pause || !windowActive) return
-    if (motion === 'randomWalk') {
+    const { motion, animation, animationIndex: index } = spawnData[i]
+    if (!motion || !windowActive) return
+    if (animation === 'randomWalk') {
       spriteWalk({
         dir: randomDirection(),
         actor: spawnData[i], sprite: sprites[i], 
       })
-    } else if (motion === 'randomTurn') {
+    } else if (animation === 'randomTurn') {
       if (Math.random() < 0.5)
       turnSprite({
         e: randomDirection(), 
         actor: spawnData[i], sprite: sprites[i],
       })
-    } else if (Array.isArray(motion)) {
+    } else if (Array.isArray(animation)) {
       // if motion[index] is 0, it would be falsy so spriteWalk is skipped
-      if (motion[index]) spriteWalk({
-        dir: walkDirections[motion[index]],
+      if (animation[index]) spriteWalk({
+        dir: walkDirections[animation[index]],
         actor: spawnData[i], sprite: sprites[i], 
       })
-      spawnData[i].motionIndex = index === motion.length - 1 ? 0 : index + 1
+      spawnData[i].animationIndex = index === animation.length - 1 ? 0 : index + 1
     }
     
   }
@@ -158,7 +157,7 @@ function init() {
     const { iWidth, cellD } = map 
 
     mapData[map.key].characters?.forEach((c, i)=>{
-      const { pos, avatar, spritePos, event, name, motion } = c
+      const { pos, avatar, spritePos, event, name, animation } = c
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
       map.spawnData[i] = {
@@ -172,8 +171,9 @@ function init() {
         pos,
         spawn: null,
         name,
-        motion,
-        motionIndex: Array.isArray(motion) ? 0 : null
+        animation,
+        animationIndex: Array.isArray(animation) ? 0 : null,
+        motion: true
       }
 
       const spawn = document.createElement('div')
@@ -191,7 +191,7 @@ function init() {
       mapImage.appendChild(spawn)   
       map.spawnData[i].spawn = spawn.childNodes[1]
       map.spawnData[i].interval = setInterval(()=>{
-        spawnMotion(i)
+        spawnAnimation(i)
       }, avatars[avatar].speed)
     })
 
@@ -227,7 +227,7 @@ function init() {
 
   const showDialog = ({ talkTarget, facingDirection, event }) =>{
     bear.isTalking = true
-    talkTarget.pause = true
+    talkTarget.motion = false
     texts[0].parentNode.classList.remove('hidden')
     if (facingDirection) turnSprite({
       e: facingDirection,
@@ -257,7 +257,7 @@ function init() {
   // displays multiple choice
   const displayAnswer = prev =>{ 
     const eventPoint = bear.dialog[bear.dialogKey]
-    bear.pause = true
+    bear.answering = true
     bear.choice = prev ? bear.prevChoices[bear.dialogKey] : 0 
     bear.optionTexts = Object.keys(eventPoint.choice)
     texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
@@ -293,7 +293,7 @@ function init() {
       textCount: 0,
       prevChoices: {},
       motion: true,
-      pause: false,
+      answering: false,
       dialogHistory: [],
       dialog: {},
       dialogKey: null,
@@ -444,7 +444,7 @@ function init() {
   }
   
   const spriteWalk = ({ dir, actor, sprite }) =>{
-    if (!dir || !bear.motion) return //TODO should swap with pause?
+    if (!dir || !bear.motion) return
     const isBear = actor === bear
 
     if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
@@ -484,6 +484,7 @@ function init() {
       }, 200)
       if (act) {
         map.eventActive = true
+        // bear.motion = false
         setTimeout(()=> {
           eventAnimation({ act: mapData[key].eventContents[act], index: 0 })
         }, 200)
@@ -499,12 +500,13 @@ function init() {
   const select = () =>{
     const { dialogKey } = bear
     texts[1].innerHTML = ''
-    bear.pause = false
+    bear.answering = false
     bear.prevChoices[dialogKey] = bear.choice
     bear.textCount = 0
     bear.dialogHistory.push(dialogKey)
     console.log('bear choice', bear.choice)
     bear.dialogKey = bear.dialog[dialogKey].choice[bear.optionTexts[bear.choice]]
+    console.log('dialogKey', bear.dialogKey)
     displayText(bear.textCount, false)
   }
 
@@ -533,11 +535,11 @@ function init() {
   const handleKeyAction = e =>{
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
     if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
-      const { pause, options, choice, isTalking, textCount } = bear
+      const { answering, options, choice, isTalking, textCount } = bear
       const { sprites } = map
   
       if (isTalking) {
-        if (pause) {
+        if (answering) {
           options.forEach(option => option.classList.remove('selected'))
           if (key === 'up' && choice > 0) bear.choice--
           if (key === 'down' && choice < options.length - 1) bear.choice++
@@ -553,11 +555,13 @@ function init() {
         check(textCount)
         return
       }
-      spriteWalk({
-        dir: key, 
-        actor: bear, 
-        sprite: sprites[sprites.length - 1]
-      })
+      if (!map.eventActive) {
+        spriteWalk({
+          dir: key, 
+          actor: bear, 
+          sprite: sprites[sprites.length - 1]
+        })
+      }
     }
   }
 
@@ -619,6 +623,7 @@ function init() {
       // TODO perhaps this should not be based on just index but some kind of end flag within the act
       // (otherwise, triggers when there are only one item in the act array)
       map.eventIndex = 0
+      map.eventActive = false
     } else {
       console.log('event animation 1', act[index])
       Object.keys(act[index]).forEach(actor =>{
@@ -629,14 +634,14 @@ function init() {
         } else {
           const actorData = map.spawnData.find(s => s.name === actor)
           // actorData.spawn.style.backgroundColor = 'red'
-          actorData.pause = true
+          actorData.motion = false
           const key = act[index][actor]
           const sprite = actorData.spawn.childNodes[1]
         
           if (eventCode === 'stop') console.log('hey')
           if (['u', 'd', 'r', 'l'].includes(key)) spriteWalk({ dir: eventCode, actor: actorData, sprite })
           if (['tu', 'td', 'tr', 'tl'].includes(key)) turnSprite({ e: eventCode, actor: actorData, sprite })
-          if (eventCode === 'resume') actorData.pause = false
+          if (eventCode === 'resume') actorData.motion = true
           // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
           // TODO  disable turn if dialog initiated via event?
           if (isObject(key)) showDialog({ talkTarget: actorData, event: key.event }) 
@@ -650,6 +655,7 @@ function init() {
       } else {
         // stops eventAnimation proceeding
         map.eventActive = false
+        // bear.motion = true
       }
     }
   }

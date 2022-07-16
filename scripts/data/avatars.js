@@ -6,7 +6,7 @@ const avatars = {
     <svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 87.64 87.64">
       <ellipse cx="43.82" cy="43.82" rx="28.191" ry="38.099"/>
     </svg>`,
-    motion: 'udlr',
+    animation: 'udlr',
     speed: 5000
   },
   bunny: {

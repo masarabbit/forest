@@ -7,9 +7,9 @@ const mapData = {
     iWidth: 30,
     iHeight: 20,
     characters: [
-      { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio', motion: 'randomWalk' },
-      { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon', motion: 'randomWalk' },
-      { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo', motion: 'randomWalk' },
+      { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio', animation: 'randomWalk' },
+      { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon', animation: 'randomWalk' },
+      { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo', animation: 'randomWalk' },
     ],
     events: {
       5: { event: 'transport', gateway: 'portal3'},
@@ -134,7 +134,7 @@ const mapData = {
     iWidth: 40,
     iHeight: 30,
     characters: [
-      { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot', motion: 'randomWalk' },
+      { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot', animation: 'randomWalk' },
     ],
     events: {
       1178: { event: 'transport', gateway: 'portal1'},
@@ -158,9 +158,9 @@ const mapData = {
     iWidth: 18,
     iHeight: 14,
     characters: [
-      { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala', motion: ['r', 0, 0, 'd', 'l', 'u'] },
-      { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira', motion: 'randomTurn' },
-      { pos: 166, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko', motion: 'randomTurn' },
+      { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala', animation: ['r', 0, 0, 'd', 'l', 'u'] },
+      { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira', animation: 'randomTurn' },
+      { pos: 166, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko', animation: 'randomTurn' },
     ],
     events: {
       241: { event: 'transport', gateway: 'portal1'},
@@ -273,8 +273,8 @@ const mapData = {
     iWidth: 40,
     iHeight: 30,
     characters: [
-      { pos: 900, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artio', motion: [0, 'r', 0, 'd', 0, 'l', 0, 'u']  },
-      { pos: 967, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artion', motion: [0]  },
+      { pos: 900, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artio', animation: [0, 'r', 0, 'd', 0, 'l', 0, 'u']  },
+      { pos: 967, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artion', animation: [0]  },
     ],
     events: {
       1125: { event: 'transport', gateway: 'portal1'},
