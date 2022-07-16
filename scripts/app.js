@@ -5,7 +5,8 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
-// TODO check ways to make event only trigger once (and make this visible?)
+// TODO could some events take place more than once?
+// TODO could event trigger be visualised? (make text box visible on top and bottom.)
 
 
 import mapData from './data/mapData.js'
@@ -632,21 +633,15 @@ function init() {
 
   const animateActor = ({ frame, actor }) =>{ 
     const eventCode = walkDirections[frame]
-    if (actor === 'bear'){
-      if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: bear, sprite })
-      if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: bear, sprite })
-    } else {
-      const actorData = map.spawnData.find(s => s.name === actor)
-      // actorData.spawn.style.backgroundColor = 'red'
-      actorData.pause = true
-      const sprite = actorData.spawn.childNodes[1]
-    
-      if (eventCode === 'stop') console.log('stop')
-      if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: actorData, sprite })
-      if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: actorData, sprite })
-      if (eventCode === 'resume') actorData.pause = false
-      if (isObject(frame)) showDialog({ talkTarget: actorData, event: frame.event }) 
-    }
+    const isBear = actor === 'bear'
+    const actorData = isBear ? bear : map.spawnData.find(s => s.name === actor)
+    const actorSprite = isBear ? sprite : actorData.spawn.childNodes[1]
+    if (!isBear) actorData.pause = true
+    if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: actorData, sprite: actorSprite })
+    if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: actorData, sprite: actorSprite })
+    if (eventCode === 'stop') console.log('stop')
+    if (eventCode === 'resume') actorData.pause = false
+    if (isObject(frame)) showDialog({ talkTarget: actorData, event: frame.event }) 
   }
 
   const chainAnimation = ({ act, index, actorData, motionIndex }) =>{
