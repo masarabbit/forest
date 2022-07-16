@@ -19,7 +19,9 @@ const map = {
   sprites: null,
   map: [],
   eventIndex: 0,
-  eventActive: false,
+  activeEvent: null,
+  eventChainActors: [],
+  completedEvents: [],
 }
 
 const bear = {
@@ -37,6 +39,8 @@ const bear = {
   dialogKey: null,
   dialogHistory: [],
   isTalking: false,
+  motionIndex: 0,
+  name: 'bear',
 }
 
 const directionKey = {
@@ -88,6 +92,7 @@ const testAct = [
     usabon: 're',
     bear: 'l'
   },
+  'end'
 ]
 
 export {

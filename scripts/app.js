@@ -5,7 +5,8 @@
 //! add ways to decorate map further
 //! design other avatars and map
 
-// it breaks dialogue, so check why this is
+// TODO check ways to make event only trigger once (and make this visible?)
+
 
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
@@ -13,9 +14,10 @@ import svgData from './data/svgData.js'
 import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
 import { decode, decompress } from './utils/compression.js'
-import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection, mouse } from './utils/utils.js'
+import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection } from './utils/utils.js'
 import { map, bear, directionKey, walkDirections, testAct } from './state.js'
 import { setSpritePos, turnSprite } from './utils/sprite.js'
+import { addTouchAction } from './utils/touchControl.js'
 
 import {
   transitionCover,
@@ -109,28 +111,28 @@ function init() {
     })
   }
 
-  const spawnAnimation = i =>{
+  const spawnMotion = i =>{
     const { spawnData, sprites } = map
-    const { motion, animation, animationIndex: index } = spawnData[i]
-    if (!motion || !windowActive) return
-    if (animation === 'randomWalk') {
+    const { pause, motion, motionIndex: index } = spawnData[i]
+    if (pause || !windowActive) return
+    if (motion === 'randomWalk') {
       spriteWalk({
         dir: randomDirection(),
         actor: spawnData[i], sprite: sprites[i], 
       })
-    } else if (animation === 'randomTurn') {
+    } else if (motion === 'randomTurn') {
       if (Math.random() < 0.5)
       turnSprite({
         e: randomDirection(), 
         actor: spawnData[i], sprite: sprites[i],
       })
-    } else if (Array.isArray(animation)) {
+    } else if (Array.isArray(motion)) {
       // if motion[index] is 0, it would be falsy so spriteWalk is skipped
-      if (animation[index]) spriteWalk({
-        dir: walkDirections[animation[index]],
+      if (motion[index]) spriteWalk({
+        dir: walkDirections[motion[index]],
         actor: spawnData[i], sprite: sprites[i], 
       })
-      spawnData[i].animationIndex = index === animation.length - 1 ? 0 : index + 1
+      spawnData[i].motionIndex = index === motion.length - 1 ? 0 : index + 1
     }
     
   }
@@ -157,7 +159,7 @@ function init() {
     const { iWidth, cellD } = map 
 
     mapData[map.key].characters?.forEach((c, i)=>{
-      const { pos, avatar, spritePos, event, name, animation } = c
+      const { pos, avatar, spritePos, event, name, motion } = c
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
       map.spawnData[i] = {
@@ -171,9 +173,9 @@ function init() {
         pos,
         spawn: null,
         name,
-        animation,
-        animationIndex: Array.isArray(animation) ? 0 : null,
-        motion: true
+        motion,
+        motionIndex: Array.isArray(motion) ? 0 : null,
+        pause: false
       }
 
       const spawn = document.createElement('div')
@@ -191,7 +193,7 @@ function init() {
       mapImage.appendChild(spawn)   
       map.spawnData[i].spawn = spawn.childNodes[1]
       map.spawnData[i].interval = setInterval(()=>{
-        spawnAnimation(i)
+        spawnMotion(i)
       }, avatars[avatar].speed)
     })
 
@@ -208,10 +210,10 @@ function init() {
 
   const transition = () =>{
     transitionCover.classList.add('transition')
-    bear.motion = false
+    bear.pause = true
     setTimeout(()=>{
       transitionCover.classList.remove('transition')
-      bear.motion = true
+      bear.pause = false
     },500)
   }
 
@@ -227,7 +229,7 @@ function init() {
 
   const showDialog = ({ talkTarget, facingDirection, event }) =>{
     bear.isTalking = true
-    talkTarget.motion = false
+    talkTarget.pause = true
     texts[0].parentNode.classList.remove('hidden')
     if (facingDirection) turnSprite({
       e: facingDirection,
@@ -292,7 +294,7 @@ function init() {
     Object.assign(bear, {
       textCount: 0,
       prevChoices: {},
-      motion: true,
+      pause: false,
       answering: false,
       dialogHistory: [],
       dialog: {},
@@ -308,12 +310,9 @@ function init() {
     // control.classList.remove('deactivate')
     toggleControl('remove')
 
-    if (event){
-      map.eventActive = true
-      eventAnimation({
-        act: event.act,
-        index: map.eventIndex + 1
-      })
+    if (event && !map.completedEvents.some(e => e === event.act)){
+      map.activeEvent = event.act
+      eventAnimation({ act: event.act, index: map.eventIndex + 1 })
     } else {
       map.eventIndex = 0
     }
@@ -349,7 +348,7 @@ function init() {
       })
       
       bear.textCount++
-      bear.motion = false
+      bear.pause = true
       displayTextGradual(text, 0)
       if (eventPoint.choice && count === eventPoint.text.length - 1) {
         displayAnswer(prev)
@@ -366,7 +365,7 @@ function init() {
   const toggleControl = action =>{
     control.classList[action]('deactivate')
     touchToggle.parentNode.classList[action]('deactivate')
-    console.log('trigger')
+    // console.log('trigger')
   }
 
   const investigate = (count, eventPoint) =>{
@@ -376,7 +375,7 @@ function init() {
       // displays text and answer
       const text = eventPoint.text[count]
       bear.textCount++
-      bear.motion = false
+      bear.pause = true
       texts[0].parentNode.classList.remove('hidden')
       updateNextButtonText(count, eventPoint.text)
       displayTextGradual(text, 0)
@@ -444,7 +443,7 @@ function init() {
   }
   
   const spriteWalk = ({ dir, actor, sprite }) =>{
-    if (!dir || !bear.motion) return
+    if (!dir || bear.pause) return
     const isBear = actor === bear
 
     if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
@@ -482,16 +481,12 @@ function init() {
       if (gateway) setTimeout(()=> {
         transport(gateway)
       }, 200)
-      if (act) {
-        map.eventActive = true
-        // bear.motion = false
+      if (act && !map.completedEvents.some(e => e === act)) {
+        map.activeEvent = act
         setTimeout(()=> {
           eventAnimation({ act: mapData[key].eventContents[act], index: 0 })
         }, 200)
       } 
-      // TODO add some way to trigger eventAnimation
-      //? need ways to make the event only trigger once
-      //? need ways to enble character to move several times
     } 
 
     if(isBear) indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
@@ -504,9 +499,7 @@ function init() {
     bear.prevChoices[dialogKey] = bear.choice
     bear.textCount = 0
     bear.dialogHistory.push(dialogKey)
-    console.log('bear choice', bear.choice)
     bear.dialogKey = bear.dialog[dialogKey].choice[bear.optionTexts[bear.choice]]
-    console.log('dialogKey', bear.dialogKey)
     displayText(bear.textCount, false)
   }
 
@@ -555,7 +548,7 @@ function init() {
         check(textCount)
         return
       }
-      if (!map.eventActive) {
+      if (!map.activeEvent) {
         spriteWalk({
           dir: key, 
           actor: bear, 
@@ -618,45 +611,75 @@ function init() {
     resize()
   }
 
-  const eventAnimation = ({ act, index }) =>{
-    if (index === act.length - 1){
-      // TODO perhaps this should not be based on just index but some kind of end flag within the act
-      // (otherwise, triggers when there are only one item in the act array)
-      map.eventIndex = 0
-      map.eventActive = false
+  const checkAndContinueEvent = ({ act, index }) =>{ 
+     // carries on event
+    if (!Object.keys(act[index]).some(k => isObject(act[index][k])) && index < act.length - 1 && map.activeEvent){
+      // console.log('event', map.eventIndex)
+      map.eventIndex = index + 1
+      setTimeout(()=>{
+        eventAnimation({ act, index: map.eventIndex })
+      }, 600)
     } else {
-      console.log('event animation 1', act[index])
+      endEvent()
+    }
+  }
+
+  const endEvent = () => {
+    map.completedEvents.push(map.activeEvent)
+    map.eventIndex = 0
+    map.activeEvent = null
+  }
+
+  const animateActor = ({ frame, actor }) =>{ 
+    const eventCode = walkDirections[frame]
+    if (actor === 'bear'){
+      if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: bear, sprite })
+      if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: bear, sprite })
+    } else {
+      const actorData = map.spawnData.find(s => s.name === actor)
+      // actorData.spawn.style.backgroundColor = 'red'
+      actorData.pause = true
+      const sprite = actorData.spawn.childNodes[1]
+    
+      if (eventCode === 'stop') console.log('stop')
+      if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: actorData, sprite })
+      if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: actorData, sprite })
+      if (eventCode === 'resume') actorData.pause = false
+      if (isObject(frame)) showDialog({ talkTarget: actorData, event: frame.event }) 
+    }
+  }
+
+  const chainAnimation = ({ act, index, actorData, motionIndex }) =>{
+    const frame = decompress(act[index][actorData.name])
+    animateActor({ frame: frame[motionIndex], actor: actorData.name })
+    if (motionIndex <= frame.length) {
+      actorData.motionIndex++
+      setTimeout(()=>{
+        chainAnimation({ act, index, actorData, motionIndex: actorData.motionIndex })
+      }, 300)
+    } else {
+      map.eventChainActors = map.eventChainActors.filter(name => name !== actorData.name)
+      if (!map.eventChainActors.length) checkAndContinueEvent({ act, index })
+    }
+  }
+
+
+  const eventAnimation = ({ act, index }) =>{
+    if (act[index] === 'end'){
+      endEvent()
+    } else {
       Object.keys(act[index]).forEach(actor =>{
-        const eventCode = walkDirections[act[index][actor]]
-        if (actor === 'bear'){
-          if (['u', 'd', 'r', 'l'].includes(act[index][actor])) spriteWalk({ dir: eventCode, actor: bear, sprite })
-          if (['tu', 'td', 'tr', 'tl'].includes(act[index][actor])) turnSprite({ e: eventCode, actor: bear, sprite })
+        const frame = act[index][actor]
+        if(Array.isArray(frame)) {
+          map.eventChainActors.push(actor)
+          const actorData = actor === 'bear' ? bear : map.spawnData.find(s => s.name === actor)
+          actorData.motionIndex = 0
+          chainAnimation({ act, index, actorData, motionIndex: actorData.motionIndex })
         } else {
-          const actorData = map.spawnData.find(s => s.name === actor)
-          // actorData.spawn.style.backgroundColor = 'red'
-          actorData.motion = false
-          const key = act[index][actor]
-          const sprite = actorData.spawn.childNodes[1]
-        
-          if (eventCode === 'stop') console.log('hey')
-          if (['u', 'd', 'r', 'l'].includes(key)) spriteWalk({ dir: eventCode, actor: actorData, sprite })
-          if (['tu', 'td', 'tr', 'tl'].includes(key)) turnSprite({ e: eventCode, actor: actorData, sprite })
-          if (eventCode === 'resume') actorData.motion = true
-          // TODO for some reason, spawn turns when the dialog ends, so this needs to be checked
-          // TODO  disable turn if dialog initiated via event?
-          if (isObject(key)) showDialog({ talkTarget: actorData, event: key.event }) 
+          animateActor({ frame, actor })
         }
       })
-      if (!Object.keys(act[index]).some(k => isObject(act[index][k])) && index < act.length - 1 && map.eventActive){
-        map.eventIndex = index + 1
-        setTimeout(()=>{
-          eventAnimation({ act, index: map.eventIndex })
-        }, 600)
-      } else {
-        // stops eventAnimation proceeding
-        map.eventActive = false
-        // bear.motion = true
-      }
+      if (!map.eventChainActors.length) checkAndContinueEvent({ act, index })
     }
   }
   
@@ -683,74 +706,14 @@ function init() {
   const testButton = document.querySelector('.test_button')
   testButton.addEventListener('click', ()=> {
     if (map.eventIndex === 0) {
-      map.eventActive = true
+      map.activeEvent = testAct
       eventAnimation({ act: testAct, index: 0 })
     }  
 
     //? should the animation be recoreded as a scenario which houses all motions? array of acts?  
   })
   
-  const touchControl = {
-    active: false,
-    timer: null,
-    direction: null,
-  }
-
-  const distanceBetween = (a, b) => Math.round(Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2)))
-
-
-  const drag = (target, pos, x, y) =>{
-    pos.a = pos.c - x
-    pos.b = pos.d - y
-    const newX = target.offsetLeft - pos.a
-    const newY = target.offsetTop - pos.b
-    if (distanceBetween({x: 0,y: 0}, {x: newX, y: newY}) < 35) {
-      setTargetPos(target, newX, newY)
-      touchControl.direction = Math.abs(newX) < Math.abs(newY)
-        ? newY < 0 ? 'up' : 'down'
-        : newX < 0 ? 'left' : 'right'
-    }  
-  }
-
-
-  const client = (e, type) => e.type[0] === 'm' ? e[`client${type}`] : e.touches[0][`client${type}`]
-  const roundedClient = (e, type) => Math.round(client(e, type))
-  
-  const addTouchAction = target =>{
-    const pos = { a: 0, b: 0, c: 0, d: 0 }
-    
-    const onGrab = e =>{
-      pos.c = roundedClient(e, 'X')
-      pos.d = roundedClient(e, 'Y')  
-      mouse.up(document, 'add', onLetGo)
-      mouse.move(document, 'add', onDrag)
-      touchControl.active = true
-      touchControl.timer = setInterval(()=> {
-        if (touchControl.active) handleKeyAction(touchControl.direction)
-      }, 200)
-    }
-    const onDrag = e =>{
-      const x = roundedClient(e, 'X')
-      const y = roundedClient(e, 'Y')
-      drag(target, pos, x, y)
-      pos.c = x
-      pos.d = y
-    }
-    const onLetGo = () => {
-      mouse.up(document, 'remove', onLetGo)
-      mouse.move(document,'remove', onDrag)
-      target.style.transition = '0.2s'
-      setTargetPos(target, 0 ,0)
-      setTimeout(()=>{
-        target.style.transition = '0s'
-      }, 200)
-      clearInterval(touchControl.timer)
-      touchControl.active = false
-    }
-    mouse.down(target,'add', onGrab)
-  }
-  // console.log(control.childNodes[1].childNodes)
-  addTouchAction(control.childNodes[1].childNodes[1])
+  addTouchAction(control.childNodes[1].childNodes[1], handleKeyAction)
   
 }
 

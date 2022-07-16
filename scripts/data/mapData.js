@@ -7,9 +7,9 @@ const mapData = {
     iWidth: 30,
     iHeight: 20,
     characters: [
-      { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio', animation: 'randomWalk' },
-      { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon', animation: 'randomWalk' },
-      { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo', animation: 'randomWalk' },
+      { pos: 155, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'bunnio', motion: 'randomWalk' },
+      { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon', motion: 'randomWalk' },
+      { pos: 309, avatar: 'bunny', spritePos: 0, event: 'tomato', name: 'tololo', motion: 'randomWalk' },
     ],
     events: {
       5: { event: 'transport', gateway: 'portal3'},
@@ -134,7 +134,7 @@ const mapData = {
     iWidth: 40,
     iHeight: 30,
     characters: [
-      { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot', animation: 'randomWalk' },
+      { pos: 779, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'carrot', motion: 'randomWalk' },
     ],
     events: {
       1178: { event: 'transport', gateway: 'portal1'},
@@ -158,9 +158,9 @@ const mapData = {
     iWidth: 18,
     iHeight: 14,
     characters: [
-      { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala', animation: ['r', 0, 0, 'd', 'l', 'u'] },
-      { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira', animation: 'randomTurn' },
-      { pos: 166, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko', animation: 'randomTurn' },
+      { pos: 135, avatar: 'bunny', spritePos: 9, event: 'hello', name: 'talala', motion: ['r', 0, 0, 'd', 'l', 'u'] },
+      { pos: 101, avatar: 'bunny', spritePos: 6, event: 'hello', name: 'kira', motion: 'randomTurn' },
+      { pos: 166, avatar: 'bunny', spritePos: 3, event: 'hello', name: 'tontoko', motion: 'randomTurn' },
     ],
     events: {
       241: { event: 'transport', gateway: 'portal1'},
@@ -273,8 +273,8 @@ const mapData = {
     iWidth: 40,
     iHeight: 30,
     characters: [
-      { pos: 900, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artio', animation: [0, 'r', 0, 'd', 0, 'l', 0, 'u']  },
-      { pos: 967, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artion', animation: [0]  },
+      { pos: 900, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artio', motion: [0, 'r', 0, 'd', 0, 'l', 0, 'u']  },
+      { pos: 967, avatar: 'bunny', spritePos: 0, event: 'hello', name: 'artion', motion: [0]  },
     ],
     events: {
       1125: { event: 'transport', gateway: 'portal1'},
@@ -301,18 +301,34 @@ const mapData = {
       },
       galleryTest: [
         {
-          artion: 'l', // maybe this could be an array
-          bear: 'r'
+          artion: ['tu', 'td', 'tr', 'tl'],
+          bear: 'u'
         },
         {
-          artion: 'r',
-          bear: 'r'
+          artion: ['r', 'd'],
+          bear: ['r10', 'u']
         },
         {
-          artion: 'l',
-          bear: 'r'
+          artion: { event: 'test_event2' },
+          bear: 'l'
         },
+        'end'
       ],
+      test_event2: {
+        first:{ 
+          text:['this is a test event2', 'test test test'], 
+          choice: {
+            'yeah!': 's_1',
+            'yo!': 's_2',
+          },
+        },
+        s_1: {
+          text: ['ho!'], 
+        },
+        s_2: {
+          text: ['takoyaki!'], 
+        },  
+      }
     },  
     map: 'bd201,iw21,bd6,iw4,bd9,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw3,bd6,iw4,bd9,iw21,bd6,iw4,bd9,ry1,at20,p6,at3,rt1,bd9,al1,p29,ar1,bd9,al1,p29,ar1,bd9,bx1,ab20,p6,ab3,by1,bd30,p6,bd13,iw21,st6,iw4,bd9,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw3,st6,iw4,bd9,iw21,st6,iw1,do1,iw2,bd9,ry1,at20,p6,at3,rt1,bd9,al1,p29,ar1,bd9,al1,p29,ar1,bd9,bx1,ab14,p6,ab9,by1,bd24,al1,p4,ar1,bd19,iw15,st6,bd19,iw2,aa1,iw2,aa1,iw2,aa1,iw2,aa1,iw3,st6,bd19,iw15,st6,bd19,ry1,at14,p5,ar1,bd19,al1,p19,ar1,bd19,al1,p19,ar1,bd19,bx1,ab3,p1,ab15,by1,bd23,e1,bd74',
     entry: {

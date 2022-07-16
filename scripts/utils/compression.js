@@ -11,7 +11,8 @@ const decode = arr =>{
 
 const decompress = arr =>{
   const output = []
-  arr.split(',').forEach(x=>{
+  const input = Array.isArray(arr) ? arr : arr.split(',')
+  input.forEach(x=>{
     const letter = x.split('').filter(y => y * 0 !== 0).join('')
     const repeat = x.split('').filter(y => y * 0 === 0).join('')
     for (let i = 0; i < repeat; i++){
