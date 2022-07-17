@@ -620,9 +620,9 @@ input:checked + .slider:before {
   cursor: grab;
 }
 
-.art_work {
+/* .art_work {
   border: 1px solid hotpink;
-}
+} */
 
 .art_work img {
   position: absolute;
