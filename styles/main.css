@@ -687,19 +687,19 @@ input:checked + .slider:before {
 .td { background-position: calc(3 * var(--cell-d)) calc(1 * var(--cell-d)); }
 .o { background-position: calc(2 * var(--cell-d)) calc(1 * var(--cell-d)); }
 .d { background-position: calc(6 * var(--cell-d)) calc(5 * var(--cell-d)); }
-.s { background-position: calc(6 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) rotate(90deg); }
+.s { background-position: calc(6 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) perspective(1px) rotate(90deg); }
 .bt { background-position: calc(5 * var(--cell-d)) calc(5 * var(--cell-d)); }
-.br { background-position: calc(5 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) rotate(90deg); }
-.bb { background-position: calc(5 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) rotate(180deg); }
-.bl { background-position: calc(5 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) rotate(270deg); }
+.br { background-position: calc(5 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) perspective(1px) rotate(90deg); }
+.bb { background-position: calc(5 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) perspective(1px) rotate(180deg); }
+.bl { background-position: calc(5 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(0) perspective(1px) rotate(270deg); }
 .bx { background-position: calc(4 * var(--cell-d)) calc(5 * var(--cell-d)); }
-.by { background-position: calc(4 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) scale(-1, 1); }
+.by { background-position: calc(4 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) perspective(1px) scale(-1, 1); }
 .rr { background-position: calc(3 * var(--cell-d)) calc(5 * var(--cell-d)); }
-.rl { background-position: calc(3 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) scale(-1, 1); }
+.rl { background-position: calc(3 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) perspective(1px) scale(-1, 1); }
 .ry { background-position: calc(2 * var(--cell-d)) calc(5 * var(--cell-d)); }
-.rt { background-position: calc(2 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) scale(-1, 1); }
+.rt { background-position: calc(2 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) perspective(1px) scale(-1, 1); }
 .g { background-position: calc(1 * var(--cell-d)) calc(5 * var(--cell-d)); }
-.y { background-position: calc(1 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) scale(-1, 1); }
+.y { background-position: calc(1 * var(--cell-d)) calc(5 * var(--cell-d)); transform: translateZ(1px) perspective(1px) scale(-1, 1); }
 .p { background-color: #fff; }
 .iw { background-position: calc(6 * var(--cell-d)) calc(2 * var(--cell-d)); }
 .rp { background-color: #58d3d8; }
@@ -707,18 +707,18 @@ input:checked + .slider:before {
 .wi { background-position: calc(5 * var(--cell-d)) calc(4 * var(--cell-d)); }
 .sw { background-position: calc(4 * var(--cell-d)) calc(4 * var(--cell-d)); }
 .sl { background-position: calc(3 * var(--cell-d)) calc(4 * var(--cell-d)); }
-.sr { background-position: calc(3 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) scale(-1, 1); }
+.sr { background-position: calc(3 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) perspective(1px) scale(-1, 1); }
 .nw { background-position: calc(2 * var(--cell-d)) calc(4 * var(--cell-d)); }
-.nr { background-position: calc(2 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) scale(-1, 1); }
+.nr { background-position: calc(2 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) perspective(1px) scale(-1, 1); }
 .at { background-position: calc(1 * var(--cell-d)) calc(4 * var(--cell-d)); }
-.ar { background-position: calc(1 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) rotate(90deg); }
-.ab { background-position: calc(1 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) rotate(180deg); }
+.ar { background-position: calc(1 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) perspective(1px) rotate(90deg); }
+.ab { background-position: calc(1 * var(--cell-d)) calc(4 * var(--cell-d)); transform: translateZ(1px) perspective(1px) rotate(180deg); }
 .al { background-position: calc(1 * var(--cell-d)) calc(4 * var(--cell-d)); transform: rotate(270deg); }
 .rc { background-position: calc(6 * var(--cell-d)) calc(3 * var(--cell-d)); }
 .pt { background-position: calc(5 * var(--cell-d)) calc(3 * var(--cell-d)); }
-.pr { background-position: calc(5 * var(--cell-d)) calc(3 * var(--cell-d)); transform: translateZ(1px) rotate(90deg); }
-.pb { background-position: calc(5 * var(--cell-d)) calc(3 * var(--cell-d)); transform: translateZ(1px) rotate(180deg); }
-.pu { background-position: calc(5 * var(--cell-d)) calc(3 * var(--cell-d)); transform: translateZ(1px) rotate(270deg); }
+.pr { background-position: calc(5 * var(--cell-d)) calc(3 * var(--cell-d)); transform: translateZ(1px) perspective(1px) rotate(90deg); }
+.pb { background-position: calc(5 * var(--cell-d)) calc(3 * var(--cell-d)); transform: translateZ(1px) perspective(1px) rotate(180deg); }
+.pu { background-position: calc(5 * var(--cell-d)) calc(3 * var(--cell-d)); transform: translateZ(1px) perspective(1px) rotate(270deg); }
 .b { background-color: #a2fcf0; }
 .bd { background-color: #0d8799; }
 /* .r { background-position: calc(4 * 32px) calc(3 * 32px); }
