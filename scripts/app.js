@@ -105,9 +105,14 @@ function init() {
       // letterCode === 'v' && tile.classList.add(letterCode)
       if (target !== map.locationTiles) {
         tile.classList.add(letterCode)
+        if (svgData[letterCode]) {
+          populateWithSvg(letterCode, tile) 
+        }
       } else {
         !map.noWallList.includes(letterCode) && tile.classList.add('wall') 
       }
+
+
 
       // if (svgData[letterCode])  {
       //   target !== map.locationTiles
