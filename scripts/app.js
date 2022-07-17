@@ -106,28 +106,23 @@ function init() {
     'pr','pb','pu','r','rh','ra','rb','rd','re',
     'la','e','lh','st','aa','gr','','',''
   ]
+  const riverTiles = ['r', 'rh', 'ra', 'rb','rd', 're']
 
   const setUpWalls = target =>{
     map.map = decompress(mapData[map.key].map)
     target.forEach((tile, i)=>{
       const letterCode = map.map[i]
-      // letterCode === 'v' && tile.classList.add(letterCode)
       if (target !== map.locationTiles) {
         tile.classList.add(letterCode)
         const index = tiles.indexOf(letterCode)
-
         const h = index !== -1 && 9 - (index % 9)
         const v = index !== -1 && 6 - (Math.floor(index / 9))
-        // console.log(letterCode, index, h, v)
+        if (riverTiles.includes(letterCode)) tile.classList.add('river')
+
         tile.style=`--h: ${h || 0}; --v: ${v || 0}`
-        // if (svgData[letterCode]) {
-        //   populateWithSvg(letterCode, tile) 
-        // }
       } else {
         !map.noWallList.includes(letterCode) && tile.classList.add('wall') 
       }
-
-
 
       // if (svgData[letterCode])  {
       //   target !== map.locationTiles
