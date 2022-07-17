@@ -637,7 +637,6 @@ input:checked + .slider:before {
 
 .map_image_tile::after,
 .map_image_tile {
-  background-size: calc(9 * var(--cell-d)) calc(6 * var(--cell-d)) !important;
   background: var(--bg);
   background-position: calc(var(--h) * 32px) calc(var(--v) * 32px);
   image-rendering: pixelated;
@@ -646,6 +645,7 @@ input:checked + .slider:before {
 }
 
 .map_image_tile {
+  background-size: calc(9 * var(--cell-d)) calc(6 * var(--cell-d)) !important;
   background-color: #a2fcf0;
 }
 

@@ -160,8 +160,9 @@ function init() {
 
   const setPos = (para, num) =>{
     map.mapXY[para === 'left' ? 'x' : 'y'] = num
-    const { x, y } = map.mapXY
-    mapImage.style.transform = `translate(${x}px,${y}px)`
+    // const { x, y } = map.mapXY
+    // mapImage.style.transform = `translate(${x}px,${y}px)`
+    mapImage.style[para] = `${num}px`
   }
 
 
