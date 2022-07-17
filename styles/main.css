@@ -10,6 +10,10 @@
   /* #a2fcf0ba: '#a2fcf0ba'; */
 /* } */
 
+:root {
+  --bg: url(data:image/png;base64,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);
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -522,19 +526,19 @@ input:checked + .slider:before {
   opacity: 0;
 }
 
-.face { z-index: 999; }
-.text_display { z-index: 999; }
-.control, .touch_control { z-index: 99999; }
-.toggle_wrapper { z-index: 99999; }
-.test_button { z-index: 999; }
-.no_wall_show::before { z-index: 999; }
+.face { z-index: 5; }
+.text_display { z-index: 5; }
+.control, .touch_control { z-index: 6; }
+.toggle_wrapper { z-index: 6; }
+.test_button { z-index: 5; }
+.no_wall_show::before { z-index: 5; }
 .map_cover { z-index: 1; }
-.button { z-index: 999; }
-.stage { z-index: 998; }
-.transition_cover { z-index: 999; }
+.button { z-index: 5; }
+.stage { z-index: 4; }
+.transition_cover { z-index: 5; }
 .cover { z-index: 3; }
 .wrapper.overlap { z-index: -9; }
-.indicator { z-index: 999999; }
+.indicator { z-index: 6; }
 
 
 /* keyframes */
@@ -614,12 +618,96 @@ input:checked + .slider:before {
   cursor: grab;
 }
 
-/* .art_work {
+.art_work {
   border: 1px solid hotpink;
-} */
+}
 
 .art_work img {
   position: absolute;
   animation: display-artwork forwards ease 0.3s;
 }
 
+/* svg {
+  opacity: 0.2 !important;
+} */
+
+.map_image_tile {
+  background-repeat: no-repeat, repeat;
+  background: var(--bg);
+  background-size: calc(6 * 2 * 16px) calc(5 * 2 * 16px) !important;
+  image-rendering: pixelated;
+  background-color: #a2fcf0;
+}
+
+.v,
+.p,
+.rp,
+.b,
+.bd {
+  background: none;
+}
+
+
+.ta { background-position: calc(6 * 32px) calc(1 * 32px); }
+.tb { background-position: calc(5 * 32px) calc(1 * 32px); }
+.tc { background-position: calc(4 * 32px) calc(1 * 32px); }
+.td { background-position: calc(3 * 32px) calc(1 * 32px); }
+.o { background-position: calc(2 * 32px) calc(1 * 32px); }
+.d { background-position: calc(6 * 32px) calc(5 * 32px); }
+.s { background-position: calc(6 * 32px) calc(5 * 32px); transform: rotate(90deg); }
+.bt { background-position: calc(5 * 32px) calc(5 * 32px); }
+.br { background-position: calc(5 * 32px) calc(5 * 32px); transform: rotate(90deg); }
+.bb { background-position: calc(5 * 32px) calc(5 * 32px); transform: rotate(180deg); }
+.bl { background-position: calc(5 * 32px) calc(5 * 32px); transform: rotate(270deg); }
+.bx { background-position: calc(4 * 32px) calc(5 * 32px); }
+.by { background-position: calc(4 * 32px) calc(5 * 32px); transform: scale(-1, 1); }
+.rr { background-position: calc(3 * 32px) calc(5 * 32px); }
+.rl { background-position: calc(3 * 32px) calc(5 * 32px); transform: scale(-1, 1); }
+.ry { background-position: calc(2 * 32px) calc(5 * 32px); }
+.rt { background-position: calc(2 * 32px) calc(5 * 32px); transform: scale(-1, 1); }
+.g { background-position: calc(1 * 32px) calc(5 * 32px); }
+.y { background-position: calc(1 * 32px) calc(5 * 32px); transform: scale(-1, 1); }
+.p { background-color: #fff; }
+.iw { background-position: calc(6 * 32px) calc(2 * 32px); }
+.rp { background-color: #58d3d8; }
+.do { background-position: calc(0 * 32px) calc(4 * 32px); }
+.wi { background-position: calc(5 * 32px) calc(4 * 32px); }
+.sw { background-position: calc(4 * 32px) calc(4 * 32px); }
+.sl { background-position: calc(3 * 32px) calc(4 * 32px); }
+.sr { background-position: calc(3 * 32px) calc(4 * 32px); transform: scale(-1, 1); }
+.nw { background-position: calc(2 * 32px) calc(4 * 32px); }/**/
+.nr { background-position: calc(2 * 32px) calc(4 * 32px); transform: scale(-1, 1); }
+.at { background-position: calc(1 * 32px) calc(4 * 32px); }
+.ar { background-position: calc(1 * 32px) calc(4 * 32px); transform: rotate(90deg); }
+.ab { background-position: calc(1 * 32px) calc(4 * 32px); transform: rotate(180deg); }
+.al { background-position: calc(1 * 32px) calc(4 * 32px); transform: rotate(270deg); }
+.rc { background-position: calc(6 * 32px) calc(3 * 32px); }
+.pt { background-position: calc(5 * 32px) calc(3 * 32px); }
+.pr { background-position: calc(5 * 32px) calc(3 * 32px); transform: rotate(90deg); }
+.pb { background-position: calc(5 * 32px) calc(3 * 32px); transform: rotate(180deg); }
+.pu { background-position: calc(5 * 32px) calc(3 * 32px); transform: rotate(270deg); }
+.b { background-color: #a2fcf0; }
+.bd { background-color: #0d8799; }
+.r { background-position: calc(4 * 32px) calc(3 * 32px); }
+/* .r::before { 
+  position: absolute;
+  background: var(--bg);
+  background-position: calc(3 * 32px) calc(3 * 32px);
+  content: '';
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+  backdrop-filter: grayscale(100%);
+} */
+.rh { background-position: calc(4 * 32px) calc(3 * 32px); transform: rotate(90deg); }
+.ra { background-position: calc(2 * 32px) calc(3 * 32px); }
+.rb { background-position: calc(2 * 32px) calc(3 * 32px); transform: rotate(90deg); }
+.rd { background-position: calc(2 * 32px) calc(3 * 32px); transform: rotate(180deg); }
+.re { background-position: calc(2 * 32px) calc(3 * 32px); transform: rotate(270deg); }
+.la { background-position: calc(5 * 32px) calc(2 * 32px); }
+/* .c { background-position: calc(0 * 32px) calc(4 * 32px); } */
+.e { background-position: calc(4 * 32px) calc(2 * 32px); }
+.lh { background-position: calc(3 * 32px) calc(2 * 32px); }
+.gr { background-position: calc(2 * 32px) calc(2 * 32px); }
+.aa { background-position: calc(1 * 32px) calc(1 * 32px); }
+.st { background-position: calc(1 * 32px) calc(2 * 32px); }

@@ -102,13 +102,18 @@ function init() {
     map.map = decompress(mapData[map.key].map)
     target.forEach((tile, i)=>{
       const letterCode = map.map[i]
-      letterCode === 'v' && tile.classList.add(letterCode)
-
-      if (svgData[letterCode])  {
-        target !== map.locationTiles
-          ? populateWithSvg(letterCode, tile) 
-          : !map.noWallList.includes(letterCode) && tile.classList.add('wall') 
+      // letterCode === 'v' && tile.classList.add(letterCode)
+      if (target !== map.locationTiles) {
+        tile.classList.add(letterCode)
+      } else {
+        !map.noWallList.includes(letterCode) && tile.classList.add('wall') 
       }
+
+      // if (svgData[letterCode])  {
+      //   target !== map.locationTiles
+      //     ? populateWithSvg(letterCode, tile) 
+      //     : !map.noWallList.includes(letterCode) && tile.classList.add('wall') 
+      // }
     })
   }
 

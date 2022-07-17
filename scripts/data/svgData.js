@@ -1,8 +1,5 @@
 // const sub = '#f9ede5'
-import {
-  randomColor,
-  svg 
-} from '../data/svg.js'
+import { svg } from '../data/svg.js'
 
 
 const sub = '#58d3d8'
@@ -13,9 +10,9 @@ const svgData = {
   'tb': { svg: svg.treeTwo },
   'tc': { svg: svg.treeThree },
   'td': { svg: svg.treeFour },
-  't': { svg: svg.tree, color: '#0d8799' },
-  'w': { svg: svg.tree, color: '#0d8799' },
-  'o': { svg: svg.flowers, color: randomColor },
+  't': { svg: svg.tree, color: '#0d8799' }, //x
+  'w': { svg: svg.tree, color: '#0d8799' }, //x
+  'o': { svg: svg.flowers },
   'd': { svg: svg.buildingCorner, color: main, subColor: sub },
   's': { svg: svg.buildingCorner, color: main, subColor: sub, rotate: 90 },
   'bt': { svg: svg.buildingCorner, color: main },
