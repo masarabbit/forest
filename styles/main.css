@@ -2,6 +2,7 @@
 * {
   box-sizing: border-box;
   user-select: none;
+　shape-rendering: crispEdges;
 }
 
 /* :root { */
@@ -633,7 +634,7 @@ input:checked + .slider:before {
 
 .map_image_tile::after,
 .map_image_tile {
-  background-repeat: no-repeat, repeat;
+  background-repeat: no-repeat;
   background: var(--bg);
   background-size: calc(6 * var(--cell-d)) calc(5 * var(--cell-d)) !important;
   image-rendering: pixelated;
