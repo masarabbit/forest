@@ -98,6 +98,15 @@ function init() {
     } 
   }
 
+  const tiles = [
+    'z','ta','tb','tc','td','t','w','o','d',
+    's','bt','br','bb','bl','bx','by','rr','rl',
+    'ry','rt','g','y','iw','do','wi','sw','sl',
+    'sr','nw','nr','at','ar','ab','al','rc','pt',
+    'pr','pb','pu','r','rh','ra','rb','rd','re',
+    'la','e','lh','st','aa','gr','','',''
+  ]
+
   const setUpWalls = target =>{
     map.map = decompress(mapData[map.key].map)
     target.forEach((tile, i)=>{
@@ -105,6 +114,12 @@ function init() {
       // letterCode === 'v' && tile.classList.add(letterCode)
       if (target !== map.locationTiles) {
         tile.classList.add(letterCode)
+        const index = tiles.indexOf(letterCode)
+
+        const h = index !== -1 && 9 - (index % 9)
+        const v = index !== -1 && 6 - (Math.floor(index / 9))
+        // console.log(letterCode, index, h, v)
+        tile.style=`--h: ${h || 0}; --v: ${v || 0}`
         // if (svgData[letterCode]) {
         //   populateWithSvg(letterCode, tile) 
         // }
