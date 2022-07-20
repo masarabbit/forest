@@ -103,8 +103,7 @@ function init() {
     const mapX = (i % iWidth) * cellD
     const mapY = Math.floor(i / iWidth) * cellD
     //TODO set background color based on code?
-    console.log(x, y, mapX, mapY)
-    ctx.drawImage(spriteSheet, x, y, cellD, cellD, mapX, mapY, cellD, cellD)
+    ctx.drawImage(spriteSheet, x, y, cellD / 2, cellD / 2, mapX, mapY, cellD, cellD)
   }
 
   const drawMap = (w, h) => {
@@ -112,20 +111,19 @@ function init() {
     mapImage.innerHTML = ''
     const mapCanvas = document.createElement('canvas')
     mapImage.appendChild(mapCanvas)
-    const ctx = mapCanvas.getContext('2d')
-
-
     resizeCanvas(mapCanvas, w * map.cellD, h * map.cellD)
-        //TODO set background color based on code?
+    const ctx = mapCanvas.getContext('2d')
+    //TODO set background color based on code?
     ctx.fillStyle = '#a2fcf0'
+    ctx.imageSmoothingEnabled = false
+    ctx.imageSmoothingQuality = 'high'
     ctx.fillRect(0, 0, map.cellD * map.iWidth, map.cellD * map.iHeight)
-    console.log(map.map)
+  
     map.map.forEach((tile, i) =>{
       // tile.classList.add(letterCode)
-      // const letterCode = map.map[i]
       const index = tiles.indexOf(tile)
-      const x = (index % 9) * 32
-      const y = Math.floor(index / 9) * 32
+      const x = (index % 9) * 16
+      const y = Math.floor(index / 9) * 16
       output(ctx, i, x, y)
     })
   }
