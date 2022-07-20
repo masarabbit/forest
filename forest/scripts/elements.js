@@ -14,6 +14,11 @@
   const sprite = document.querySelector('.sprite')
   const indicator = document.querySelector('.indicator')
   const spriteFace = document.querySelector('.face')
+  const elements = {
+    ctx: null,
+    animCtx: null,
+    spriteSheets: document.querySelectorAll('.sprite_sheet')
+  }
 
 
   
@@ -32,4 +37,5 @@
     sprite,
     indicator,
     spriteFace,
+    elements,
   }

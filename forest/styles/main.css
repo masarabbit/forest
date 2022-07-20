@@ -680,7 +680,7 @@ input:checked + .slider:before {
   image-rendering: pixelated;
 }
 
-.sprite_sheet {
+.display_none {
   display: none;
   /* width: calc(2 * 144px);
   height: auto;
@@ -691,4 +691,8 @@ canvas {
   position: absolute;
   top: 0px;
   left: 0px;
+}
+
+.blink {
+  animation: blink infinite 1s;
 }

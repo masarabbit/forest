@@ -34,6 +34,7 @@ import {
   sprite,
   indicator,
   spriteFace,
+  elements
 } from './elements.js'
 
 function init() {
@@ -54,8 +55,6 @@ function init() {
     location.innerHTML = mapMap(iWidth, iHeight,'location_indicator_tile')
     map.locationTiles = document.querySelectorAll('.location_indicator_tile')
     drawMap(iWidth, iHeight)
-    // mapImage.innerHTML = mapMap(iWidth, iHeight,'map_image_tile', map.mapImageTiles)
-    // map.mapImageTiles = document.querySelectorAll('.map_image_tile')
   }
 
   const mapMap = (w, h, classToAdd)=>{
@@ -77,10 +76,6 @@ function init() {
     return noWallList.some(c => mapcode[pos] === c)
   }
   
-  // TODO move to elements
-  const spriteSheet = document.querySelector('.sprite_sheet')
-  // resizeCanvas(printTile, map.cellD)
-  // const printCtx = printTile.getContext('2d')
 
   const resizeCanvas = (target, w, h) =>{
     target.setAttribute('width', w)
@@ -96,53 +91,63 @@ function init() {
     'la','e','lh','st','aa','gr','','',''
   ]
   const riverTiles = ['r', 'rh', 'ra', 'rb','rd', 're']
+  const plainColors = {
+    p: '#fff',
+    rp: '#58d3d8',
+    bd: '#0d8799'
+  }
 
-  const output = (ctx, i, x, y) =>{
-    const { cellD, iWidth } = map
+  const output = ({ ctx, i, x, y, tile, sprite }) =>{
+    const { cellD: d, iWidth } = map
+    const mapX = (i % iWidth) * d
+    const mapY = Math.floor(i / iWidth) * d
 
-    const mapX = (i % iWidth) * cellD
-    const mapY = Math.floor(i / iWidth) * cellD
-    //TODO set background color based on code?
-    ctx.drawImage(spriteSheet, x, y, cellD / 2, cellD / 2, mapX, mapY, cellD, cellD)
+    if (tile !== 'v') {
+      ctx.fillStyle = plainColors[tile] || '#a2fcf0'
+      ctx.fillRect(mapX, mapY, d, d)
+      ctx.drawImage(sprite, x, y, d / 2, d / 2, mapX, mapY, d, d)
+    }
+  }
+
+  const createCanvas = (ctx, w, h) => {
+    const canvas = document.createElement('canvas')
+    mapImage.appendChild(canvas)
+    if (ctx === 'animCtx') canvas.classList.add('blink')
+    resizeCanvas(canvas, w * map.cellD, h * map.cellD)
+    elements[ctx] = canvas.getContext('2d')
+    elements[ctx].imageSmoothingEnabled = false
   }
 
   const drawMap = (w, h) => {
     map.map = decompress(mapData[map.key].map)
     mapImage.innerHTML = ''
-    const mapCanvas = document.createElement('canvas')
-    mapImage.appendChild(mapCanvas)
-    resizeCanvas(mapCanvas, w * map.cellD, h * map.cellD)
-    const ctx = mapCanvas.getContext('2d')
-    //TODO set background color based on code?
-    ctx.fillStyle = '#a2fcf0'
-    ctx.imageSmoothingEnabled = false
-    ctx.imageSmoothingQuality = 'high'
-    ctx.fillRect(0, 0, map.cellD * map.iWidth, map.cellD * map.iHeight)
-  
+
+    createCanvas('ctx', w, h)
     map.map.forEach((tile, i) =>{
-      // tile.classList.add(letterCode)
       const index = tiles.indexOf(tile)
-      const x = (index % 9) * 16
-      const y = Math.floor(index / 9) * 16
-      output(ctx, i, x, y)
+      output({ 
+        ctx: elements.ctx, i, tile, 
+        x: (index % 9) * 16, y: Math.floor(index / 9) * 16,
+        sprite: elements.spriteSheets[0]
+      })
+    })
+
+    createCanvas('animCtx', w, h)
+    map.map.forEach((tile, i) =>{
+      const index = riverTiles.indexOf(tile)
+      if (index !== -1) {
+        output({ 
+          ctx: elements.animCtx, i, tile, 
+          x: (index % 6) * 16, y: 0,
+          sprite: elements.spriteSheets[1]
+        })
+      }
     })
   }
 
   const setUpWalls = target =>{
-    // map.map = decompress(mapData[map.key].map)
     target.forEach((tile, i)=>{
-      const letterCode = map.map[i]
-      if (target !== map.locationTiles) {
-        // tile.classList.add(letterCode)
-        // const index = tiles.indexOf(letterCode)
-        // const h = index !== -1 && 9 - (index % 9)
-        // const v = index !== -1 && 6 - (Math.floor(index / 9))
-        // if (riverTiles.includes(letterCode)) tile.classList.add('river')
-
-        // tile.style=`--h: ${h || 0}; --v: ${v || 0}`
-      } else {
-        !map.noWallList.includes(letterCode) && tile.classList.add('wall') 
-      }
+      !map.noWallList.includes(map.map[i]) && tile.classList.add('wall') 
     })
   }
 
@@ -174,9 +179,8 @@ function init() {
 
   const setPos = (para, num) =>{
     map.mapXY[para === 'left' ? 'x' : 'y'] = num
-    // const { x, y } = map.mapXY
-    // mapImage.style.transform = `translate(${x}px,${y}px)`
-    mapImage.style[para] = `${num}px`
+    const { x, y } = map.mapXY
+    mapImage.style.transform = `translate(${x}px,${y}px)`
   }
 
 
@@ -448,7 +452,6 @@ function init() {
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
-    // setUpWalls(map.mapImageTiles)
     turnSprite({
       e: bear.facingDirection, 
       actor: bear, sprite
@@ -467,7 +470,7 @@ function init() {
       mapImage.classList.remove('transition')
       setUpWalls(map.locationTiles)
       
-      // TODO indicate where the walls are
+      // TODO indicate where the walls are - this needs to be done some other way
       // map.map.forEach((c, i) =>{
       //   if (map.noWallList.includes(c)) {
       //     map.mapImageTiles[i].classList.add('no_wall_show')
