@@ -50,14 +50,14 @@
     <button class="btn move_selection alt" data-alt="move selection">move</button>
     <button class="btn crop_selection alt icon" data-alt="crop"></button>
     <button class="btn delete_selection alt" data-alt="delete selection">delete</button>
-    <button class="btn compile_map alt" data-alt="create map png">print</button>
   </nav>
 
   <div class="pagewrap">
 
-    <!-- grid 2 -->
-    <div class="copy_grid"></div>
-    <div class="grid extra_margin"></div>
+    <div class="canvas_wrapper">
+      <canvas class="overlay"></canvas>
+      <canvas class="artboard"></canvas>
+    </div>
     
     <div class="map_link"></div>
 
@@ -68,8 +68,6 @@
       <button class="btn compress icon alt" data-alt="compress code">c</button>
     </div>
 
-    <canvas class="display_none"></canvas>
-    <canvas class="display_none"></canvas>
 
 
     <!-- grid 3 -->
@@ -84,9 +82,6 @@
     <div class="mini_wrap">
       <button class="copy icon alt" data-alt="copy code"></button>
     </div> -->
-    
-    
-
 
   </div>
 
