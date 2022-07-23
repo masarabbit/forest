@@ -1,97 +1,29 @@
 import mapData from './data/mapData.js'
 import { tiles, riverTiles, plainColors } from './data/tileData.js'
+import { artData, copyData } from './mapState.js'
+import { drawPos, grid, placeTile, resize } from './utils/draw.js'
+import { createSelectBox, copySelection, paste, select  } from './utils/select.js'
+
+import {
+  input,
+  artboard,
+  overlay,
+  elements
+} from './mapElements.js'
+
+import {
+  mouse,
+  tileX,
+  tileY,
+  styleTarget,
+  resizeCanvas,
+} from './utils/mapUtils.js'
 
 
 
 function init() {
 
-  let paletteCells
-
-  const spriteSheets = document.querySelectorAll('.sprite_sheet')
-  const elements = {
-    cursor: document.querySelector('.cursor')
-  }
-  const palettes = document.querySelectorAll('.palette')
-  
-  // button
-  let alts = document.querySelectorAll('.alt')
-  const copyButtons = document.querySelectorAll('.copy') 
-  const indexToggleButton = document.querySelector('.display_index')
-  const buttons = document.querySelectorAll('.btn')
-
-  // input
-  const cellSizeInputs = document.querySelectorAll('.cell_size')
-  const rowInputs = document.querySelectorAll('.row')
-  const columnInputs = document.querySelectorAll('.column')
-  const letterInput = document.querySelector('.letter')
-  const codesBox = document.querySelectorAll('.codes')
-  const indexIndicator = document.querySelector('.index_indicator')
-  const codes = {
-    0: [],
-    // 1: []
-  }
-
-  const canvasWrapper = document.querySelector('.canvas_wrapper')
-  const artboard = document.querySelector('.artboard')
-  const overlay = document.querySelector('.overlay')
-  const aCtx = artboard.getContext('2d')
-  const oCtx = overlay.getContext('2d')
-
   const mapKeys = Object.keys(mapData)
-  const mapLinks = document.querySelector('.map_link')
-
-  const grid = {
-    draw: () => {
-      const { column, row, cellSize, gridWidth } = artData
-      const { width, height } = artboard.getBoundingClientRect()
-    
-      oCtx.strokeStyle = artData.gridColor
-      oCtx.beginPath()
-      const pos = (n, type) => n === type ? n * cellSize - gridWidth : n * cellSize + gridWidth
-      for (let x = 0; x <= column; x += 1) {
-        oCtx.moveTo(pos(x, column), gridWidth)
-        oCtx.lineTo(pos(x, column), height - gridWidth)
-      }
-      for (let y = 0; y <= row; y += 1) {
-        oCtx.moveTo(gridWidth, pos(y, row))
-        oCtx.lineTo(width - gridWidth, pos(y, row))
-      }
-      oCtx.stroke()
-    },
-    clear: () => {
-      const { width, height } = artboard.getBoundingClientRect()
-      oCtx.clearRect(0, 0, width, height)
-    }
-  }
-
-  const addEvents = (target, event, action, array) =>{
-    array.forEach(a => event === 'remove' ? target.removeEventListener(a, action) : target.addEventListener(a, action))
-  }
-
-  const mouse = {
-    up: (t, e, a) => addEvents(t, e, a, ['mouseup', 'touchend']),
-    move: (t, e, a) => addEvents(t, e, a, ['mousemove', 'touchmove']),
-    down: (t, e, a) => addEvents(t, e, a, ['mousedown', 'touchstart']),
-    enter: (t, e, a) => addEvents(t, e, a, ['mouseenter', 'touchstart']),
-    leave: (t, e, a) => addEvents(t, e, a, ['mouseleave', 'touchmove'])
-  }
-
-  const artData = {
-    cursor: 'pen_cursor',
-    draw: false,
-    grid: true,
-    gridWidth: 0.5,
-    cellSize: 20,
-    row: 20,
-    column: 20,
-    gridColor: 'lightgrey',
-    erase: false,
-  }
-
-  const nearestN = (x, n) => x === 0 ? 0 : (x - 1) + Math.abs(((x - 1) % n) - n)
-  const isNum = x => x * 0 === 0
-  const tileX = index => (index % 9) * 16
-  const tileY = index => Math.floor(index / 9) * 16
 
   const compress = value =>{
     const originalArray = value.split(',')
@@ -109,26 +41,6 @@ function init() {
     return record.map(x=> x[0] + x[1])
   }
 
-  const resize = () =>{
-    const { column, row, cellSize } = artData
-    const boards = [overlay, artboard]
-    boards.forEach(b =>{
-      resizeCanvas({
-        canvas: b,
-        w: column * cellSize,
-        h: row * cellSize
-      })
-    })
-    styleTarget({
-      target: canvasWrapper,
-      w: column * cellSize,
-      h: row * cellSize
-    })
-    if (artData.grid) grid.draw()
-    generateMap()
-  }
-
-
   const decompress = value =>{
     const output = []
     value.split(',').forEach(x=>{
@@ -139,35 +51,6 @@ function init() {
       }
     })
     return output
-  }
-
-  const styleTarget = ({ target, w, h, x, y }) =>{
-    const t = target.style
-    if (isNum(w)) t.width = `${w}px`
-    if (isNum(w) && !isNum(h)) t.height = `${w}px`
-    if (isNum(h)) t.height = `${h}px`
-    if (isNum(x)) t.left = `${x}px`
-    if (isNum(y)) t.top = `${y}px`
-  }
-
-  const resizeCanvas = ({ canvas, w, h }) =>{
-    canvas.setAttribute('width', w)
-    canvas.setAttribute('height', h || w)
-  }
-
-  
-  const placeTile = ({ sprite, tile, mapIndex  }) =>{
-    const tileIndex = tiles.indexOf(tile)
-    const { cellSize: d, column } = artData
-    const mapX = (mapIndex % column) * d
-    const mapY = Math.floor(mapIndex / column) * d
-    aCtx.imageSmoothingEnabled = false
-
-    if (tile !== 'v') {
-      aCtx.fillStyle = plainColors[tile] || '#a2fcf0'
-      aCtx.fillRect(mapX, mapY, d, d)
-      aCtx.drawImage(sprite, tileX(tileIndex), tileY(tileIndex), 16, 16, mapX, mapY, d, d)
-    }
   }
 
   
@@ -184,42 +67,37 @@ function init() {
   
 
   const populatePalette = () =>{
-    palettes[0].innerHTML = tiles.map(t =>`<canvas class="palette_cell" data-tile="${t}"></canvas>`).join('')
-    paletteCells = document.querySelectorAll('.palette_cell')
-    paletteCells.forEach(canvas => {
+    elements.palette.innerHTML = tiles.map(t =>`<canvas class="palette_cell" data-tile="${t}"></canvas>`).join('')
+    elements.paletteCells = document.querySelectorAll('.palette_cell')
+    elements.paletteCells.forEach(canvas => {
       resizeCanvas({ canvas, w:32 })
       const index = tiles.indexOf(canvas.dataset.tile)
       outputTile({
         ctx: canvas.getContext('2d'),
         x: tileX(index), y: tileY(index),
-        sprite: spriteSheets[0]
+        sprite: elements.spriteSheets[0]
       })
     })
 
-    paletteCells.forEach(palette =>{
+    elements.paletteCells.forEach(palette =>{
       palette.addEventListener('click',(e)=>{
-        letterInput.value = e.target.dataset.tile
+        input.letter.value = e.target.dataset.tile
       })
     })  
   }
 
   const updateCodesDisplay = (box, arr) =>{
     box.value = `${arr.map(ele => ele).join(',')}`
-    window.location.hash = `${columnInputs[0].value}#${rowInputs[0].value}#${compress(codesBox[0].value).join('-')}`
+    window.location.hash = `${input.column.value}#${input.row.value}#${compress(input.codesBox[0].value).join('-')}`
   }
 
   const continuousDraw = (e, action) =>{
     if (artData.draw) action(e)
   }
   
-  const generateMap = () =>{
-    codes[0].forEach((code, i) =>{
-      placeTile({ sprite: spriteSheets[0], tile: code, mapIndex: i })
-    })
-  }
 
   const generateFromCode = () =>{
-    codes[0] = codesBox[0].value.split(',')
+    artData.tiles = input.codesBox[0].value.split(',')
     resize()
   }
 
@@ -238,14 +116,14 @@ function init() {
   }
 
   const addLabelDisplay = () =>{
-    alts.forEach(button => {
+    elements.alts.forEach(button => {
       button.addEventListener('mouseover', displayLabel)
       button.addEventListener('mouseleave', hideLabel)
     })
   }
 
   const removeLabelDisplay = () =>{
-    alts.forEach(button => {
+    elements.alts.forEach(button => {
       button.removeEventListener('mouseover', displayLabel)
       button.removeEventListener('mouseleave', hideLabel)
     })
@@ -262,28 +140,28 @@ function init() {
     mapGenCells.forEach(grid => grid.classList.toggle('index_display'))
   }
 
-  cellSizeInputs[0].addEventListener('change',()=> {
-    artData.cellSize = +cellSizeInputs[0].value
+  input.cellD.addEventListener('change',()=> {
+    artData.cellD = +input.cellD.value
     generateFromCode()
   })
 
-  rowInputs[0].addEventListener('change',()=> {
-    const newRow = +rowInputs[0].value
+  input.row.addEventListener('change',()=> {
+    const newRow = +input.row.value
     const diff = Math.abs(newRow - artData.row) 
-    codesBox[0].value = newRow > artData.row
-      ?  [...codes[0], ...Array(diff * artData.column).fill('transparent')]
-      :  codes[0].slice(0, codes[0].length - (diff * artData.column))
+    input.codesBox[0].value = newRow > artData.row
+      ?  [...artData.tiles, ...Array(diff * artData.column).fill('transparent')]
+      :  artData.tiles.slice(0, artData.tiles.length - (diff * artData.column))
       artData.row = newRow
-    codes[0] = codesBox[0].value
+    artData.tiles = input.codesBox[0].value
     generateFromCode()
   })
 
-  columnInputs[0].addEventListener('change',()=> {
-    const newColumn = +columnInputs[0].value
+  input.column.addEventListener('change',()=> {
+    const newColumn = +input.column.value
     const updatedCodes = [[]]
     let count = 0
     let index = 0
-    codes[0].forEach(code =>{
+    artData.tiles.forEach(code =>{
       if (count === +artData.column) {
         count = 0
         index++
@@ -293,7 +171,7 @@ function init() {
       updatedCodes[index].push(code)
     })
 
-    codesBox[0].value = updatedCodes.map(codes =>{
+    input.codesBox[0].value = updatedCodes.map(codes =>{
       const diff = Math.abs(newColumn - artData.column) //TODO adjust arrays
       if (newColumn > artData.column){
         return [...codes, ...Array(diff).fill('transparent')]
@@ -303,12 +181,12 @@ function init() {
     }).join(',')
 
     artData.column = newColumn
-    codes[0] = codesBox[0].value
+    artData.tiles = input.codesBox[0].value
     generateFromCode()
   })
 
   const compressCode = () =>{
-    codesBox[1].value = compress(codesBox[0].value)
+    input.codesBox[1].value = compress(input.codesBox[0].value)
   }
 
 
@@ -326,12 +204,12 @@ function init() {
     const queryArray = query.split('#')
     artData.row = queryArray[2]
     artData.column = queryArray[1]
-    rowInputs[0].value = artData.row
-    columnInputs[0].value = artData.column
+    input.row.value = artData.row
+    input.column.value = artData.column
 
-    codes[0] = decompress(queryArray[3].replaceAll('-',','))
-    codesBox[0].value = codes[0]
-    if (queryArray[4]) indexIndicator.value = queryArray[4]
+    artData.tiles = decompress(queryArray[3].replaceAll('-',','))
+    input.codesBox[0].value = artData.tiles
+    if (queryArray[4]) input.indexIndicator.value = queryArray[4]
     generateFromCode()
   }
 
@@ -343,32 +221,32 @@ function init() {
   }
 
 
-  const drawPos = (e, cellD) => {
-    const { top, left } = artboard.getBoundingClientRect()
-    return {
-      x: nearestN(e.pageX - left, cellD),
-      y: nearestN(e.pageY - top - window.scrollY, cellD)
-    }
-  }
+  // const drawPos = (e, cellD) => {
+  //   const { top, left } = artboard.getBoundingClientRect()
+  //   return {
+  //     x: nearestN(e.pageX - left, cellD),
+  //     y: nearestN(e.pageY - top - window.scrollY, cellD)
+  //   }
+  // }
 
   const drawTile = e => {
-    const { cellSize: d, column } = artData
+    const { cellD: d, column } = artData
     const { x, y } = drawPos(e, d)
-    const { value:tile } = letterInput
+    const { value:tile } = input.letter
     const tileIndex = tiles.indexOf(tile)
     const mapIndex = ((y / d - 1) * column) + x / d - 1
 
     if (!artData.erase && tileIndex) {
-      placeTile({ sprite: spriteSheets[0], tile, mapIndex })
-      codes[0][mapIndex] = tile
-      updateCodesDisplay(codesBox[0], codes[0]) 
+      placeTile({ sprite: elements.spriteSheets[0], tile, mapIndex })
+      artData.tiles[mapIndex] = tile
+      updateCodesDisplay(input.codesBox[0], artData.tiles) 
     }
   }
 
 
 
   // eventlisteners
-  mapLinks.innerHTML = mapKeys.map( map =>{
+  elements.mapLinks.innerHTML = mapKeys.map( map =>{
     return `
       <div class="map_link_cell">
         ${map}
@@ -386,19 +264,19 @@ function init() {
     })
   })
 
-  
+  overlay.addEventListener('click', e => createSelectBox(e))
 
-  copyButtons.forEach((copyButton, i) =>{
-    copyButton.addEventListener('click',()=>copyText(codesBox[i]))
+  elements.copyButtons.forEach((copyButton, i) =>{
+    copyButton.addEventListener('click',()=>copyText(input.codesBox[i]))
   })
   
-  indexToggleButton.addEventListener('click', toggleIndex)
-  codesBox[0].addEventListener('change', compressCode)
-  codesBox[1].addEventListener('change',()=>{   
-    codesBox[0].value = decompress(codesBox[1].value)
+  elements.indexToggleButton.addEventListener('click', toggleIndex)
+  input.codesBox[0].addEventListener('change', compressCode)
+  input.codesBox[1].addEventListener('change',()=>{   
+    input.codesBox[0].value = decompress(input.codesBox[1].value)
   })
 
-  buttons.forEach(b =>{
+  elements.buttons.forEach(b =>{
     const addClickEvent = (className, event) =>{
       if (b.classList.contains(className)) b.addEventListener('click', event)
     }
@@ -407,6 +285,10 @@ function init() {
     addClickEvent('compress', compressCode)
     addClickEvent('download', ()=> downloadImage(artboard, 'map', true))
     addClickEvent('display_index', ()=> artData.number = !artData.number)
+    addClickEvent('select_state', select)
+    addClickEvent('copy_selection', copySelection)
+    addClickEvent('paste_selection', paste)
+    addClickEvent('cut_selection', ()=> copySelection({ cut: true }))
   })
   mouse.down(artboard, 'add', ()=> artData.draw = true)
   mouse.up(artboard, 'add', ()=> artData.draw = false)
@@ -426,31 +308,31 @@ function init() {
   resize()
 
   removeLabelDisplay()
-  alts = document.querySelectorAll('.alt')
+  elements.alts = document.querySelectorAll('.alt')
   addLabelDisplay()
   
   window.addEventListener('mousemove', e =>{
-    const { cellSize, gridWidth, column } = artData
+    const { cellD, gridWidth, column } = artData
     const { left, top } = artboard.getBoundingClientRect()
     const isArtboard = artData.cursor === 'artboard' 
     const pos = isArtboard
       ? { 
-          x: drawPos(e, cellSize).x - cellSize + left, 
-          y: drawPos(e, cellSize).y - cellSize + top 
+          x: drawPos(e, cellD).x - cellD + left, 
+          y: drawPos(e, cellD).y - cellD + top 
         }
       : { x: e.pageX, y: e.pageY }
     elements.cursor.classList[isArtboard ? 'add' : 'remove']('highlight')
     if (isArtboard) {
-      const { x, y } = drawPos(e, cellSize)
-      const mapIndex = ((y / cellSize - 1) * column) + x / cellSize - 1
-      elements.cursor.setAttribute('code', artData.number ? mapIndex : codes[0][mapIndex])
+      const { x, y } = drawPos(e, cellD)
+      const mapIndex = ((y / cellD - 1) * column) + x / cellD - 1
+      elements.cursor.setAttribute('code', artData.number ? mapIndex : artData.tiles[mapIndex])
     }
     styleTarget({
       target: elements.cursor,
       x: pos.x + (2 * gridWidth),
-      y: pos.y + (2 * gridWidth) + window.scrollY,
-      w: cellSize - gridWidth,
-      h: cellSize - gridWidth,
+      y: pos.y + (2 * gridWidth) + (isArtboard ? window.scrollY : 0),
+      w: cellD - gridWidth,
+      h: cellD - gridWidth,
     })
   })
 
