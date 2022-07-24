@@ -149,7 +149,7 @@ const copyTiles = ({ offset, w, h, data, cut }) =>{
       data.push(artData.tiles[mapIndex + offset])
     }
   }
-  if (cut) data.tiles = artData.tiles.map((tile, i) => tilesToCut.includes(i) ? '' : tile)
+  if (cut) data.tiles = artData.tiles.map((tile, i) => tilesToCut.includes(i) ? 'v' : tile)
 }
 
 

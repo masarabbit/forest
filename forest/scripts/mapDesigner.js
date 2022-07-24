@@ -1,6 +1,6 @@
 import mapData from './data/mapData.js'
 import { tiles, riverTiles, plainColors } from './data/tileData.js'
-import { artData, copyData } from './mapState.js'
+import { artData } from './mapState.js'
 import { drawPos, grid, placeTile, resize } from './utils/draw.js'
 import { createSelectBox, copySelection, paste, select  } from './utils/select.js'
 
@@ -17,6 +17,7 @@ import {
   tileY,
   styleTarget,
   resizeCanvas,
+  update,
 } from './utils/mapUtils.js'
 
 
@@ -221,14 +222,6 @@ function init() {
   }
 
 
-  // const drawPos = (e, cellD) => {
-  //   const { top, left } = artboard.getBoundingClientRect()
-  //   return {
-  //     x: nearestN(e.pageX - left, cellD),
-  //     y: nearestN(e.pageY - top - window.scrollY, cellD)
-  //   }
-  // }
-
   const drawTile = e => {
     const { cellD: d, column } = artData
     const { x, y } = drawPos(e, d)
@@ -236,7 +229,7 @@ function init() {
     const tileIndex = tiles.indexOf(tile)
     const mapIndex = ((y / d - 1) * column) + x / d - 1
 
-    if (!artData.erase && tileIndex) {
+    if (!artData.erase && (tileIndex !== -1 || tile === 'v')) {
       placeTile({ sprite: elements.spriteSheets[0], tile, mapIndex })
       artData.tiles[mapIndex] = tile
       updateCodesDisplay(input.codesBox[0], artData.tiles) 
@@ -290,6 +283,7 @@ function init() {
     addClickEvent('paste_selection', paste)
     addClickEvent('cut_selection', ()=> copySelection({ cut: true }))
     addClickEvent('crop_selection', ()=> copySelection({ crop: true }))
+    addClickEvent('eraser', ()=> update('letter','v'))
   })
   mouse.down(artboard, 'add', ()=> artData.draw = true)
   mouse.up(artboard, 'add', ()=> artData.draw = false)

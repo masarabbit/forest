@@ -46,9 +46,11 @@ const placeTile = ({ sprite, tile, mapIndex  }) =>{
   aCtx.imageSmoothingEnabled = false
 
   if (tile !== 'v') {
-    aCtx.fillStyle = plainColors[tile] || '#a2fcf0'
+    aCtx.fillStyle = plainColors[tile] || '#a2fcf0' // TODO check if background can be blank
     aCtx.fillRect(mapX, mapY, d, d)
     aCtx.drawImage(sprite, tileX(tileIndex), tileY(tileIndex), 16, 16, mapX, mapY, d, d)
+  } else {
+    aCtx.clearRect(mapX, mapY, d, d)
   }
 }
 
