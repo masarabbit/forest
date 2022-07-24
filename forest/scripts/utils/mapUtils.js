@@ -1,3 +1,6 @@
+import { input } from '../mapElements.js'
+import { artData } from '../mapState.js'
+
 
   const addEvents = (target, event, action, array) =>{
     array.forEach(a => event === 'remove' ? target.removeEventListener(a, action) : target.addEventListener(a, action))

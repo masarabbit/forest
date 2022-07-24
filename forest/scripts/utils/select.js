@@ -134,55 +134,58 @@ const createSelectBox = e =>{
 }
 
 
-const copyTiles = ({ w, h, data }) =>{ // TODO need to be different for cut (and crop?)
-  data.length = 0
+// TODO this isn't working as expected. Not returning the selected area
+const copyTiles = ({ offset, w, h, data, cut }) =>{
   const { cellD, column } = artData
+  if (!cut) data.length = 0
+  const tilesToCut = []
   for (let i = 0; i < w * h; i++) {
     const x = i % w * cellD
     const y = Math.floor(i / w) * cellD
     const mapIndex = ((y / cellD) * column) + x / cellD
-    // console.log(x, y, mapIndex)
-    data.push(artData.tiles[mapIndex])
+    if (cut){ 
+      tilesToCut.push(mapIndex + offset)
+    } else {
+      data.push(artData.tiles[mapIndex + offset])
+    }
   }
+  if (cut) data.tiles = artData.tiles.map((tile, i) => tilesToCut.includes(i) ? '' : tile)
 }
 
 
-// TODO change to selectAction
 const copySelection = ({ crop, cut }) => {
   if (elements.selectBox) {
     copyData.ctx = elements.selectBox.getContext('2d')
     const { size: { w, h }, defPos: { x, y }, ctx } = copyData
     ctx.imageSmoothingEnabled = false
     ctx.putImageData(aCtx.getImageData(x, y, w, h), 0, 0)
-    const { column, row, cellD } = artData
-    if (cut) {
-      aCtx.clearRect(x, y, w, h) 
-      copyTiles({ // TODO this clears everything
-        w: column, h: row,
-        data: artData.tiles
-      })
-      input.codesBox[0].value = artData.tiles
-    }  
+    const { column, cellD } = artData
     copyData.move = true
+    const offset = ((y / cellD) * column) + x / cellD
+    console.log('mapIndex', offset)
     copyTiles({
+      offset,
       w: w / artData.cellD,
       h: h / artData.cellD,
       data: copyData.tiles
     })
-    if (crop) {
-      aCtx.clearRect(0, 0, column * cellD, row * cellD)
-      copyTiles({
-        w: column, h: row,
-        data: artData.tiles
+    if (cut) {
+      aCtx.clearRect(x, y, w, h) 
+      copyTiles({ 
+        offset,
+        w: w / artData.cellD,
+        h: h / artData.cellD,
+        data: artData,
+        cut: true,
       })
+      input.codesBox[0].value = artData.tiles
+    }  
+    if (crop) {
+      paste()
+      artData.tiles = copyData.tiles
       update('column', w / cellD)
       update('row', h / cellD)
-      artData.colors = copyData.tiles
       resize()
-      styleTarget({
-        target: elements.selectBox, 
-        x: 0, y: 0,
-      })
       copyData.defPos = { x: 0, y: 0 }
       select()
     }

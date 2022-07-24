@@ -289,6 +289,7 @@ function init() {
     addClickEvent('copy_selection', copySelection)
     addClickEvent('paste_selection', paste)
     addClickEvent('cut_selection', ()=> copySelection({ cut: true }))
+    addClickEvent('crop_selection', ()=> copySelection({ crop: true }))
   })
   mouse.down(artboard, 'add', ()=> artData.draw = true)
   mouse.up(artboard, 'add', ()=> artData.draw = false)
