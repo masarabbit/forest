@@ -33,7 +33,7 @@ const grid = {
 const drawPos = (e, cellD) => {
   const { top, left } = artboard.getBoundingClientRect()
   return {
-    x: nearestN(e.pageX - left, cellD),
+    x: nearestN(e.pageX - left - window.scrollX, cellD),
     y: nearestN(e.pageY - top - window.scrollY, cellD)
   }
 }

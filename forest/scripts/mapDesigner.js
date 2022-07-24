@@ -324,7 +324,7 @@ function init() {
     }
     styleTarget({
       target: elements.cursor,
-      x: pos.x + (2 * gridWidth),
+      x: pos.x + (2 * gridWidth) + (isArtboard ? window.scrollX : 0),
       y: pos.y + (2 * gridWidth) + (isArtboard ? window.scrollY : 0),
       w: cellD - gridWidth,
       h: cellD - gridWidth,
