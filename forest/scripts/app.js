@@ -8,6 +8,8 @@
 // TODO could some events take place more than once?
 // TODO could event trigger be visualised? (make text box visible on top and bottom.)
 
+// TODO add continuous walk
+
 
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
@@ -193,7 +195,8 @@ function init() {
         interval: null,
         left: sx,
         top: sy,
-        animationTimer: ['',''],
+        animationTimer: null,
+        frameOffset: 0,
         face: avatars[avatar].face,
         spritePos,
         event,

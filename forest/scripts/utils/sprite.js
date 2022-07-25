@@ -10,6 +10,7 @@ const setSpritePos = (num, actor, sprite) =>{
 const turnSprite = ({ e, actor, sprite, animate }) => {
   const dir = e || 'down'
   actor.facingDirection = dir
+  const { frameOffset } = actor
   const { cellD } = map
   const frames = {
     right: [4, 6, 5, 'add'],
@@ -18,13 +19,11 @@ const turnSprite = ({ e, actor, sprite, animate }) => {
     down: [0, 0, 1, 'toggle']
   }
   let m = -cellD
-  m = animate ? m * frames[dir][0] : m * frames[dir][2]
+  m = animate ? m * frames[dir][0 + frameOffset] : m * frames[dir][2]
+  actor.frameOffset = frameOffset === 0 ? 1 : 0
   sprite.parentNode.classList[frames[dir][3]]('right') 
-  actor.animationTimer.forEach(timer=> clearTimeout(timer))
-  if (animate){
-    actor.animationTimer[0] = setTimeout(()=>setSpritePos(-cellD * frames[dir][1], actor, sprite), 100)
-    actor.animationTimer[1] = setTimeout(()=>setSpritePos(-cellD * frames[dir][2], actor, sprite), 200) 
-  }   
+  timer=> clearTimeout(actor.animationTimer)
+  actor.animationTimer = setTimeout(()=>setSpritePos(-cellD * frames[dir][2], actor, sprite), 100)
   setSpritePos(m, actor, sprite)
 }
 
