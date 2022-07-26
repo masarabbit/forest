@@ -22,7 +22,7 @@ const turnSprite = ({ e, actor, sprite, animate }) => {
   m = animate ? m * frames[dir][0 + frameOffset] : m * frames[dir][2]
   actor.frameOffset = frameOffset === 0 ? 1 : 0
   sprite.parentNode.classList[frames[dir][3]]('right') 
-  timer=> clearTimeout(actor.animationTimer)
+  clearTimeout(actor.animationTimer)
   actor.animationTimer = setTimeout(()=>setSpritePos(-cellD * frames[dir][2], actor, sprite), 100)
   setSpritePos(m, actor, sprite)
 }

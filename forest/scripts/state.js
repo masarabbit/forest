@@ -42,6 +42,8 @@ const bear = {
   isTalking: false,
   motionIndex: 0,
   name: 'bear',
+  walkingDirection: null,
+  walkingInterval: null,
 }
 
 const directionKey = {
@@ -96,10 +98,17 @@ const testAct = [
   'end'
 ]
 
+const touchControl = {
+  active: false,
+  timer: null,
+  direction: null,
+}
+
 export {
   map,
   bear,
   directionKey,
   walkDirections,
   testAct,
+  touchControl
 }

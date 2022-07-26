@@ -8,7 +8,6 @@
 // TODO could some events take place more than once?
 // TODO could event trigger be visualised? (make text box visible on top and bottom.)
 
-// TODO add continuous walk
 
 
 import mapData from './data/mapData.js'
@@ -678,7 +677,7 @@ function init() {
       actorData.motionIndex++
       setTimeout(()=>{
         chainAnimation({ act, index, actorData, motionIndex: actorData.motionIndex })
-      }, 300)
+      }, 150)
     } else {
       map.eventChainActors = map.eventChainActors.filter(name => name !== actorData.name)
       if (!map.eventChainActors.length) checkAndContinueEvent({ act, index })
@@ -705,11 +704,34 @@ function init() {
     }
   }
   
+  const handleWalk = e =>{
+    if (bear.walkingDirection !== e){
+      clearInterval(bear.walkingInterval)
+      bear.walkingDirection = e
+      bear.walkingInterval = setInterval(()=>{
+        if (!bear.walkingDirection) {
+          clearInterval(bear.walkingInterval)
+        } else {
+          handleKeyAction(e)
+        }
+      }, 150)
+    }
+  }
 
   // set up
 
   // key control
-  window.addEventListener('keyup', e => handleKeyAction(e))
+  window.addEventListener('keyup', () => {
+    bear.walkingDirection = null
+    clearInterval(bear.walkingInterval)
+  })
+  window.addEventListener('keydown', e => {
+    if (bear.isTalking || (e.key[0] !== 'A')) {
+      handleKeyAction(e)
+    } else if (e.key[0] === 'A'){
+      handleWalk(e)
+    }
+  })
   window.addEventListener('resize', setWidthAndHeightAndResize)
 
   controlButtons.forEach(c =>{

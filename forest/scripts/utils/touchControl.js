@@ -1,10 +1,6 @@
 import { mouse, setTargetPos } from './utils.js'
+import { touchControl } from '../state.js'
 
-const touchControl = {
-  active: false,
-  timer: null,
-  direction: null,
-}
 
 const distanceBetween = (a, b) => Math.round(Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2)))
 
