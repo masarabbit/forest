@@ -15,7 +15,7 @@ import { artData } from '../mapState.js'
   }
 
   const nearestN = (x, n) => x === 0 ? 0 : (x - 1) + Math.abs(((x - 1) % n) - n)
-  const isNum = x => x * 0 === 0
+  const isNum = x => typeof x === 'number'
   const tileX = index => (index % 9) * 16
   const tileY = index => Math.floor(index / 9) * 16
 
