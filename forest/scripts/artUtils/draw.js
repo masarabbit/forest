@@ -2,7 +2,7 @@
 import { artboard, overlay, aCtx, oCtx, elements } from '../mapElements.js'
 import { nearestN, resizeCanvas, styleTarget, tileX, tileY } from './mapUtils.js'
 import { artData } from '../mapState.js'
-import { tiles, riverTiles, plainColors } from '../data/tileData.js'
+import { tiles, plainColors } from '../data/tileData.js'
 
 
 const grid = {

@@ -21,23 +21,7 @@ import { map, bear, directionKey, walkDirections } from './state.js'
 import { setSpritePos, turnSprite } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { tiles, riverTiles, plainColors} from './data/tileData.js'
-
-import {
-  transitionCover,
-  touchToggle,
-  control,
-  controlButtons,
-  mapContainer,
-  mapCover,
-  mapImage,
-  location,
-  spriteContainer,
-  texts,
-  sprite,
-  indicator,
-  spriteFace,
-  elements
-} from './elements.js'
+import { elements } from './elements.js'
 
 function init() {
 
@@ -54,7 +38,7 @@ function init() {
     const { iWidth, iHeight } = mapData[map.key]   
     map.iHeight = iHeight
     map.iWidth = iWidth
-    location.innerHTML = mapMap(iWidth, iHeight,'location_indicator_tile')
+    elements.location.innerHTML = mapMap(iWidth, iHeight,'location_indicator_tile')
     map.locationTiles = document.querySelectorAll('.location_indicator_tile')
     drawMap(iWidth, iHeight)
   }
@@ -98,7 +82,7 @@ function init() {
 
   const createCanvas = (ctx, w, h) => {
     const canvas = document.createElement('canvas')
-    mapImage.appendChild(canvas)
+    elements.mapImage.appendChild(canvas)
     if (ctx === 'animCtx') canvas.classList.add('blink')
     resizeCanvas(canvas, w * map.cellD, h * map.cellD)
     elements[ctx] = canvas.getContext('2d')
@@ -107,7 +91,7 @@ function init() {
 
   const drawMap = (w, h) => {
     map.map = decompress(mapData[map.key].map)
-    mapImage.innerHTML = ''
+    elements.mapImage.innerHTML = ''
 
     createCanvas('ctx', w, h)
     map.map.forEach((tile, i) =>{
@@ -167,14 +151,14 @@ function init() {
   const setPos = (para, num) =>{
     map.mapXY[para === 'left' ? 'x' : 'y'] = num
     const { x, y } = map.mapXY
-    mapImage.style.transform = `translate(${x}px,${y}px)`
+    elements.mapImage.style.transform = `translate(${x}px,${y}px)`
   }
 
 
   const positionSprite = pos =>{
     const { width, cellD } = map
     setTargetPos(
-      spriteContainer, 
+      elements.spriteContainer, 
       pos % width * cellD, 
       Math.floor(pos / width) * cellD
     )
@@ -183,7 +167,7 @@ function init() {
   const spawnCharacter = () =>{
     if (map.spawnData.length) map.spawnData.forEach(m => clearInterval(m.interval))
     map.spawnData.length = 0
-    // mapImage.innerHTML = '' // TODO need to clear old sprites from mapImage
+    // elements.mapImage.innerHTML = '' // TODO need to clear old sprites from elements.mapImage
     const { iWidth, cellD } = map 
 
     mapData[map.key].characters?.forEach((c, i)=>{
@@ -219,7 +203,7 @@ function init() {
         </svg>
       </div>`  
 
-      mapImage.appendChild(spawn)   
+      elements.mapImage.appendChild(spawn)   
       map.spawnData[i].spawn = spawn.childNodes[1]
       map.spawnData[i].interval = setInterval(()=>{
         spawnMotion(i)
@@ -237,16 +221,16 @@ function init() {
   }
 
   const transition = () =>{
-    transitionCover.classList.add('transition')
+    elements.transitionCover.classList.add('transition')
     bear.pause = true
     setTimeout(()=>{
-      transitionCover.classList.remove('transition')
+      elements.transitionCover.classList.remove('transition')
       bear.pause = false
     },500)
   }
 
   const displayChoiceDetails = () =>{
-    indicator.innerHTML = (   
+    elements.indicator.innerHTML = (   
       `<div>
         <p>bear textCount: ${bear.textCount}</p>
         <p>bear choice: ${bear.choice}</p>
@@ -258,7 +242,7 @@ function init() {
   const showDialog = ({ talkTarget, facingDirection, event }) =>{
     bear.isTalking = true
     talkTarget.pause = true
-    texts[0].parentNode.classList.remove('hidden')
+    elements.texts[0].parentNode.classList.remove('hidden')
     if (facingDirection) turnSprite({
       e: facingDirection,
       actor: talkTarget, 
@@ -290,7 +274,7 @@ function init() {
     bear.answering = true
     bear.choice = prev ? bear.prevChoices[bear.dialogKey] : 0 
     bear.optionTexts = Object.keys(eventPoint.choice)
-    texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
+    elements.texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
       return `<div class="option ${i === bear.choice && 'selected'}">${qu}</div>`
     }).join('')
     
@@ -308,7 +292,7 @@ function init() {
   }
 
   const displayTextGradual = (t, i) =>{
-    texts[0].innerHTML = t.slice(0, i)
+    elements.texts[0].innerHTML = t.slice(0, i)
     if (i < t.length) {
       setTimeout(()=>{
         displayTextGradual(t, i + 1)
@@ -330,11 +314,11 @@ function init() {
       talkTarget: null,
       isTalking: false
     })
-    texts[0].parentNode.classList.add('hidden')
-    texts[0].classList.remove('face_displayed')
-    texts.forEach(t => t.innerText = '')
-    transitionCover.innerHTML = ''
-    spriteFace.innerHTML = ''
+    elements.texts[0].parentNode.classList.add('hidden')
+    elements.texts[0].classList.remove('face_displayed')
+    elements.texts.forEach(t => t.innerText = '')
+    elements.transitionCover.innerHTML = ''
+    elements.spriteFace.innerHTML = ''
     // control.classList.remove('deactivate')
     toggleControl('remove')
 
@@ -346,12 +330,12 @@ function init() {
     }
   }
 
-  const updateNextButtonText = (count, text) => controlButtons[0].innerHTML = count === text.length - 1? 'end' : 'next'
+  const updateNextButtonText = (count, text) => elements.controlButtons[0].innerHTML = count === text.length - 1? 'end' : 'next'
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
-    const nextButton = controlButtons[0]
-    texts[0].classList.add('face_displayed')
+    const nextButton = elements.controlButtons[0]
+    elements.texts[0].classList.add('face_displayed')
     // control.classList.add('deactivate')
     toggleControl('add')
 
@@ -361,7 +345,7 @@ function init() {
       // TODO could separate this bit out to control facial expression
       const targetExpression = (eventPoint.face && eventPoint.face[count]) || 'happy'
 
-      spriteFace.innerHTML = svgWrapper({
+      elements.spriteFace.innerHTML = svgWrapper({
         content: decode(bear.talkTarget.face[targetExpression].sprite),
         frameNo: bear.talkTarget.face[targetExpression].frameNo,
         frameSize: 32,
@@ -369,7 +353,7 @@ function init() {
         color: '#74645a'
       })
       animateCell({
-        target: spriteFace.childNodes[1],
+        target: elements.spriteFace.childNodes[1],
         start: 0,
         end: 1,
         interval: bear.talkTarget.interval
@@ -391,8 +375,8 @@ function init() {
   }
 
   const toggleControl = action =>{
-    control.classList[action]('deactivate')
-    touchToggle.parentNode.classList[action]('deactivate')
+    elements.control.classList[action]('deactivate')
+    elements.touchToggle.parentNode.classList[action]('deactivate')
     // console.log('trigger')
   }
 
@@ -404,10 +388,10 @@ function init() {
       const text = eventPoint.text[count]
       bear.textCount++
       bear.pause = true
-      texts[0].parentNode.classList.remove('hidden')
+      elements.texts[0].parentNode.classList.remove('hidden')
       updateNextButtonText(count, eventPoint.text)
       displayTextGradual(text, 0)
-      if (eventPoint.art && !transitionCover.innerHTML) transitionCover.innerHTML = `<div class="art_work"><img src=${eventPoint.art} /></div>`
+      if (eventPoint.art && !elements.transitionCover.innerHTML) elements.transitionCover.innerHTML = `<div class="art_work"><img src=${eventPoint.art} /></div>`
       // TODO add trigger for event?
       return
     }
@@ -431,7 +415,7 @@ function init() {
 
   const transport = key =>{
     transition()
-    mapImage.classList.add('transition')
+    elements.mapImage.classList.add('transition')
     const entryPoint = mapData[map.key].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
     
@@ -440,6 +424,7 @@ function init() {
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
     setWidthAndHeightAndResize()
+    const { sprite } = elements
     turnSprite({
       e: bear.facingDirection, 
       actor: bear, sprite
@@ -455,7 +440,7 @@ function init() {
     startCellAnimations(map.animInterval)
 
     setTimeout(()=> {
-      mapImage.classList.remove('transition')
+      elements.mapImage.classList.remove('transition')
       setUpWalls(map.locationTiles)
       
       // TODO indicate where the walls are - this needs to be done some other way
@@ -516,12 +501,12 @@ function init() {
       } 
     } 
 
-    if(isBear) indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
+    if(isBear) elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
   }
 
   const select = () =>{
     const { dialogKey } = bear
-    texts[1].innerHTML = ''
+    elements.texts[1].innerHTML = ''
     bear.answering = false
     bear.prevChoices[dialogKey] = bear.choice
     bear.textCount = 0
@@ -547,7 +532,7 @@ function init() {
       // return within same dialog
       bear.textCount -= 2
     }
-    texts[1].innerHTML = ''
+   elements.texts[1].innerHTML = ''
     displayText(bear.textCount, true)
   }
   
@@ -569,7 +554,7 @@ function init() {
           options[bear.choice].classList.add('selected')
           return
         }
-        if (key === 'left' && texts[0].innerHTML) prevText()
+        if (key === 'left' && elements.texts[0].innerHTML) prevText()
       }
       if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
         check(textCount)
@@ -595,13 +580,13 @@ function init() {
     setPos('top', mapY() * -cellD + ((Math.floor(height / 2) - 1) * cellD))
 
     // adjust sprite
-    setSpritePos(-cellD, bear, sprite)
-    setTargetSize(sprite, cellD * 7, cellD)
-    setTargetSize(spriteContainer, cellD, cellD)
+    setSpritePos(-cellD, bear, elements.sprite)
+    setTargetSize(elements.sprite, cellD * 7, cellD)
+    setTargetSize(elements.spriteContainer, cellD, cellD)
 
     // resize mapContainer
     adjustRectSize({
-      target: mapContainer, 
+      target: elements.mapContainer, 
       w: width, h: height, 
       cellD
     })
@@ -609,7 +594,7 @@ function init() {
     // setup location indicator
     map.minicellD = Math.floor(cellD / 8)
     adjustRectSize({
-      target: location, 
+      target: elements.location, 
       w: iWidth, h: iHeight, 
       cellD: map.minicellD, 
       cells: map.locationTiles
@@ -618,7 +603,7 @@ function init() {
   
     // setup map image
     adjustRectSize({ 
-      target: mapImage, 
+      target: elements.mapImage, 
       w: iWidth, h: iHeight, 
       cellD, 
       cells: map.mapImageTiles
@@ -626,7 +611,7 @@ function init() {
     
     // setup mapcover
     adjustRectSize({
-      target: mapCover, 
+      target: elements.mapCover, 
       w: width, h: height, 
       cellD
     })
@@ -661,7 +646,7 @@ function init() {
     const eventCode = walkDirections[frame]
     const isBear = actor === 'bear'
     const actorData = isBear ? bear : map.spawnData.find(s => s.name === actor)
-    const actorSprite = isBear ? sprite : actorData.spawn.childNodes[1]
+    const actorSprite = isBear ? elements.sprite : actorData.spawn.childNodes[1]
     if (!isBear) actorData.pause = true
     if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: actorData, sprite: actorSprite })
     if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: actorData, sprite: actorSprite })
@@ -734,12 +719,12 @@ function init() {
   })
   window.addEventListener('resize', setWidthAndHeightAndResize)
 
-  controlButtons.forEach(c =>{
+  elements.controlButtons.forEach(c =>{
     c.addEventListener('click', ()=> handleKeyAction(c.dataset.c))
   })
 
-  touchToggle.addEventListener('change', ()=>{
-    control.classList.toggle('hide')
+  elements.touchToggle.addEventListener('change', ()=>{
+    elements.control.classList.toggle('hide')
     const status = document.querySelector('.touch_status')
     status.innerHTML = status.innerHTML === 'off' ? 'on' : 'off'
   })
@@ -747,7 +732,7 @@ function init() {
   transport('start')
 
   
-  addTouchAction(control.childNodes[1].childNodes[1], handleKeyAction)
+  addTouchAction(elements.control.childNodes[1].childNodes[1], handleKeyAction)
   
 }
 
