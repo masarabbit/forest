@@ -2,11 +2,12 @@
 
 //*maybe design maps first.
 //! add control button (enter)
-//! add ways to decorate map further
 //! design other avatars and map
 
 // TODO could some events take place more than once?
 // TODO could event trigger be visualised? (make text box visible on top and bottom.)
+
+// TODO refactor to remove reliance on svgs
 
 
 
