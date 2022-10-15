@@ -14,7 +14,7 @@ const animateCell = ({ target, start, end, interval, speed }) => {
 
 const animateCells = (interval, cells) => {
   interval = setInterval(()=> {
-    cells.forEach( cell =>{
+    cells.forEach(cell =>{
       const { current, frame_no }  =  cell.dataset
       // console.log('anim', animInterval)
       const next = current >= frame_no - 1

@@ -8,7 +8,9 @@
 // TODO could event trigger be visualised? (make text box visible on top and bottom.)
 
 // TODO refactor to remove reliance on svgs
+// TODO disallow 'back' for conversation
 
+// TODO move and sort files that are only related to mapGen
 
 
 import mapData from './data/mapData.js'
@@ -23,6 +25,9 @@ import { setSpritePos, turnSprite } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { tiles, riverTiles, plainColors} from './data/tileData.js'
 import { elements } from './elements.js'
+
+// bear.pause is used for pausing during animation as well as talking
+// bear.isTalking is for triggering dialogue
 
 function init() {
 
@@ -45,8 +50,8 @@ function init() {
   }
 
   const mapMap = (w, h, classToAdd)=>{
-    const mapArr = new Array(w * h).fill('').map((_ele, i)=>i)
-    return mapArr.map((_ele, i)=>{
+    return new Array(w * h).fill('').map((_ele, i) => i)
+      .map(i => {
       return `<div class=${classToAdd} data-index=${i}>${i}</div>`
     }).join('')
   }
@@ -172,22 +177,18 @@ function init() {
     const { iWidth, cellD } = map 
 
     mapData[map.key].characters?.forEach((c, i)=>{
-      const { pos, avatar, spritePos, event, name, motion } = c
+      const { pos, avatar, motion } = c
       const sx = Math.floor(pos % iWidth) * cellD
       const sy = Math.floor(pos / iWidth) * cellD
       map.spawnData[i] = {
+        ...c,
         interval: null,
         left: sx,
         top: sy,
         animationTimer: null,
         frameOffset: 0,
         face: avatars[avatar].face,
-        spritePos,
-        event,
-        pos,
         spawn: null,
-        name,
-        motion,
         motionIndex: Array.isArray(motion) ? 0 : null,
         pause: false
       }
@@ -196,6 +197,8 @@ function init() {
       spawn.classList.add('spawn_container')
       setTargetPos(spawn, sx, sy)
       
+
+      // TODO to update to data URL
       const fill = '#74645a'
       spawn.innerHTML = `
       <div class="spawn">
@@ -241,8 +244,10 @@ function init() {
   }
 
   const showDialog = ({ talkTarget, facingDirection, event }) =>{
+    // TODO could this be simplified or be labelled further?
+
     bear.isTalking = true
-    talkTarget.pause = true
+    // talkTarget.pause = true //TODO check if this is necessary
     elements.texts[0].parentNode.classList.remove('hidden')
     if (facingDirection) turnSprite({
       e: facingDirection,
@@ -275,14 +280,14 @@ function init() {
     bear.answering = true
     bear.choice = prev ? bear.prevChoices[bear.dialogKey] : 0 
     bear.optionTexts = Object.keys(eventPoint.choice)
-    elements.texts[1].innerHTML = bear.optionTexts.map((qu, i)=>{
-      return `<div class="option ${i === bear.choice && 'selected'}">${qu}</div>`
+    elements.texts[1].innerHTML = bear.optionTexts.map((op, i) => {
+      return `<div class="option ${i === bear.choice ? 'selected' : ''}">${op}</div>`
     }).join('')
     
     // makes multiple choice clickable
     bear.options = document.querySelectorAll('.option')
-    bear.options.forEach((op, i)=>{
-      op.addEventListener('click',()=>{
+    bear.options.forEach((op, i) => {
+      op.addEventListener('click',() => {
         bear.options.forEach(op => op.classList.remove('selected'))
         op.classList.add('selected')
 
@@ -344,6 +349,7 @@ function init() {
       const text = eventPoint.text[count]
 
       // TODO could separate this bit out to control facial expression
+      // TODO change this to dateURL
       const targetExpression = (eventPoint.face && eventPoint.face[count]) || 'happy'
 
       elements.spriteFace.innerHTML = svgWrapper({
@@ -361,18 +367,19 @@ function init() {
       })
       
       bear.textCount++
+      // TODO check why bear is pausing at this timing and not elsewhere
       bear.pause = true
       displayTextGradual(text, 0)
       if (eventPoint.choice && count === eventPoint.text.length - 1) {
         displayAnswer(prev)
         nextButton.classList.add('hide')
       } else {
-        nextButton.classList.remove('hide')
         updateNextButtonText(count, eventPoint.text)
+        nextButton.classList.remove('hide')
       }
-      return
+    } else {
+      clearText()
     }
-    clearText()
   }
 
   const toggleControl = action =>{
@@ -533,7 +540,7 @@ function init() {
       // return within same dialog
       bear.textCount -= 2
     }
-   elements.texts[1].innerHTML = ''
+    elements.texts[1].innerHTML = ''
     displayText(bear.textCount, true)
   }
   
@@ -551,7 +558,10 @@ function init() {
           if (key === 'down' && choice < options.length - 1) bear.choice++
           if ([' ', 'enter', 'right'].includes(key)) select()
           if (key === 'left') prevText()
+
+          // TODO development code. remove later
           displayChoiceDetails()
+
           options[bear.choice].classList.add('selected')
           return
         }
