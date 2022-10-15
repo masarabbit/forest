@@ -24,8 +24,8 @@ const resizeBox = (e, box) =>{
   const yDiff = Math.abs(newXy.y, xy.y) * cellD
   const adjustedXdiff = xDiff >= column * cellD ? column * cellD : xDiff
   const adjustedYdiff = yDiff >= row * cellD ? row * cellD : yDiff
-  const w = xIncreased ? adjustedXdiff - defPos.x + gridWidth: defPos.x - xDiff + (2 * gridWidth)
-  const h = yIncreased ? adjustedYdiff - defPos.y + gridWidth: defPos.y - yDiff + (2 * gridWidth)
+  const w = xIncreased ? adjustedXdiff - defPos.x + gridWidth : defPos.x - xDiff + (2 * gridWidth)
+  const h = yIncreased ? adjustedYdiff - defPos.y + gridWidth : defPos.y - yDiff + (2 * gridWidth)
 
   resizeCanvas({
     canvas: box,
@@ -197,7 +197,7 @@ const copySelection = ({ crop, cut }) => {
 const paste = () => {
   if (copyData.tiles.length){
     const { cellD, column } = artData
-    const { size: { w, h }, defPos: { x, y }} = copyData
+    const { size: { w, h }, defPos: { x, y } } = copyData
     const index = (((y + cellD) / cellD - 1) * column) + (x + cellD) / cellD - 1
     const width = w / cellD
     copyData.index = Array(width * (h / cellD)).fill('').map((_, i) => {

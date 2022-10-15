@@ -18,7 +18,7 @@ import {
   styleTarget,
   resizeCanvas,
   update,
-} from './utils/mapUtils.js'
+} from './artUtils/mapUtils.js'
 
 
 
