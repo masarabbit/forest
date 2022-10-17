@@ -71,7 +71,7 @@ function init() {
     elements.palette.innerHTML = tiles.map(t =>`<canvas class="palette_cell" data-tile="${t}"></canvas>`).join('')
     elements.paletteCells = document.querySelectorAll('.palette_cell')
     elements.paletteCells.forEach(canvas => {
-      resizeCanvas({ canvas, w:32 })
+      resizeCanvas({ canvas, w: 32 })
       const index = tiles.indexOf(canvas.dataset.tile)
       outputTile({
         ctx: canvas.getContext('2d'),
@@ -152,7 +152,7 @@ function init() {
     input.codesBox[0].value = newRow > artData.row
       ?  [...artData.tiles, ...Array(diff * artData.column).fill('transparent')]
       :  artData.tiles.slice(0, artData.tiles.length - (diff * artData.column))
-      artData.row = newRow
+    artData.row = newRow
     artData.tiles = input.codesBox[0].value
     generateFromCode()
   })
@@ -225,7 +225,7 @@ function init() {
   const drawTile = e => {
     const { cellD: d, column } = artData
     const { x, y } = drawPos(e, d)
-    const { value:tile } = input.letter
+    const { value: tile } = input.letter
     const tileIndex = tiles.indexOf(tile)
     const mapIndex = ((y / d - 1) * column) + x / d - 1
 
@@ -312,9 +312,9 @@ function init() {
     const isArtboard = artData.cursor === 'artboard' 
     const pos = isArtboard
       ? { 
-          x: drawPos(e, cellD).x - cellD + left, 
-          y: drawPos(e, cellD).y - cellD + top 
-        }
+        x: drawPos(e, cellD).x - cellD + left, 
+        y: drawPos(e, cellD).y - cellD + top 
+      }
       : { x: e.pageX, y: e.pageY }
     elements.cursor.classList[isArtboard ? 'add' : 'remove']('highlight')
     if (isArtboard) {
