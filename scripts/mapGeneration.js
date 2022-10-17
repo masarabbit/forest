@@ -21,14 +21,14 @@ function init() {
 
       const svgContent = 
       `${svgWrapper({
-          content: decode(subColor ? svg(subColor) : svg()),
-          color: colorAction || '',
-          rotate: rotate || 0,
-          flip,
-          wrapper: frameNo ? 'anim_wrapper' : 'svg_wrap',
-          frameNo,
-          speed
-        })}`
+        content: decode(subColor ? svg(subColor) : svg()),
+        color: colorAction || '',
+        rotate: rotate || 0,
+        flip,
+        wrapper: frameNo ? 'anim_wrapper' : 'svg_wrap',
+        frameNo,
+        speed
+      })}`
       
       target.innerHTML = svgContent
     } 

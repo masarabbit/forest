@@ -3,7 +3,7 @@ import { wrapper } from '../elements.js'
 
 
 const setWidthAndHeight = () =>{
-  const { offsetWidth: w, offsetHeight:h } = wrapper
+  const { offsetWidth: w, offsetHeight: h } = wrapper
   const pWidth = w < 800 ? w : 800
   map.width = 2 * Math.floor((pWidth / map.cellD) / 2)
   const pHeight = h < 600 ? h : 600
@@ -18,7 +18,9 @@ const setTargetPos = (target, x, y) => Object.assign(target.style, { left: `${x}
 
 const adjustRectSize = ({ target, w, h, cellD, cells }) =>{
   setTargetSize(target, w * cellD, h * cellD) 
-  cells && cells.forEach(cell=>{ setTargetSize(cell, cellD, cellD) })
+  cells && cells.forEach(cell=>{
+    setTargetSize(cell, cellD, cellD) 
+  })
 }
 
 const centerOfMap = (width, height) => Math.floor((width * height) / 2) - Math.floor((width / 2)) - 1
