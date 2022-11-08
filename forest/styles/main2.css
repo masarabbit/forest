@@ -243,12 +243,45 @@ a:hover {
   transition: 0.4s;
 }
 
+.event_cover,
+.event_cover::after,
 .text_display {
   position: fixed;
-  bottom: 0;
   width: 100%;
-  height: 160px;
+  height: 180px;
 }
+
+.event_cover {
+  top: 0px;
+}
+
+.event_cover::after,
+.text_display {
+  bottom: 0;
+}
+
+.event_cover,
+.event_cover::after {
+  transition: 0.3s;
+  pointer-events: none;
+  background-color: #4f443d;
+}
+
+.event_cover::after {
+  content: '';
+}
+
+.event_cover.hidden::after {
+  bottom: -200px;
+}
+.event_cover.hidden {
+  opacity: 0;
+  top: -200px;
+}
+
+
+
+
 
 .next {
   position: fixed;
@@ -301,7 +334,7 @@ a:hover {
   right: 100vh;
   top: -20px;
   /* background-color: rgb(3, 31, 92); */
-  background-color: #4b403ad8;
+  background-color: #392a20d8;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -524,6 +557,7 @@ input:checked + .slider:before {
 }
 
 .face { z-index: 5; }
+.event_cover,
 .text_display { z-index: 5; }
 .control, .touch_control { z-index: 6; }
 .toggle_wrapper { z-index: 6; }

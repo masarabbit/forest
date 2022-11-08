@@ -19,6 +19,7 @@
     spriteSheets: document.querySelectorAll('.sprite_sheet'),
 
   transitionCover: document.querySelector('.transition_cover'),
+  eventCover: document.querySelector('.event_cover'),
   touchToggle: document.querySelector('.touch_toggle'),
   control: document.querySelector('.control'),
   controlButtons: document.querySelectorAll('.control_button'),

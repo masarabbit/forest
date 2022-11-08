@@ -504,6 +504,7 @@ function init() {
       if (act && !map.completedEvents.some(e => e === act)) {
         map.activeEvent = act
         setTimeout(()=> {
+          elements.eventCover.classList.remove('hidden')
           eventAnimation({ act: mapData[key].eventContents[act], index: 0 })
         }, 200)
       } 
@@ -651,6 +652,7 @@ function init() {
     map.completedEvents.push(map.activeEvent)
     map.eventIndex = 0
     map.activeEvent = null
+    elements.eventCover.classList.add('hidden')
   }
 
   const animateActor = ({ frame, actor }) =>{ 
