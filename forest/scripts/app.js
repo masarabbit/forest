@@ -2,15 +2,13 @@
 
 //*maybe design maps first.
 //! add control button (enter)
-//! design other avatars and map
 
 // TODO could some events take place more than once?
 // TODO could event trigger be visualised? (make text box visible on top and bottom.)
 
-// TODO refactor to remove reliance on svgs
+// TODO refactor to remove reliance on svgs - just the face
 // TODO disallow 'back' for conversation
 
-// TODO move and sort files that are only related to mapGen
 
 
 import mapData from './data/mapData.js'
@@ -192,23 +190,16 @@ function init() {
         motionIndex: Array.isArray(motion) ? 0 : null,
         pause: false
       }
-
+      
       const spawn = document.createElement('div')
       spawn.classList.add('spawn_container')
       setTargetPos(spawn, sx, sy)
       
 
-      // TODO to update to data URL
-      const fill = '#74645a'
-      spawn.innerHTML = `
-      <div class="spawn">
-        <svg class="sprite" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 112 16" style="height: ${cellD}px; width: ${cellD * 7}px; fill: ${fill};">
-          ${decode(avatars[avatar].sprite)}
-        </svg>
-      </div>`  
+      spawn.innerHTML = `<div class="spawn"><div class="sprite ${avatars[avatar].sprite}"></div></div>`
 
       elements.mapImage.appendChild(spawn)   
-      map.spawnData[i].spawn = spawn.childNodes[1]
+      map.spawnData[i].spawn = spawn.childNodes[0]
       map.spawnData[i].interval = setInterval(()=>{
         spawnMotion(i)
       }, avatars[avatar].speed)

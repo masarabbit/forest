@@ -9,7 +9,7 @@ const drag = (target, pos, x, y) =>{
   pos.b = pos.d - y
   const newX = target.offsetLeft - pos.a
   const newY = target.offsetTop - pos.b
-  if (distanceBetween({x: 0,y: 0}, {x: newX, y: newY}) < 35) {
+  if (distanceBetween({ x: 0,y: 0 }, { x: newX, y: newY }) < 35) {
     setTargetPos(target, newX, newY)
     touchControl.direction = Math.abs(newX) < Math.abs(newY)
       ? newY < 0 ? 'up' : 'down'
