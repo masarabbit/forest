@@ -243,7 +243,7 @@ function init() {
     if (facingDirection) turnSprite({
       e: facingDirection,
       actor: talkTarget, 
-      sprite: talkTarget.spawn.childNodes[1]
+      sprite: talkTarget.spawn.childNodes[0]
     })
     
     if (!bear.dialogKey) {
