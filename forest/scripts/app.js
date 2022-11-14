@@ -28,12 +28,10 @@ import { elements } from './elements.js'
 // bear.isTalking is for triggering dialogue
 
 function init() {
-
   //* stops intervals firing while window is inactive
   let windowActive = true
   window.addEventListener('focus', ()=> windowActive = true)
   window.addEventListener('blur', ()=> windowActive = false)
-
 
   const setLocation = key => {
     map.key = key
@@ -66,7 +64,6 @@ function init() {
     return noWallList.some(c => mapcode[pos] === c)
   }
   
-
   const resizeCanvas = (target, w, h) =>{
     target.setAttribute('width', w)
     target.setAttribute('height', h || w)
@@ -106,7 +103,6 @@ function init() {
         sprite: elements.spriteSheets[0]
       })
     })
-
     createCanvas('animCtx', w, h)
     map.map.forEach((tile, i) =>{
       const index = riverTiles.indexOf(tile)
@@ -158,7 +154,6 @@ function init() {
     elements.mapImage.style.transform = `translate(${x}px,${y}px)`
   }
 
-
   const positionSprite = pos =>{
     const { width, cellD } = map
     setTargetPos(
@@ -194,8 +189,6 @@ function init() {
       const spawn = document.createElement('div')
       spawn.classList.add('spawn_container')
       setTargetPos(spawn, sx, sy)
-      
-
       spawn.innerHTML = `<div class="spawn"><div class="sprite ${avatars[avatar].sprite}"></div></div>`
 
       elements.mapImage.appendChild(spawn)   
@@ -204,7 +197,6 @@ function init() {
         spawnMotion(i)
       }, avatars[avatar].speed)
     })
-    
     map.sprites = document.querySelectorAll('.sprite')
     map.sprites.forEach((sprite, i)=>{
       if (i === map.sprites.length - 1) return
@@ -236,7 +228,6 @@ function init() {
 
   const showDialog = ({ talkTarget, facingDirection, event }) =>{
     // TODO could this be simplified or be labelled further?
-
     bear.isTalking = true
     // talkTarget.pause = true //TODO check if this is necessary
     elements.texts[0].parentNode.classList.remove('hidden')
@@ -245,13 +236,11 @@ function init() {
       actor: talkTarget, 
       sprite: talkTarget.spawn.childNodes[0]
     })
-    
     if (!bear.dialogKey) {
       bear.dialog = mapData[map.key].eventContents[event || talkTarget.event]
       bear.dialogKey = 'first'
       bear.talkTarget = talkTarget
     }
-
     bear.dialog[bear.dialogKey].text.length !== bear.textCount
       ? displayText(bear.textCount, false)
       : clearText()
@@ -263,7 +252,6 @@ function init() {
       facingDirection: { r: 'left', l: 'right', u: 'down', d: 'up' }[bear.facingDirection[0]]
     })
   }
-  
   
   // displays multiple choice
   const displayAnswer = prev =>{ 
@@ -338,7 +326,6 @@ function init() {
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
-
       // TODO could separate this bit out to control facial expression
       // TODO change this to dateURL
       const targetExpression = (eventPoint.face && eventPoint.face[count]) || 'happy'
@@ -356,7 +343,6 @@ function init() {
         end: 1,
         interval: bear.talkTarget.interval
       })
-      
       bear.textCount++
       // TODO check why bear is pausing at this timing and not elsewhere
       bear.pause = true
@@ -460,7 +446,6 @@ function init() {
     if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
     const { key, iWidth, cellD, map:mapcode } = map
     const { x, y } = map.mapXY
-
     // prevents bear from turning away from ladder
     turnSprite({
       e: isBear && mapcode[bear.pos] === 'la' ? 'up' : dir,
@@ -483,9 +468,7 @@ function init() {
       } 
       actor.pos += diff
     }  
-      
     if (isBear) map.locationTiles[actor.pos].classList.add('mark')
-    
     // trigger event based on bear position
     if (isBear && mapData[key].events[bear.pos]) {
       const { gateway, act } = mapData[map.key].events[bear.pos]
@@ -500,7 +483,6 @@ function init() {
         }, 200)
       } 
     } 
-
     if(isBear) elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
   }
 
@@ -536,7 +518,6 @@ function init() {
     displayText(bear.textCount, true)
   }
   
-
   const handleKeyAction = e =>{
     const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
     if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
@@ -577,23 +558,19 @@ function init() {
   const resize = () =>{
     const { width, height, iWidth, iHeight, cellD, start } = map
     positionSprite(start)
-    
     // update offset margins
     setPos('left', mapX() * -cellD + ((Math.floor(width / 2) - 1) * cellD))  
     setPos('top', mapY() * -cellD + ((Math.floor(height / 2) - 1) * cellD))
-
     // adjust sprite
     setSpritePos(-cellD, bear, elements.sprite)
     setTargetSize(elements.sprite, cellD * 7, cellD)
     setTargetSize(elements.spriteContainer, cellD, cellD)
-
     // resize mapContainer
     adjustRectSize({
       target: elements.mapContainer, 
       w: width, h: height, 
       cellD
     })
-    
     // setup location indicator
     map.minicellD = Math.floor(cellD / 8)
     adjustRectSize({
@@ -603,7 +580,6 @@ function init() {
       cells: map.locationTiles
     })
     map.locationTiles[bear.pos].classList.add('mark')
-  
     // setup map image
     adjustRectSize({ 
       target: elements.mapImage, 
@@ -611,7 +587,6 @@ function init() {
       cellD, 
       cells: map.mapImageTiles
     })
-    
     // setup mapcover
     adjustRectSize({
       target: elements.mapCover, 
@@ -672,7 +647,6 @@ function init() {
       if (!map.eventChainActors.length) checkAndContinueEvent({ act, index })
     }
   }
-
 
   const eventAnimation = ({ act, index }) =>{
     if (act[index] === 'end'){
@@ -735,7 +709,6 @@ function init() {
 
   transport('start')
 
-  
   addTouchAction(elements.control.childNodes[1].childNodes[1], handleKeyAction)
   
 }
