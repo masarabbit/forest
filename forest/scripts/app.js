@@ -21,7 +21,7 @@ import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerO
 import { map, bear, directionKey, walkDirections } from './state.js'
 import { setSpritePos, turnSprite } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
-import { tiles, riverTiles, plainColors} from './data/tileData.js'
+import { tiles, riverTiles, plainColors } from './data/tileData.js'
 import { elements } from './elements.js'
 
 // bear.pause is used for pausing during animation as well as talking
