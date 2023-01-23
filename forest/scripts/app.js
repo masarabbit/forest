@@ -4,19 +4,11 @@
 //! add control button (enter)
 
 // TODO could some events take place more than once?
-// TODO could event trigger be visualised? (make text box visible on top and bottom.)
-
-// TODO refactor to remove reliance on svgs - just the face
-// TODO disallow 'back' for conversation
-
-
 
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
-// import svgData from './data/svgData.js'
-import { svgWrapper } from './data/svg.js'
 import { animateCell, startCellAnimations } from './utils/animation.js'
-import { decode, decompress } from './utils/compression.js'
+import { decompress } from './utils/compression.js'
 import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection } from './utils/utils.js'
 import { map, bear, directionKey, walkDirections } from './state.js'
 import { setSpritePos, turnSprite } from './utils/sprite.js'
@@ -317,6 +309,17 @@ function init() {
 
   const updateNextButtonText = (count, text) => elements.controlButtons[0].innerHTML = count === text.length - 1? 'end' : 'next'
 
+  const spriteWrapper = ( { url, wrapper, frameNo, speed, frameSize } ) =>{
+    const size = frameSize || 16
+    const width = size * (frameNo || 1)
+    return `
+      <div class="${wrapper}">
+        ${frameNo ? `<div class="svg_anim img-bg" style="background-image: url(${url}); width:${width}px; height:${size}px; background-size: ${width}px ${size}px !important;" ${frameNo ? `data-frame_no="${frameNo}" data-current="0"` : ''}  ${speed ? `data-speed="${speed}"` : ''}>` : ''}
+        ${frameNo ? '</div>' : ''}
+      </div>
+      `
+  }
+
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
     const nextButton = elements.controlButtons[0]
@@ -326,14 +329,12 @@ function init() {
 
     if (count < eventPoint.text.length){
       const text = eventPoint.text[count]
-      // TODO could separate this bit out to control facial expression
-      // TODO change this to dateURL
       const targetExpression = (eventPoint.face && eventPoint.face[count]) || 'happy'
-
-      elements.spriteFace.innerHTML = svgWrapper({
-        content: decode(bear.talkTarget.face[targetExpression].sprite),
+      
+      elements.spriteFace.innerHTML = spriteWrapper({
+        url: bear.talkTarget.face[targetExpression].sprite,
         frameNo: bear.talkTarget.face[targetExpression].frameNo,
-        frameSize: 32,
+        frameSize: 64,
         wrapper: 'sprite_face',
         color: '#74645a'
       })
@@ -404,7 +405,7 @@ function init() {
     const entryPoint = mapData[map.key].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
     
-    map.noWallList = entryPoint.noWall || ['b','do', 'gr']
+    map.noWallList = entryPoint.noWall || ['b','do','gr']
 
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
@@ -427,6 +428,7 @@ function init() {
     setTimeout(()=> {
       elements.mapImage.classList.remove('transition')
       setUpWalls(map.locationTiles)
+      map.locationTiles[bear.pos].classList.add('mark')
       
       // TODO indicate where the walls are - this needs to be done some other way
       // map.map.forEach((c, i) =>{
@@ -497,6 +499,8 @@ function init() {
     displayText(bear.textCount, false)
   }
 
+  // this enables user to go back during conversation, but better not to have
+  // because it causes conversation to end
   const prevText = () =>{
     const { dialog, dialogKey, dialogHistory } = bear
     const currentDialogLength = dialog[dialogKey].text.length
@@ -530,7 +534,7 @@ function init() {
           if (key === 'up' && choice > 0) bear.choice--
           if (key === 'down' && choice < options.length - 1) bear.choice++
           if ([' ', 'enter', 'right'].includes(key)) select()
-          if (key === 'left') prevText()
+          // if (key === 'left') prevText()
 
           // TODO development code. remove later
           displayChoiceDetails()
@@ -538,7 +542,7 @@ function init() {
           options[bear.choice].classList.add('selected')
           return
         }
-        if (key === 'left' && elements.texts[0].innerHTML) prevText()
+        // if (key === 'left' && elements.texts[0].innerHTML) prevText()
       }
       if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
         check(textCount)
@@ -579,7 +583,6 @@ function init() {
       cellD: map.minicellD, 
       cells: map.locationTiles
     })
-    map.locationTiles[bear.pos].classList.add('mark')
     // setup map image
     adjustRectSize({ 
       target: elements.mapImage, 
