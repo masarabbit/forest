@@ -147,6 +147,8 @@ a:hover {
 }
 
 .location_indicator {
+  top: 15px;
+  left: 15px;
   position: absolute;
   height: 160px;
   width: 320px;

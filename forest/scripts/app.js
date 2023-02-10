@@ -416,12 +416,12 @@ function init() {
       actor: bear, sprite
     })
 
-    setTimeout(()=> {
-      turnSprite({ 
-        e: entryPoint.direction, 
-        actor: bear, sprite
-      })
-    }, 150)
+    // setTimeout(()=> {
+    //   turnSprite({ 
+    //     e: entryPoint.direction, 
+    //     actor: bear, sprite
+    //   })
+    // }, 150)
     spawnCharacter()
     startCellAnimations(map.animInterval)
 
@@ -429,6 +429,11 @@ function init() {
       elements.mapImage.classList.remove('transition')
       setUpWalls(map.locationTiles)
       map.locationTiles[bear.pos].classList.add('mark')
+
+      turnSprite({ 
+        e: entryPoint.direction, 
+        actor: bear, sprite
+      })
       
       // TODO indicate where the walls are - this needs to be done some other way
       // map.map.forEach((c, i) =>{
