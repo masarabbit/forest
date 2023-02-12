@@ -69,31 +69,31 @@ const walkDirections = {
 
 const testAct = [
   {
-    usabon: 'r',
-    bunnio: 'l',
-    bear: 'tr'
+    usabon: ['r'],
+    bunnio: ['l'],
+    bear: ['tr']
   },
   {
-    usabon: 'r',
-    bunnio: 'u',
-    bear: 'r'
+    usabon: ['r'],
+    bunnio: ['u'],
+    bear: ['r']
   },
   {
-    usabon: 'r',
-    bunnio: { event: 'test_event' },
-    bear: 'u'
+    usabon: ['r'],
+    bunnio: { dialog: 'test_event' },
+    bear: ['u']
   },
   {
-    usabon: 're',
-    bear: 'l'
+    usabon: ['re'],
+    bear: ['l']
   },
   {
-    usabon: 're',
-    bear: 'l'
+    usabon: ['re'],
+    bear: ['l']
   },
   {
-    usabon: 're',
-    bear: 'l'
+    usabon: ['re'],
+    bear: ['l']
   },
   'end'
 ]

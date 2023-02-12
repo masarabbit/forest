@@ -218,7 +218,7 @@ function init() {
     )
   }
 
-  const showDialog = ({ talkTarget, facingDirection, event }) =>{
+  const showDialog = ({ talkTarget, facingDirection, dialog }) =>{
     // TODO could this be simplified or be labelled further?
     bear.isTalking = true
     // talkTarget.pause = true //TODO check if this is necessary
@@ -229,7 +229,7 @@ function init() {
       sprite: talkTarget.spawn.childNodes[0]
     })
     if (!bear.dialogKey) {
-      bear.dialog = mapData[map.key].eventContents[event || talkTarget.event]
+      bear.dialog = mapData[map.key].eventContents[dialog || talkTarget.event]
       bear.dialogKey = 'first'
       bear.talkTarget = talkTarget
     }
@@ -301,7 +301,7 @@ function init() {
 
     if (event && !map.completedEvents.some(e => e === event.act)){
       map.activeEvent = event.act
-      eventAnimation({ act: event.act, index: map.eventIndex + 1 })
+      eventAnimation({ act: event.act, index: map.eventIndex })
     } else {
       map.eventIndex = 0
     }
@@ -336,12 +336,10 @@ function init() {
         frameNo: bear.talkTarget.face[targetExpression].frameNo,
         frameSize: 64,
         wrapper: 'sprite_face',
-        color: '#74645a'
       })
       animateCell({
         target: elements.spriteFace.childNodes[1],
-        start: 0,
-        end: 1,
+        start: 0, end: 1,
         interval: bear.talkTarget.interval
       })
       bear.textCount++
@@ -363,7 +361,6 @@ function init() {
   const toggleControl = action =>{
     elements.control.classList[action]('deactivate')
     elements.touchToggle.parentNode.classList[action]('deactivate')
-    // console.log('trigger')
   }
 
   const investigate = (count, eventPoint) =>{
@@ -445,6 +442,14 @@ function init() {
 
     },400)
   }
+
+  const triggerEventAnimation = (act, key) => {
+    map.activeEvent = act
+    setTimeout(()=> {
+      elements.eventCover.classList.remove('hidden')
+      eventAnimation({ act: mapData[key].eventContents[act], index: 0 })
+    }, 200)
+  }
   
   const spriteWalk = ({ dir, actor, sprite }) =>{
     if (!dir || bear.pause) return
@@ -483,11 +488,7 @@ function init() {
         transport(gateway)
       }, 200)
       if (act && !map.completedEvents.some(e => e === act)) {
-        map.activeEvent = act
-        setTimeout(()=> {
-          elements.eventCover.classList.remove('hidden')
-          eventAnimation({ act: mapData[key].eventContents[act], index: 0 })
-        }, 200)
+        triggerEventAnimation(act, key)
       } 
     } 
     if(isBear) elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
@@ -612,7 +613,6 @@ function init() {
   const checkAndContinueEvent = ({ act, index }) =>{ 
      // carries on event
     if (!Object.keys(act[index]).some(k => isObject(act[index][k])) && index < act.length - 1 && map.activeEvent){
-      // console.log('event', map.eventIndex)
       map.eventIndex = index + 1
       setTimeout(()=>{
         eventAnimation({ act, index: map.eventIndex })
@@ -623,7 +623,8 @@ function init() {
   }
 
   const endEvent = () => {
-    map.completedEvents.push(map.activeEvent)
+    // only add to completed events when event is non repeat type
+    !mapData[map.key].eventContents[map.activeEvent]?.includes('repeat') && map.completedEvents.push(map.activeEvent)
     map.eventIndex = 0
     map.activeEvent = null
     elements.eventCover.classList.add('hidden')
@@ -637,9 +638,9 @@ function init() {
     if (!isBear) actorData.pause = true
     if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: actorData, sprite: actorSprite })
     if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: actorData, sprite: actorSprite })
-    if (eventCode === 'stop') console.log('stop')
-    if (eventCode === 'resume') actorData.pause = false
-    if (isObject(frame)) showDialog({ talkTarget: actorData, event: frame.event }) 
+    // if (eventCode === 'stop') console.log('stop') // TODO possibly redundant?
+    // if (eventCode === 'resume') actorData.pause = false
+    if (isObject(frame)) showDialog({ talkTarget: actorData, dialog: frame.dialog }) 
   }
 
   const chainAnimation = ({ act, index, actorData, motionIndex }) =>{
@@ -658,6 +659,9 @@ function init() {
 
   const eventAnimation = ({ act, index }) =>{
     if (act[index] === 'end'){
+      endEvent()
+    } else if (act[index]?.gateway) {
+      transport(act[index].gateway)
       endEvent()
     } else {
       Object.keys(act[index]).forEach(actor =>{
@@ -680,11 +684,9 @@ function init() {
       clearInterval(bear.walkingInterval)
       bear.walkingDirection = e
       bear.walkingInterval = setInterval(()=>{
-        if (!bear.walkingDirection) {
-          clearInterval(bear.walkingInterval)
-        } else {
-          handleKeyAction(e)
-        }
+        !bear.walkingDirection
+          ? clearInterval(bear.walkingInterval)
+          : handleKeyAction(e)
       }, 150)
     }
   }
