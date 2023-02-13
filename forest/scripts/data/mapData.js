@@ -299,7 +299,8 @@ const mapData = {
         // item: null,
         direction: 'up'
       },
-      galleryTest: [
+      galleryTest: {
+        sequences: [
         {
           artion: ['tu', 'td', 'tr', 'tl'],
           bear: 'u'
@@ -314,8 +315,9 @@ const mapData = {
           bear: 'l'
         },
         'end', //* end isn't required when act ends with event
-        'repeat'
       ],
+      repeat: true,
+    },
       test_event2: {
         first: { 
           text: ['this is a test event2', 'test test test'], 
@@ -330,9 +332,12 @@ const mapData = {
         s_2: {
           text: ['takoyaki!'], 
           event: {
-            act: [ 
-              { event: 'transport', gateway: 'portal1' },
-            ],
+            act: {
+              sequences: [ 
+                { event: 'transport', gateway: 'portal1' },
+              ],
+              repeat: false,
+            }
           },  
         },
       },

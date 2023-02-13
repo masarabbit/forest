@@ -3,7 +3,6 @@
 //*maybe design maps first.
 //! add control button (enter)
 
-// TODO could some events take place more than once?
 
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
@@ -301,7 +300,7 @@ function init() {
 
     if (event && !map.completedEvents.some(e => e === event.act)){
       map.activeEvent = event.act
-      eventAnimation({ act: event.act, index: map.eventIndex })
+      eventAnimation({ act: event.act.sequences, index: map.eventIndex })
     } else {
       map.eventIndex = 0
     }
@@ -447,7 +446,7 @@ function init() {
     map.activeEvent = act
     setTimeout(()=> {
       elements.eventCover.classList.remove('hidden')
-      eventAnimation({ act: mapData[key].eventContents[act], index: 0 })
+      eventAnimation({ act: mapData[key].eventContents[act].sequences, index: 0 })
     }, 200)
   }
   
@@ -611,7 +610,7 @@ function init() {
   }
 
   const checkAndContinueEvent = ({ act, index }) =>{ 
-     // carries on event
+    // carries on event
     if (!Object.keys(act[index]).some(k => isObject(act[index][k])) && index < act.length - 1 && map.activeEvent){
       map.eventIndex = index + 1
       setTimeout(()=>{
@@ -624,7 +623,8 @@ function init() {
 
   const endEvent = () => {
     // only add to completed events when event is non repeat type
-    !mapData[map.key].eventContents[map.activeEvent]?.includes('repeat') && map.completedEvents.push(map.activeEvent)
+    console.log(mapData[map.key].eventContents[map.activeEvent])
+    !mapData[map.key].eventContents[map.activeEvent]?.repeat && map.completedEvents.push(map.activeEvent)
     map.eventIndex = 0
     map.activeEvent = null
     elements.eventCover.classList.add('hidden')

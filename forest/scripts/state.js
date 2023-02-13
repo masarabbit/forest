@@ -67,36 +67,38 @@ const walkDirections = {
   re: 'resume',
 }
 
-const testAct = [
-  {
-    usabon: ['r'],
-    bunnio: ['l'],
-    bear: ['tr']
-  },
-  {
-    usabon: ['r'],
-    bunnio: ['u'],
-    bear: ['r']
-  },
-  {
-    usabon: ['r'],
-    bunnio: { dialog: 'test_event' },
-    bear: ['u']
-  },
-  {
-    usabon: ['re'],
-    bear: ['l']
-  },
-  {
-    usabon: ['re'],
-    bear: ['l']
-  },
-  {
-    usabon: ['re'],
-    bear: ['l']
-  },
-  'end'
-]
+const testAct = {
+  sequences: [
+    {
+      usabon: ['r'],
+      bunnio: ['l'],
+      bear: ['tr']
+    },
+    {
+      usabon: ['r'],
+      bunnio: ['u'],
+      bear: ['r']
+    },
+    {
+      usabon: ['r'],
+      bunnio: { dialog: 'test_event' },
+      bear: ['u']
+    },
+    {
+      usabon: ['re'],
+      bear: ['l']
+    },
+    {
+      usabon: ['re'],
+      bear: ['l']
+    },
+    {
+      usabon: ['re'],
+      bear: ['l']
+    },
+    'end'
+  ]
+}
 
 const touchControl = {
   active: false,
