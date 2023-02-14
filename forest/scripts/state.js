@@ -12,6 +12,7 @@ const map = {
   locationTiles: null,
   mapImageTiles: null,
   animInterval: null,
+  animCounter: 0,
   noWallList: ['b','do','gr'],
   noLeftEdgeList: ['pu','g'],
   key: 'one',

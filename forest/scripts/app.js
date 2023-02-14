@@ -6,13 +6,13 @@
 
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
-import { animateCell, startCellAnimations } from './utils/animation.js'
+import { animateCell } from './utils/animation.js'
 import { decompress } from './utils/compression.js'
 import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection } from './utils/utils.js'
 import { map, bear, directionKey, walkDirections } from './state.js'
 import { setSpritePos, turnSprite } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
-import { tiles, riverTiles, plainColors } from './data/tileData.js'
+import { tiles, riverTiles, plainColors, animationTiles } from './data/tileData.js'
 import { elements } from './elements.js'
 
 // bear.pause is used for pausing during animation as well as talking
@@ -75,10 +75,50 @@ function init() {
   const createCanvas = (ctx, w, h) => {
     const canvas = document.createElement('canvas')
     elements.mapImage.appendChild(canvas)
-    if (ctx === 'animCtx') canvas.classList.add('blink')
+    // if (ctx === 'animCtx') canvas.classList.add('blink')
     resizeCanvas(canvas, w * map.cellD, h * map.cellD)
     elements[ctx] = canvas.getContext('2d')
     elements[ctx].imageSmoothingEnabled = false
+  }
+
+  // const animateMap = () => {
+  //   clearInterval(map.animInterval)
+  //   let test = true
+  //   map.animInterval = setInterval(()=> {
+  //     test = !test
+  //     map.map.forEach((tile, i) =>{
+  //       const index = test ? tiles.indexOf(tile) : riverTiles.indexOf(tile)
+  //       if (index !== -1) {
+  //         output({ 
+  //           ctx: elements.ctx, i, tile,
+  //           x: test ? (index % 9) * 16 : (index % 6) * 16, 
+  //           y: test ? Math.floor(index / 9) * 16 : 0,
+  //           sprite: elements.spriteSheets[test ? 0 : 1]
+  //         })
+  //       }
+  //     })
+  //   }, 500)
+  // }
+
+  const animateMap = () => {
+    clearInterval(map.animInterval)
+    map.animInterval = setInterval(()=> {
+      map.animCounter++
+      if (map.animCounter === 6) map.animCounter = 0
+      map.map.forEach((tile, i) =>{
+        if (animationTiles[tile]) {
+          const animTile = animationTiles[tile][map.animCounter]
+          const index = tiles.indexOf(animTile)
+          output({ 
+            ctx: elements.ctx, i, 
+            tile,
+            x: (index % 9) * 16, 
+            y: Math.floor(index / 9) * 16,
+            sprite: elements.spriteSheets[0]
+          })
+        }
+      })
+    }, 500)
   }
 
   const drawMap = (w, h) => {
@@ -94,17 +134,7 @@ function init() {
         sprite: elements.spriteSheets[0]
       })
     })
-    createCanvas('animCtx', w, h)
-    map.map.forEach((tile, i) =>{
-      const index = riverTiles.indexOf(tile)
-      if (index !== -1) {
-        output({ 
-          ctx: elements.animCtx, i, tile, 
-          x: (index % 6) * 16, y: 0,
-          sprite: elements.spriteSheets[1]
-        })
-      }
-    })
+    animateMap()
   }
 
   const setUpWalls = target =>{
@@ -419,7 +449,7 @@ function init() {
     //   })
     // }, 150)
     spawnCharacter()
-    startCellAnimations(map.animInterval)
+    // startCellAnimations(map.animInterval)
 
     setTimeout(()=> {
       elements.mapImage.classList.remove('transition')
