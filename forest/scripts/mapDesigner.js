@@ -8,7 +8,8 @@ import {
   input,
   artboard,
   overlay,
-  elements
+  elements,
+  aCtx
 } from './mapElements.js'
 
 import {
@@ -68,16 +69,19 @@ function init() {
   
 
   const populatePalette = () =>{
-    elements.palette.innerHTML = tiles.map(t =>`<canvas class="palette_cell" data-tile="${t}"></canvas>`).join('')
+    elements.palette.innerHTML = tiles.map(t =>`<canvas class="palette_cell tile" data-tile="${t}"></canvas>`).join('') + Object.keys(plainColors).map(k =>`<div class="palette_cell" style="background-color: ${plainColors[k]}; width: 32px; height: 32px;" data-tile="${k}"></div>`).join('')
     elements.paletteCells = document.querySelectorAll('.palette_cell')
-    elements.paletteCells.forEach(canvas => {
-      resizeCanvas({ canvas, w: 32 })
-      const index = tiles.indexOf(canvas.dataset.tile)
-      outputTile({
-        ctx: canvas.getContext('2d'),
-        x: tileX(index), y: tileY(index),
-        sprite: elements.spriteSheets[0]
-      })
+
+    elements.paletteCells.forEach((canvas, i) => {
+      if (i < tiles.length) {
+        resizeCanvas({ canvas, w: 32 })
+        const index = tiles.indexOf(canvas.dataset.tile)
+        outputTile({
+          ctx: canvas.getContext('2d'),
+          x: tileX(index), y: tileY(index),
+          sprite: elements.spriteSheets[0]
+        })
+      }
     })
 
     elements.paletteCells.forEach(palette =>{
@@ -229,7 +233,7 @@ function init() {
     const tileIndex = tiles.indexOf(tile)
     const mapIndex = ((y / d - 1) * column) + x / d - 1
 
-    if (!artData.erase && (tileIndex !== -1 || tile === 'v')) {
+    if (!artData.erase && (tileIndex !== -1 || tile === 'v' || plainColors[tile])) {
       placeTile({ sprite: elements.spriteSheets[0], tile, mapIndex })
       artData.tiles[mapIndex] = tile
       updateCodesDisplay(input.codesBox[0], artData.tiles) 

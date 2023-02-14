@@ -293,7 +293,7 @@ img {
   background-size: cover; 
 }
 
-.palette_cell{
+.palette_cell.tile{
   background-repeat: no-repeat, repeat;
   background-size: cover; 
   /* background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAALElEQVQYV2M89fH3fwYGBgYzflZGEM0IE2D9xyIIFgAR59//F/jN9Oc9VgEAp9YUPNgR6OoAAAAASUVORK5CYII=); */

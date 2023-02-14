@@ -75,30 +75,10 @@ function init() {
   const createCanvas = (ctx, w, h) => {
     const canvas = document.createElement('canvas')
     elements.mapImage.appendChild(canvas)
-    // if (ctx === 'animCtx') canvas.classList.add('blink')
     resizeCanvas(canvas, w * map.cellD, h * map.cellD)
     elements[ctx] = canvas.getContext('2d')
     elements[ctx].imageSmoothingEnabled = false
   }
-
-  // const animateMap = () => {
-  //   clearInterval(map.animInterval)
-  //   let test = true
-  //   map.animInterval = setInterval(()=> {
-  //     test = !test
-  //     map.map.forEach((tile, i) =>{
-  //       const index = test ? tiles.indexOf(tile) : riverTiles.indexOf(tile)
-  //       if (index !== -1) {
-  //         output({ 
-  //           ctx: elements.ctx, i, tile,
-  //           x: test ? (index % 9) * 16 : (index % 6) * 16, 
-  //           y: test ? Math.floor(index / 9) * 16 : 0,
-  //           sprite: elements.spriteSheets[test ? 0 : 1]
-  //         })
-  //       }
-  //     })
-  //   }, 500)
-  // }
 
   const animateMap = () => {
     clearInterval(map.animInterval)
@@ -134,7 +114,7 @@ function init() {
         sprite: elements.spriteSheets[0]
       })
     })
-    animateMap()
+    animateMap() // TODO maybe only trigger this if map has animation
   }
 
   const setUpWalls = target =>{
