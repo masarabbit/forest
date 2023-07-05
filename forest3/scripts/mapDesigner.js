@@ -9,7 +9,7 @@ import {
   artboard,
   overlay,
   elements,
-  aCtx
+  // aCtx
 } from './mapElements.js'
 
 import {
@@ -55,7 +55,6 @@ function init() {
     return output
   }
 
-  
   const outputTile = ({ ctx, x, y, tile, sprite }) =>{
     const d = 32
     ctx.imageSmoothingEnabled = false
@@ -67,7 +66,6 @@ function init() {
     }
   }
   
-
   const populatePalette = () =>{
     elements.palette.innerHTML = tiles.map(t =>`<canvas class="palette_cell tile" data-tile="${t}"></canvas>`).join('') + Object.keys(plainColors).map(k =>`<div class="palette_cell" style="background-color: ${plainColors[k]}; width: 32px; height: 32px;" data-tile="${k}"></div>`).join('')
     elements.paletteCells = document.querySelectorAll('.palette_cell')
@@ -195,13 +193,10 @@ function init() {
     input.codesBox[1].value = compress(input.codesBox[0].value)
   }
 
-
   const handleCursor = e =>{
     elements.cursor.style.top = `${e.pageY}px`
     elements.cursor.style.left = `${e.pageX}px`
   }
-  
-
   
   // reads from url
   const query = window.location.hash
@@ -226,7 +221,6 @@ function init() {
     link.click()
   }
 
-
   const drawTile = e => {
     const { cellD: d, column } = artData
     const { x, y } = drawPos(e, d)
@@ -240,8 +234,6 @@ function init() {
       updateCodesDisplay(input.codesBox[0], artData.tiles) 
     }
   }
-
-
 
   // eventlisteners
   elements.mapLinks.innerHTML = mapKeys.map( map =>{

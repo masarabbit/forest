@@ -10,9 +10,7 @@ const setWidthAndHeight = () =>{
   map.height = 2 * Math.floor((pHeight / map.cellD) / 2)
 }
 
-
 const setTargetSize = (target, w, h) => Object.assign(target.style, { width: `${w}px`, height: `${h}px` })
-
 const setTargetPos = (target, x, y) => Object.assign(target.style, { left: `${x}px`, top: `${y}px` })
 // const setTargetPos = (target, x, y) => target.style.transform = `translate(${x}px, ${y}px)` // this doesn't work too well with spawn
 
@@ -40,6 +38,11 @@ const mouse = {
   leave: (t, e, a) => addEvents(t, e, a, ['mouseleave', 'touchmove'])
 }
 
+const resizeCanvas = (target, w, h) =>{
+  target.setAttribute('width', w)
+  target.setAttribute('height', h || w)
+}
+
 export {
   setWidthAndHeight,
   setTargetSize,
@@ -48,5 +51,6 @@ export {
   centerOfMap,
   isObject,
   randomDirection,
+  resizeCanvas,
   mouse
 }

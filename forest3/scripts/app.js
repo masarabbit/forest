@@ -3,17 +3,17 @@
 //*maybe design maps first.
 //! add control button (enter)
 
-
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
 import { animateCell } from './utils/animation.js'
 import { decompress } from './utils/compression.js'
 import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection } from './utils/utils.js'
 import { map, bear, directionKey, walkDirections } from './state.js'
-import { setSpritePos, turnSprite } from './utils/sprite.js'
+import { setSpritePos, turnSprite, spriteWrapper } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { tiles, plainColors, animationTiles, blank } from './data/tileData.js'
 import { elements } from './elements.js'
+import { resizeCanvas } from './utils/utils.js' 
 
 // bear.pause is used for pausing during animation as well as talking
 // bear.isTalking is for triggering dialogue
@@ -53,11 +53,6 @@ function init() {
     // prevents sprite walking beyond edge
     if (bear.facingDirection === 'left' && noLeftEdgeList.some(c => mapcode[pos + 1] === c)) return false
     return noWallList.some(c => mapcode[pos] === c)
-  }
-  
-  const resizeCanvas = (target, w, h) =>{
-    target.setAttribute('width', w)
-    target.setAttribute('height', h || w)
   }
 
   const output = ({ ctx, i, x, y, tile, sprite }) =>{
@@ -146,7 +141,6 @@ function init() {
       })
       spawnData[i].motionIndex = index === motion.length - 1 ? 0 : index + 1
     }
-    
   }
 
   const setPos = (para, num) =>{
@@ -211,10 +205,10 @@ function init() {
   const transition = () =>{
     elements.transitionCover.classList.add('transition')
     bear.pause = true
-    setTimeout(()=>{
+    setTimeout(()=> {
       elements.transitionCover.classList.remove('transition')
       bear.pause = false
-    },500)
+    }, 500)
   }
 
   const displayChoiceDetails = () =>{
@@ -317,17 +311,6 @@ function init() {
   }
 
   const updateNextButtonText = (count, text) => elements.controlButtons[0].innerHTML = count === text.length - 1? 'end' : 'next'
-
-  const spriteWrapper = ( { url, wrapper, frameNo, speed, frameSize } ) =>{
-    const size = frameSize || 16
-    const width = size * (frameNo || 1)
-    return `
-      <div class="${wrapper}">
-        ${frameNo ? `<div class="svg_anim img-bg" style="background-image: url(${url}); width:${width}px; height:${size}px; background-size: ${width}px ${size}px !important;" ${frameNo ? `data-frame_no="${frameNo}" data-current="0"` : ''}  ${speed ? `data-speed="${speed}"` : ''}>` : ''}
-        ${frameNo ? '</div>' : ''}
-      </div>
-      `
-  }
 
   const displayText = (count, prev) =>{
     const eventPoint = bear.dialog[bear.dialogKey]
@@ -574,7 +557,6 @@ function init() {
     }
   }
 
-
   const resize = () =>{
     const { width, height, iWidth, iHeight, cellD, start } = map
     positionSprite(start)
@@ -634,7 +616,7 @@ function init() {
 
   const endEvent = () => {
     // only add to completed events when event is non repeat type
-    console.log(mapData[map.key].eventContents[map.activeEvent])
+    // console.log(mapData[map.key].eventContents[map.activeEvent])
     !mapData[map.key].eventContents[map.activeEvent]?.repeat && map.completedEvents.push(map.activeEvent)
     map.eventIndex = 0
     map.activeEvent = null
