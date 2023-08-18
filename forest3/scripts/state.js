@@ -8,7 +8,7 @@ const map = {
     x: null,
     y: null
   },
-  mapTiles: null,
+  // mapTiles: null,
   locationTiles: null,
   mapImageTiles: null,
   animInterval: null,

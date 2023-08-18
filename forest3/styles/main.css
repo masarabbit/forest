@@ -152,21 +152,17 @@ a:hover {
   position: absolute;
   height: 160px;
   width: 320px;
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
 }
 
-.location_indicator_tile {
-  width: 8px;
-  height: 8px;
-  font-size: 4px;
-  color: transparent;
+.location_indicator canvas {
+  opacity: 0.8;
 }
 
 .mark {
   background-color: rgb(231, 255, 125);
   border-radius: 50%;
+  position: absolute;
+  transition: 0.5s;
 }
 
 .button {

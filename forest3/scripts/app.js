@@ -2,18 +2,19 @@
 
 //*maybe design maps first.
 //! add control button (enter)
+// TODO maybe handle wall in separate layer? (reduces need to define wall separately)
+// TODO could the location entry logic be updated?
 
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
 import { animateCell } from './utils/animation.js'
 import { decompress } from './utils/compression.js'
-import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection } from './utils/utils.js'
+import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection, resizeCanvas } from './utils/utils.js'
 import { map, bear, directionKey, walkDirections } from './state.js'
 import { setSpritePos, turnSprite, spriteWrapper } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { tiles, plainColors, animationTiles, blank } from './data/tileData.js'
 import { elements } from './elements.js'
-import { resizeCanvas } from './utils/utils.js' 
 
 // bear.pause is used for pausing during animation as well as talking
 // bear.isTalking is for triggering dialogue
@@ -31,16 +32,7 @@ function init() {
     const { iWidth, iHeight } = mapData[map.key]   
     map.iHeight = iHeight
     map.iWidth = iWidth
-    elements.location.innerHTML = mapMap(iWidth, iHeight,'location_indicator_tile')
-    map.locationTiles = document.querySelectorAll('.location_indicator_tile')
     drawMap(iWidth, iHeight)
-  }
-
-  const mapMap = (w, h, classToAdd)=>{
-    return new Array(w * h).fill('').map((_ele, i) => i)
-      .map(i => {
-      return `<div class=${classToAdd} data-index=${i}>${i}</div>`
-    }).join('')
   }
   
   const mapX = () => bear.pos % map.iWidth  
@@ -67,10 +59,20 @@ function init() {
     }
   }
 
-  const createCanvas = (ctx, w, h) => {
+  const outputLocationWall = ({ ctx, i }) => {
+    const { iWidth } = map
+    const d = 4
+    const mapX = (i % iWidth) * d
+    const mapY = Math.floor(i / iWidth) * d
+    ctx.fillStyle = '#a2fcf0'
+    ctx.fillRect(mapX, mapY, d, d)
+  }
+
+  const createCanvas = (target, ctx, w, h) => {
+    target.innerHTML = ''
     const canvas = document.createElement('canvas')
-    elements.mapImage.appendChild(canvas)
-    resizeCanvas(canvas, w * map.cellD, h * map.cellD)
+    target.appendChild(canvas)
+    resizeCanvas(canvas, w, h)
     elements[ctx] = canvas.getContext('2d')
     elements[ctx].imageSmoothingEnabled = false
   }
@@ -89,34 +91,49 @@ function init() {
             tile: animTile,
             x: (index % 10) * 16, 
             y: Math.floor(index / 10) * 16,
-            sprite: elements.spriteSheets[0]
+            sprite: elements.spriteSheets[0],
           })
         }
       })
     }, 500)
   }
 
+  const createLocationMark = () => {
+    elements.mark = document.createElement('div')
+    elements.mark.classList.add('mark')
+    setTargetSize(elements.mark, 4)
+    elements.location.appendChild(elements.mark)
+    setTargetPos(elements.mark, mapX() * 4, mapY() * 4)
+  }
+
+  const drawLocationMap = () => {
+    createCanvas(elements.location, 'locationCtx', map.iWidth * 4, map.iHeight * 4)
+    map.map.forEach((tile, i) =>{
+      if (!map.noWallList.includes(tile)) { // TODO this 
+        outputLocationWall({ 
+          ctx: elements.locationCtx, 
+          i, d: 4,
+        })
+      }
+    })
+  }
+
   const drawMap = (w, h) => {
     map.map = decompress(mapData[map.key].map)
-    elements.mapImage.innerHTML = ''
-
-    createCanvas('ctx', w, h)
+    createCanvas(elements.mapImage, 'ctx', w * map.cellD, h * map.cellD)
     map.map.forEach((tile, i) =>{
       const index = tiles.indexOf(tile)
       output({ 
-        ctx: elements.ctx, i, tile, 
-        x: (index % 10) * 16, y: Math.floor(index / 10) * 16,
-        sprite: elements.spriteSheets[0]
+        ctx: elements.ctx, 
+        i, tile, 
+        x: (index % 10) * 16,
+        y: Math.floor(index / 10) * 16,
+        sprite: elements.spriteSheets[0],
       })
     })
     animateMap() // TODO maybe only trigger this if map has animation
   }
 
-  const setUpWalls = target =>{
-    target.forEach((tile, i)=>{
-      !map.noWallList.includes(map.map[i]) && tile.classList.add('wall') 
-    })
-  }
 
   const spawnMotion = i =>{
     const { spawnData, sprites } = map
@@ -399,6 +416,7 @@ function init() {
 
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
+
     setWidthAndHeightAndResize()
     const { sprite } = elements
     turnSprite({
@@ -417,8 +435,8 @@ function init() {
 
     setTimeout(()=> {
       elements.mapImage.classList.remove('transition')
-      setUpWalls(map.locationTiles)
-      map.locationTiles[bear.pos].classList.add('mark')
+      drawLocationMap()
+      createLocationMark()
 
       turnSprite({ 
         e: entryPoint.direction, 
@@ -433,7 +451,7 @@ function init() {
       //   }  
       // })
 
-    },400)
+    }, 400)
   }
 
   const triggerEventAnimation = (act, key) => {
@@ -448,7 +466,6 @@ function init() {
     if (!dir || bear.pause) return
     const isBear = actor === bear
 
-    if (isBear) map.locationTiles[actor.pos].classList.remove('mark')
     const { key, iWidth, cellD, map:mapcode } = map
     const { x, y } = map.mapXY
     // prevents bear from turning away from ladder
@@ -473,7 +490,6 @@ function init() {
       } 
       actor.pos += diff
     }  
-    if (isBear) map.locationTiles[actor.pos].classList.add('mark')
     // trigger event based on bear position
     if (isBear && mapData[key].events[bear.pos]) {
       const { gateway, act } = mapData[map.key].events[bear.pos]
@@ -484,7 +500,10 @@ function init() {
         triggerEventAnimation(act, key)
       } 
     } 
-    if(isBear) elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
+    if(isBear) {
+      elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
+      setTargetPos(elements.mark, mapX() * 4, mapY() * 4)
+    }
   }
 
   const select = () =>{
@@ -566,7 +585,7 @@ function init() {
     // adjust sprite
     setSpritePos(-cellD, bear, elements.sprite)
     setTargetSize(elements.sprite, cellD * 7, cellD)
-    setTargetSize(elements.spriteContainer, cellD, cellD)
+    setTargetSize(elements.spriteContainer, cellD)
     // resize mapContainer
     adjustRectSize({
       target: elements.mapContainer, 
@@ -586,7 +605,7 @@ function init() {
       target: elements.mapImage, 
       w: iWidth, h: iHeight, 
       cellD, 
-      cells: map.mapImageTiles
+      // cells: map.mapImageTiles
     })
     // setup mapcover
     adjustRectSize({

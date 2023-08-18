@@ -3,7 +3,7 @@
 
   const elements = {
     ctx: null,
-    animCtx: null,
+    locationCtx: null,
     spriteSheets: document.querySelectorAll('.sprite_sheet'),
     transitionCover: document.querySelector('.transition_cover'),
     eventCover: document.querySelector('.event_cover'),
@@ -15,6 +15,7 @@
     mapCover: document.querySelector('.map_cover'),
     mapImage: document.querySelector('.map_image'),
     location: document.querySelector('.location_indicator'),
+    mark: null,
     spriteContainer: document.querySelector('.sprite_container'),
     texts: document.querySelectorAll('.text'),
     sprite: document.querySelector('.sprite'),
