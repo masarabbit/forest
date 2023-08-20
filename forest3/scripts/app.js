@@ -10,7 +10,7 @@ import avatars from './data/avatars.js'
 import { animateCell } from './utils/animation.js'
 import { decompress } from './utils/compression.js'
 import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection, resizeCanvas } from './utils/utils.js'
-import { map, bear, directionKey, walkDirections } from './state.js'
+import { map, bear, walkDirections } from './state.js'
 import { setSpritePos, turnSprite, spriteWrapper } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { tiles, plainColors, animationTiles, blank } from './data/tileData.js'
@@ -59,12 +59,12 @@ function init() {
     }
   }
 
-  const outputLocationWall = ({ ctx, i }) => {
+  const outputLocationWall = ({ ctx, i, tile }) => {
     const { iWidth } = map
     const d = 4
     const mapX = (i % iWidth) * d
     const mapY = Math.floor(i / iWidth) * d
-    ctx.fillStyle = '#a2fcf0'
+    ctx.fillStyle = map.noWallList.includes(tile) ? '#06a1a1' :  '#a2fcf0'
     ctx.fillRect(mapX, mapY, d, d)
   }
 
@@ -109,12 +109,10 @@ function init() {
   const drawLocationMap = () => {
     createCanvas(elements.location, 'locationCtx', map.iWidth * 4, map.iHeight * 4)
     map.map.forEach((tile, i) =>{
-      if (!map.noWallList.includes(tile)) { // TODO this 
-        outputLocationWall({ 
-          ctx: elements.locationCtx, 
-          i, d: 4,
-        })
-      }
+      outputLocationWall({ 
+        ctx: elements.locationCtx, 
+        i, d: 4, tile
+      })
     })
   }
 
@@ -148,6 +146,11 @@ function init() {
       if (Math.random() < 0.5)
       turnSprite({
         e: randomDirection(), 
+        actor: spawnData[i], sprite: sprites[i],
+      })
+    } else if (motion.includes('facing')) {
+      turnSprite({
+        e: walkDirections[motion.split('-')[1]], 
         actor: spawnData[i], sprite: sprites[i],
       })
     } else if (Array.isArray(motion)) {
@@ -213,7 +216,7 @@ function init() {
     map.sprites.forEach((sprite, i)=>{
       if (i === map.sprites.length - 1) return
       turnSprite({
-        e: directionKey[map.spawnData[i].spritePos], 
+        e: map.spawnData[i].defaultDir, 
         actor: map.spawnData[i], sprite,
       })
     })
@@ -424,12 +427,6 @@ function init() {
       actor: bear, sprite
     })
 
-    // setTimeout(()=> {
-    //   turnSprite({ 
-    //     e: entryPoint.direction, 
-    //     actor: bear, sprite
-    //   })
-    // }, 150)
     spawnCharacter()
     // startCellAnimations(map.animInterval)
 
@@ -443,13 +440,14 @@ function init() {
         actor: bear, sprite
       })
       
-      // TODO indicate where the walls are - this needs to be done some other way
+      // TODO indicate where the walls are - OLD doesn't work
       // map.map.forEach((c, i) =>{
       //   if (map.noWallList.includes(c)) {
       //     map.mapImageTiles[i].classList.add('no_wall_show')
       //     map.mapImageTiles[i].setAttribute('letter_code', c)
       //   }  
       // })
+      checkAndTriggerEvent()
 
     }, 400)
   }
@@ -461,12 +459,25 @@ function init() {
       eventAnimation({ act: mapData[key].eventContents[act].sequences, index: 0 })
     }, 200)
   }
+
+  const checkAndTriggerEvent = () => {
+    const { key } = map
+    if (mapData[key].events[bear.pos]) {
+      const { gateway, act } = mapData[key].events[bear.pos]
+      if (gateway) setTimeout(()=> {
+        transport(gateway)
+      }, 200)
+      if (act && !map.completedEvents.some(e => e === act)) {
+        triggerEventAnimation(act, key)
+      } 
+    } 
+  }
   
   const spriteWalk = ({ dir, actor, sprite }) =>{
     if (!dir || bear.pause) return
     const isBear = actor === bear
 
-    const { key, iWidth, cellD, map:mapcode } = map
+    const { iWidth, cellD, map:mapcode } = map
     const { x, y } = map.mapXY
     // prevents bear from turning away from ladder
     turnSprite({
@@ -490,17 +501,10 @@ function init() {
       } 
       actor.pos += diff
     }  
-    // trigger event based on bear position
-    if (isBear && mapData[key].events[bear.pos]) {
-      const { gateway, act } = mapData[map.key].events[bear.pos]
-      if (gateway) setTimeout(()=> {
-        transport(gateway)
-      }, 200)
-      if (act && !map.completedEvents.some(e => e === act)) {
-        triggerEventAnimation(act, key)
-      } 
-    } 
+
     if(isBear) {
+      // trigger event based on bear position
+      checkAndTriggerEvent()
       elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
       setTargetPos(elements.mark, mapX() * 4, mapY() * 4)
     }
@@ -646,8 +650,10 @@ function init() {
     const eventCode = walkDirections[frame]
     const isBear = actor === 'bear'
     const actorData = isBear ? bear : map.spawnData.find(s => s.name === actor)
-    const actorSprite = isBear ? elements.sprite : actorData.spawn.childNodes[1]
-    if (!isBear) actorData.pause = true
+    const actorSprite = isBear ? elements.sprite : actorData.spawn.childNodes[0]
+    if (!isBear) {
+      actorData.pause = true
+    }
     if (['u', 'd', 'r', 'l'].includes(frame)) spriteWalk({ dir: eventCode, actor: actorData, sprite: actorSprite })
     if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ e: eventCode, actor: actorData, sprite: actorSprite })
     // if (eventCode === 'stop') console.log('stop') // TODO possibly redundant?
@@ -662,7 +668,7 @@ function init() {
       actorData.motionIndex++
       setTimeout(()=>{
         chainAnimation({ act, index, actorData, motionIndex: actorData.motionIndex })
-      }, 150)
+      }, 300)
     } else {
       map.eventChainActors = map.eventChainActors.filter(name => name !== actorData.name)
       if (!map.eventChainActors.length) checkAndContinueEvent({ act, index })
@@ -734,8 +740,7 @@ function init() {
     elements.transitionCover.classList.remove('intro')
     transport('start')
   })
-
-
+  
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], handleKeyAction)
 }

@@ -47,13 +47,6 @@ const bear = {
   walkingInterval: null,
 }
 
-const directionKey = {
-  9: 'right',
-  6: 'left',
-  3: 'up',
-  0: 'down',
-}
-
 const walkDirections = {
   u: 'up',
   d: 'down',
@@ -71,30 +64,30 @@ const walkDirections = {
 const testAct = {
   sequences: [
     {
-      usabon: ['r'],
+      tololo: ['r'],
       bunnio: ['l'],
       bear: ['tr']
     },
     {
-      usabon: ['r'],
+      tololo: ['r'],
       bunnio: ['u'],
       bear: ['r']
     },
     {
-      usabon: ['r'],
+      tololo: ['r'],
       bunnio: { dialog: 'test_event' },
       bear: ['u']
     },
     {
-      usabon: ['re'],
+      tololo: ['re'],
       bear: ['l']
     },
     {
-      usabon: ['re'],
+      tololo: ['re'],
       bear: ['l']
     },
     {
-      usabon: ['re'],
+      tololo: ['re'],
       bear: ['l']
     },
     'end'
@@ -110,7 +103,6 @@ const touchControl = {
 export {
   map,
   bear,
-  directionKey,
   walkDirections,
   testAct,
   touchControl
