@@ -20,7 +20,8 @@
     texts: document.querySelectorAll('.text'),
     sprite: document.querySelector('.sprite'),
     indicator: document.querySelector('.indicator'),
-    spriteFace: document.querySelector('.face')
+    spriteFace: document.querySelector('.face'),
+    startButton: document.querySelector('.start_button'),
   }
 
   export {

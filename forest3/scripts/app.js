@@ -729,7 +729,13 @@ function init() {
     status.innerHTML = status.innerHTML === 'off' ? 'on' : 'off'
   })
 
-  transport('start')
+  elements.startButton.addEventListener('click', e => {
+    e.preventDefault()
+    elements.transitionCover.classList.remove('intro')
+    transport('start')
+  })
+
+
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], handleKeyAction)
 }
