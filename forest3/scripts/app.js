@@ -4,6 +4,7 @@
 //! add control button (enter)
 // TODO maybe handle wall in separate layer? (reduces need to define wall separately)
 // TODO could the location entry logic be updated?
+// TODO revent other events triggering during eventAnimation
 
 import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
@@ -242,7 +243,6 @@ function init() {
   }
 
   const showDialog = ({ talkTarget, facingDirection, dialog }) =>{
-    // TODO could this be simplified or be labelled further?
     bear.isTalking = true
     // talkTarget.pause = true //TODO check if this is necessary
     elements.texts[0].parentNode.classList.remove('hidden')
@@ -682,6 +682,7 @@ function init() {
       transport(act[index].gateway)
       endEvent()
     } else {
+      elements.eventCover.classList.remove('hidden')
       Object.keys(act[index]).forEach(actor =>{
         const frame = act[index][actor]
         if(Array.isArray(frame)) {

@@ -1,4 +1,4 @@
-
+// TODO check if still required
 
 const svgWrapper = ( {content, color, rotate, flip, wrapper, frameNo, speed, frameSize} ) =>{
   let scale = 1
