@@ -3,6 +3,7 @@ const input = {
   row: document.querySelector('.row'),
   cellD: document.querySelector('.cell_size'),
   letter: document.querySelector('.letter'),
+  editKey: document.querySelector('.edit_key'),
   codesBox: document.querySelectorAll('.codes'),
   indexIndicator: document.querySelector('.index_indicator')
 }
@@ -11,6 +12,10 @@ const artboard = document.querySelector('.artboard')
 const overlay = document.querySelector('.overlay')
 const aCtx = artboard.getContext('2d')
 const oCtx = overlay.getContext('2d')
+
+// not used for mapDesigner3
+const drawboard = document.querySelector('.drawboard')
+const dCtx = drawboard?.getContext('2d')
 
 const elements = {
   cursor: document.querySelector('.cursor'),
@@ -24,6 +29,7 @@ const elements = {
   canvasWrapper: document.querySelector('.canvas_wrapper'),
   selectBox: null,
   paletteCells: null,
+  output: document.querySelector('.output'),
 }
 
 export {
@@ -32,5 +38,7 @@ export {
   overlay,
   aCtx,
   oCtx,
-  elements
+  elements,
+  drawboard,
+  dCtx
 }

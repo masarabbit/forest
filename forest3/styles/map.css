@@ -207,6 +207,7 @@ img {
 
 .index_indicator,
 .key,
+.edit_key,
 .letter {
   width: 30px;
   padding: 9.5px 5px;
@@ -711,6 +712,10 @@ button.icon:hover {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAGNJREFUOE9jZKAQMFKon2HwGPAf6hWYi0B8ZNch81HUghShS6KLgcyGqcFQi00xsgZYGGMzACyH7GRkPl5boS4Cq0ePBULeIegFfIGH7jWwWnxewBYWMDG4dwdPQiI7Swy8FwA2GiARMFIOrQAAAABJRU5ErkJggg==);
 }
 
+.rotate {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHFJREFUOE+lk1kOwCAIROH+h7ahCY3CyFb/JM5z2Jh+Hgb6RUQoDr+yD0UsZwRQcZSUA2ugIlbwAZFLR+wgEwdHjXY7HSefrtIFBL4CxJ6dgzbAtnEMqNSEs4mLIK82A2hNbFphEdEo707cJFYXGm7pA9ngERFM379jAAAAAElFTkSuQmCC);
+}
+
 .map_gen_cell div {
   width: 100%;
   height: 100%;
@@ -777,3 +782,9 @@ button.icon:hover {
   z-index: 2;
   background-color: rgba(255, 105, 180, 0.432);
 }
+
+/* .output {
+  position: fixed;
+  right: 20px;
+  top: 6px;
+} */
