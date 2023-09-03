@@ -48,6 +48,7 @@ function init() {
     return noWallList.some(c => mapcode[pos] === c)
   }
 
+  // TODO needs to be triggered to use drawboard
   const output = ({ ctx, i, x, y, tile, sprite }) =>{
     const { cellD: d, iWidth } = map
     const mapX = (i % iWidth) * d
@@ -120,6 +121,11 @@ function init() {
   const drawMap = (w, h) => {
     map.map = decompress(mapData[map.key].map)
     createCanvas(elements.mapImage, 'ctx', w * map.cellD, h * map.cellD)
+
+
+    // TODO this bit needs updating to new tile output
+
+
     map.map.forEach((tile, i) =>{
       const index = tiles.indexOf(tile)
       output({ 

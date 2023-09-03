@@ -137,6 +137,7 @@ function init() {
     elements.paletteCells.forEach(palette =>{
       palette.addEventListener('click', e =>{
         input.letter.value = e.target.dataset.tile
+        input.editKey.value = ''
         outputTile()
       })
     })  
@@ -322,7 +323,7 @@ function init() {
     addClickEvent('paste_selection', paste)
     addClickEvent('cut_selection', ()=> copySelection({ cut: true }))
     addClickEvent('crop_selection', ()=> copySelection({ crop: true }))
-    addClickEvent('eraser', ()=> update('letter', ''))
+    addClickEvent('eraser', ()=> update('letter', 'zz'))
     addClickEvent('flip_h', ()=> {
       addEditCode('h')
       outputTile()
