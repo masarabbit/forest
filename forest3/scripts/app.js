@@ -6,7 +6,8 @@
 // TODO could the location entry logic be updated?
 // TODO revent other events triggering during eventAnimation
 
-import mapData from './data/testMapData.js'
+
+import mapData from './data/mapData.js'
 import avatars from './data/avatars.js'
 import { animateCell } from './utils/animation.js'
 import { decompress } from './utils/compression.js'
@@ -17,7 +18,7 @@ import { addTouchAction } from './utils/touchControl.js'
 import { 
   tiles, editConfig
   // plainColors, animationTiles, blank 
-} from './data/testTileData.js'
+} from './data/tileData.js'
 import { elements } from './elements.js'
 
 // bear.pause is used for pausing during animation as well as talking

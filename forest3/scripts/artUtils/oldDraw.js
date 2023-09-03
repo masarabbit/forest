@@ -1,11 +1,9 @@
 // copyColors, paintCanvas, resize
-import { artboard, overlay, aCtx, oCtx, elements, drawboard, dCtx } from '../mapElements.js'
+import { artboard, overlay, aCtx, oCtx, elements } from '../mapElements.js'
 import { nearestN, resizeCanvas, styleTarget, tileX, tileY } from './mapUtils.js'
 import { artData } from '../mapState.js'
-// import { plainColors, blank } from '../data/tileData.js'
-import { tiles, editConfig } from '../data/testTileData.js'
+import { tiles, plainColors, blank } from '../data/tileData.js'
 
-const degToRad = deg => deg / (180 / Math.PI)
 
 const grid = {
   draw: () => {
@@ -32,35 +30,6 @@ const grid = {
 }
 
 
-
-const drawDataUrl = ({ url, color, index, edit, ctx, overrideD }) => {
-  const img = new Image()
-  img.onload = () => {
-    const { naturalWidth: w, naturalHeight: h } = img
-    dCtx.imageSmoothingEnabled = false
-    resizeCanvas({
-      canvas: drawboard,
-      w, h
-    })
-    if (edit) {
-      dCtx.save()
-      dCtx.translate(w / 2, h / 2)
-      dCtx.rotate(degToRad(editConfig?.[edit[0]]))
-      dCtx.scale(edit.includes('h') ? -1 : 1, edit.includes('v') ? -1 : 1)
-      dCtx.translate(-w / 2, -h / 2)     
-    }
-    dCtx.drawImage(img, 0, 0, w, h)
-    dCtx.restore()
-    
-    placeTile({ mapIndex: index, ctx, url, edit, color, overrideD })
-  }
-  if (url) {
-    img.src = url
-  } else {
-    placeTile({ mapIndex: index, ctx, color, overrideD })
-  }
-}
-
 const drawPos = (e, cellD) => {
   const { top, left } = artboard.getBoundingClientRect()
   return {
@@ -69,37 +38,25 @@ const drawPos = (e, cellD) => {
   }
 }
 
-const placeTile = ({ mapIndex, color, url, ctx, overrideD }) =>{
-  const { cellD, column } = artData
-  const d = overrideD || cellD
+const placeTile = ({ sprite, tile, mapIndex  }) =>{
+  const tileIndex = tiles.indexOf(tile)
+  const { cellD: d, column } = artData
   const mapX = (mapIndex % column) * d
   const mapY = Math.floor(mapIndex / column) * d
+  aCtx.imageSmoothingEnabled = false
 
-  if (color === 'transparent') {
-    ctx.clearRect(mapX, mapY, d, d)
+  if (tile !== blank) {
+    aCtx.fillStyle = plainColors[tile] || '#a2fcf0' // TODO check if background can be blank
+    aCtx.fillRect(mapX, mapY, d, d)
+    aCtx.drawImage(sprite, tileX(tileIndex), tileY(tileIndex), 16, 16, mapX, mapY, d, d)
   } else {
-    ctx.imageSmoothingEnabled = false
-    ctx.fillStyle = color || '#a2fcf0'
-    ctx.fillRect(mapX, mapY, d, d)
-  
+    aCtx.clearRect(mapX, mapY, d, d)
   }
-
-  if (url) ctx.drawImage(drawboard, mapX, mapY, d, d)
 }
 
 const generateMap = () =>{
-  if (!artData.tiles.length) return
   artData.tiles.forEach((code, i) =>{
-    const tile = code?.split('.')?.[0] || code
-    const edit = code?.split('.')?.[1]
-
-    drawDataUrl({
-      url: tiles[tile]?.img,
-      color: tiles[tile]?.color,
-      index: i,
-      edit,
-      ctx: aCtx
-    })
+    placeTile({ sprite: elements.spriteSheets[0], tile: code, mapIndex: i })
   })
 }
 
@@ -127,6 +84,5 @@ export {
   drawPos,
   grid,
   placeTile,
-  resize,
-  drawDataUrl
+  resize
 }

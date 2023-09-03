@@ -1,7 +1,7 @@
-import { tiles } from './data/testTileData.js'
+import { tiles } from './data/tileData.js'
 import { artData } from './mapState.js'
-import { drawPos, grid, resize, drawDataUrl } from './artUtils/testDraw.js'
-import { createSelectBox, copySelection, paste, select  } from './artUtils/testSelect.js'
+import { drawPos, grid, resize, drawDataUrl } from './artUtils/draw.js'
+import { createSelectBox, copySelection, paste, select  } from './artUtils/select.js'
 
 import {
   input,
@@ -18,7 +18,7 @@ import {
   update,
 } from './artUtils/mapUtils.js'
 
-import mapData from './data/testMapData.js'
+import mapData from './data/mapData.js'
 
 function init() {
 
