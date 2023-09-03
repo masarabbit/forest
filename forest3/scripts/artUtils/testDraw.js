@@ -75,15 +75,16 @@ const placeTile = ({ mapIndex, color, url, ctx, overrideD }) =>{
   const mapX = (mapIndex % column) * d
   const mapY = Math.floor(mapIndex / column) * d
 
-  ctx.imageSmoothingEnabled = false
-  ctx.fillStyle = color || '#a2fcf0'
-  ctx.fillRect(mapX, mapY, d, d)
+  if (color === 'transparent') {
+    ctx.clearRect(mapX, mapY, d, d)
+  } else {
+    ctx.imageSmoothingEnabled = false
+    ctx.fillStyle = color || '#a2fcf0'
+    ctx.fillRect(mapX, mapY, d, d)
+  
+  }
 
   if (url) ctx.drawImage(drawboard, mapX, mapY, d, d)
-
-  // } else {
-  //   aCtx.clearRect(mapX, mapY, d, d)
-  // }
 }
 
 const generateMap = () =>{
