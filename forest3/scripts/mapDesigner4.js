@@ -55,7 +55,7 @@ function init() {
 
   const updateCodesDisplay = (box, arr) =>{
     box.value = `${arr.map(ele => ele).join(',')}`
-    window.location.hash = `${input.column.value}#${input.row.value}#${compress(input.codesBox[0].value).join('-')}`
+    window.location.hash = `${input.column.value}#${input.row.value}#${input.cellD.value}#${compress(input.codesBox[0].value).join('-')}`
   }
 
   const generateFromCode = () =>{
@@ -130,6 +130,7 @@ function init() {
         color: tiles[tile]?.color,
         index: 0,
         ctx: elements.paletteCells[i].getContext('2d'),
+        overrideD: 32
       })
     })
 
@@ -147,14 +148,16 @@ function init() {
   // console.log(query)
   if (query){
     const queryArray = query.split('#')
-    artData.row = queryArray[2]
-    artData.column = queryArray[1]
+    artData.column = +queryArray[1]
+    artData.row = +queryArray[2]
+    artData.cellD = +queryArray[3]
     input.row.value = artData.row
     input.column.value = artData.column
+    input.cellD.value = artData.cellD
 
-    artData.tiles = decompress(queryArray[3].replaceAll('-',','))
+    artData.tiles = decompress(queryArray[4].replaceAll('-',','))
     input.codesBox[0].value = artData.tiles
-    if (queryArray[4]) input.indexIndicator.value = queryArray[4]
+    if (queryArray[5]) input.indexIndicator.value = queryArray[5]
     generateFromCode()
   }
 
@@ -201,7 +204,8 @@ function init() {
       color: tiles[input.letter.value]?.color,
       index: 0,
       edit: input.editKey.value,
-      ctx: elements.output.getContext('2d')
+      ctx: elements.output.getContext('2d'),
+      overrideD: 32
     })  
   }
 
@@ -209,12 +213,13 @@ function init() {
   elements.alts = document.querySelectorAll('.alt')
   addLabelDisplay()
   outputTile()
+  resize()
   
   
   // ********************
   // ** eventlisteners **
   // ********************
-  
+
   window.addEventListener('mousemove', handleCursor)
 
   elements.mapLinks.innerHTML = mapKeys.map( map =>{
@@ -231,7 +236,7 @@ function init() {
   mapLinkCells.forEach((link, i)=>{
     link.addEventListener('click',()=>{
       const { iWidth, iHeight, map } = mapData[mapKeys[i]]
-      const url = `${iWidth}#${iHeight}#${map.replaceAll(',','-')}#${i}`
+      const url = `${iWidth}#${iHeight}#${artData.cellD}#${map.replaceAll(',','-')}#${i}`
       window.location.hash = url      
       location.reload(true)
     })

@@ -33,7 +33,7 @@ const grid = {
 
 
 
-const drawDataUrl = ({ url, color, index, edit, ctx }) => {
+const drawDataUrl = ({ url, color, index, edit, ctx, overrideD }) => {
   const img = new Image()
   img.onload = () => {
     const { naturalWidth: w, naturalHeight: h } = img
@@ -52,12 +52,12 @@ const drawDataUrl = ({ url, color, index, edit, ctx }) => {
     dCtx.drawImage(img, 0, 0, w, h)
     dCtx.restore()
     
-    placeTile({ mapIndex: index, ctx, url, edit, color })
+    placeTile({ mapIndex: index, ctx, url, edit, color, overrideD })
   }
   if (url) {
     img.src = url
   } else {
-    placeTile({ mapIndex: index, ctx, color })
+    placeTile({ mapIndex: index, ctx, color, overrideD })
   }
 }
 
@@ -69,11 +69,11 @@ const drawPos = (e, cellD) => {
   }
 }
 
-const placeTile = ({ mapIndex, color, url, ctx }) =>{
-  const { cellD: d, column } = artData
+const placeTile = ({ mapIndex, color, url, ctx, overrideD }) =>{
+  const { cellD, column } = artData
+  const d = overrideD || cellD
   const mapX = (mapIndex % column) * d
   const mapY = Math.floor(mapIndex / column) * d
-
 
   ctx.imageSmoothingEnabled = false
   ctx.fillStyle = color || '#a2fcf0'

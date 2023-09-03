@@ -158,6 +158,23 @@ const mapData = {
       },
     }
   },
+  test2: {
+    iWidth: 5,
+    iHeight: 2,
+    events: {
+      80: { event: 'transport', gateway: 'portal2' },
+      100: { event: 'transport', gateway: 'portal2' },
+    },
+    map: 'v3,u1,al1',
+    entry: {
+      portal2: {
+        map: 'one',
+        cell: 44,
+        direction: 'down',
+        noWall: ['i','j','u','zd','br','as', 'ao', 'bh','av','ax','bg'],
+      },
+    }
+  },
 }
 
 export default mapData

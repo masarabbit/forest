@@ -200,7 +200,7 @@ const paste = () => {
     const width = w / cellD
     copyData.index = Array(width * (h / cellD)).fill('').map((_, i) => {
       return index + i + Math.floor(i / width) * (column - width)
-    })  
+    }) 
     copyData.index.forEach((index, i) => {
       artData.tiles[index] = copyData.tiles[i] 
     })

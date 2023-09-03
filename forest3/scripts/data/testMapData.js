@@ -5,7 +5,7 @@ import { testAct } from '../state.js'
 const mapData = {
   one: {
     iWidth: 5,
-    iHeight: 1,
+    iHeight: 2,
     characters: [
       { pos: 152, avatar: 'bunny', defaultDir: 'down', event: 'apple', name: 'bunnio', motion: 'randomWalk' },
       // { pos: 156, avatar: 'bunny', spritePos: 0, event: 'apple', name: 'usabon', motion: 'randomWalk' },
