@@ -1,7 +1,7 @@
 import { artData, copyData } from '../mapState.js'
 import { elements, aCtx, input, overlay } from '../mapElements.js'
 import { resizeCanvas, styleTarget, mouse, nearestN, update } from './mapUtils.js'
-import { drawPos, resize } from './testDraw.js'
+import { drawPos, resize } from './draw.js'
 
 
 // copyColors, paintCanvas,

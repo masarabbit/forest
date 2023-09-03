@@ -3,7 +3,7 @@ import { artboard, overlay, aCtx, oCtx, elements, drawboard, dCtx } from '../map
 import { nearestN, resizeCanvas, styleTarget, tileX, tileY } from './mapUtils.js'
 import { artData } from '../mapState.js'
 // import { plainColors, blank } from '../data/tileData.js'
-import { tiles, editConfig } from '../data/testTileData.js'
+import { tiles, editConfig } from '../data/tileData.js'
 
 const degToRad = deg => deg / (180 / Math.PI)
 

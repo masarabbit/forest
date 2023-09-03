@@ -1,6 +1,6 @@
-import mapData from './data/mapData.js'
+import mapData from './data/oldMapData.js'
 import { tiles, plainColors, blank } from './data/oldTileData.js'
-import { artData } from './oldMapState.js'
+import { artData } from './mapState.js'
 import { drawPos, grid, placeTile, resize } from './artUtils/oldDraw.js'
 import { createSelectBox, copySelection, paste, select  } from './artUtils/oldSelect.js'
 
