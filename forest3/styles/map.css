@@ -459,6 +459,15 @@ button.icon:hover {
   line-height: 0px;
 }
 
+.make_map_into_bg::before {
+  position: absolute;
+  content: 'bg';
+  margin-left: -px;
+  font-size: 12px;
+  color: rgb(255, 0, 179);
+  line-height: 0px;
+}
+
 .cursor.highlight::after {
   position: absolute;
   content: attr(code);
@@ -769,6 +778,11 @@ button.icon:hover {
 
 .artboard {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAHklEQVQYV2NkgILF/9/+BzEZMQRgMrGMwmBJRnQBAA1GDyEZnkKiAAAAAElFTkSuQmCC) repeat 0 0;
+}
+
+.artboard.bg_mode {
+  background: none;
+  opacity: 0.5;
 }
 
 .cursor.highlight {

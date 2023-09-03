@@ -6,15 +6,18 @@
 // TODO could the location entry logic be updated?
 // TODO revent other events triggering during eventAnimation
 
-import mapData from './data/mapData.js'
+import mapData from './data/testMapData.js'
 import avatars from './data/avatars.js'
 import { animateCell } from './utils/animation.js'
 import { decompress } from './utils/compression.js'
-import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection, resizeCanvas } from './utils/utils.js'
+import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerOfMap, isObject, randomDirection, resizeCanvas, degToRad } from './utils/utils.js'
 import { map, bear, walkDirections } from './state.js'
 import { setSpritePos, turnSprite, spriteWrapper } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
-import { tiles, plainColors, animationTiles, blank } from './data/tileData.js'
+import { 
+  tiles, editConfig
+  // plainColors, animationTiles, blank 
+} from './data/testTileData.js'
 import { elements } from './elements.js'
 
 // bear.pause is used for pausing during animation as well as talking
@@ -40,33 +43,24 @@ function init() {
   const mapY = () => Math.floor(bear.pos / map.iWidth)
 
   const noWall = pos =>{    
-    const { spawnData, noLeftEdgeList, noWallList, map:mapcode } = map
+    const { spawnData, map:mapcode
+      // noLeftEdgeList, noWallList, 
+      } = map
     if (!mapcode[pos] || bear.pos === pos || spawnData.some(s => s.pos === pos)) return false
 
     // prevents sprite walking beyond edge
-    if (bear.facingDirection === 'left' && noLeftEdgeList.some(c => mapcode[pos + 1] === c)) return false
-    return noWallList.some(c => mapcode[pos] === c)
+    // if (bear.facingDirection === 'left' && noLeftEdgeList.some(c => mapcode[pos + 1] === c)) return false
+    // return noWallList.some(c => mapcode[pos] === c)
+    return map.wall[pos] !== '$'
   }
 
-  // TODO needs to be triggered to use drawboard
-  const output = ({ ctx, i, x, y, tile, sprite }) =>{
-    const { cellD: d, iWidth } = map
-    const mapX = (i % iWidth) * d
-    const mapY = Math.floor(i / iWidth) * d
-    
-    if (tile !== blank) {
-      ctx.fillStyle = plainColors[tile] || '#a2fcf0'
-      ctx.fillRect(mapX, mapY, d, d)
-      ctx.drawImage(sprite, x, y, d / 2, d / 2, mapX, mapY, d, d)
-    }
-  }
 
   const outputLocationWall = ({ ctx, i, tile }) => {
     const { iWidth } = map
     const d = 4
     const mapX = (i % iWidth) * d
     const mapY = Math.floor(i / iWidth) * d
-    ctx.fillStyle = map.noWallList.includes(tile) ? '#06a1a1' :  '#a2fcf0'
+    ctx.fillStyle = tile === '$' ? '#a2fcf0' : '#06a1a1'
     ctx.fillRect(mapX, mapY, d, d)
   }
 
@@ -84,16 +78,18 @@ function init() {
     map.animInterval = setInterval(()=> {
       map.animCounter++
       if (map.animCounter === 6) map.animCounter = 0
-      map.map.forEach((tile, i) =>{
-        if (animationTiles[tile]) {
-          const animTile = animationTiles[tile][map.animCounter]
-          const index = tiles.indexOf(animTile)
-          output({ 
-            ctx: elements.ctx, i, 
-            tile: animTile,
-            x: (index % 10) * 16, 
-            y: Math.floor(index / 10) * 16,
-            sprite: elements.spriteSheets[0],
+      map.map.forEach((code, i) =>{
+        const tile = code?.split('.')?.[0] || code
+        const edit = code?.split('.')?.[1]
+      
+        if (tiles[tile]?.frames && tiles[tile]?.sequence) {
+          const { frames, sequence } = tiles[tile]
+
+          drawDataUrl({
+            url: frames[sequence[map.animCounter]],
+            index: i,
+            edit,
+            ctx: elements.ctx
           })
         }
       })
@@ -110,7 +106,7 @@ function init() {
 
   const drawLocationMap = () => {
     createCanvas(elements.location, 'locationCtx', map.iWidth * 4, map.iHeight * 4)
-    map.map.forEach((tile, i) =>{
+    map.wall.forEach((tile, i) =>{
       outputLocationWall({ 
         ctx: elements.locationCtx, 
         i, d: 4, tile
@@ -118,25 +114,70 @@ function init() {
     })
   }
 
+  const placeTile = ({ mapIndex, color, url, ctx }) =>{
+    // const { cellD: d, column } = artData
+    const { cellD: d, iWidth } = map
+    const mapX = (mapIndex % iWidth) * d
+    const mapY = Math.floor(mapIndex / iWidth) * d
+  
+    if (color === 'transparent') {
+      ctx.clearRect(mapX, mapY, d, d)
+    } else {
+      ctx.imageSmoothingEnabled = false
+      ctx.fillStyle = color || '#a2fcf0'
+      ctx.fillRect(mapX, mapY, d, d)
+    
+    }
+  
+    if (url) ctx.drawImage(elements.drawboard, mapX, mapY, d, d)
+  }
+
+
+  const drawDataUrl = ({ url, color, index, edit, ctx }) => {
+    const { dCtx } = elements
+    const img = new Image()
+    img.onload = () => {
+      const { naturalWidth: w, naturalHeight: h } = img
+      dCtx.imageSmoothingEnabled = false
+      resizeCanvas(elements.drawboard, w, h)
+      if (edit) {
+        dCtx.save()
+        dCtx.translate(w / 2, h / 2)
+        dCtx.rotate(degToRad(editConfig?.[edit[0]]))
+        dCtx.scale(edit.includes('h') ? -1 : 1, edit.includes('v') ? -1 : 1)
+        dCtx.translate(-w / 2, -h / 2)     
+      }
+      dCtx.drawImage(img, 0, 0, w, h)
+      dCtx.restore()
+      
+      placeTile({ mapIndex: index, ctx, url, edit, color })
+    }
+    if (url) {
+      img.src = url
+    } else {
+      placeTile({ mapIndex: index, ctx, color })
+    }
+  }
+
+
   const drawMap = (w, h) => {
     map.map = decompress(mapData[map.key].map)
+    map.wall = decompress(mapData[map.key].wall)
     createCanvas(elements.mapImage, 'ctx', w * map.cellD, h * map.cellD)
 
-
-    // TODO this bit needs updating to new tile output
-
-
-    map.map.forEach((tile, i) =>{
-      const index = tiles.indexOf(tile)
-      output({ 
-        ctx: elements.ctx, 
-        i, tile, 
-        x: (index % 10) * 16,
-        y: Math.floor(index / 10) * 16,
-        sprite: elements.spriteSheets[0],
+    map.map.forEach((code, i) =>{
+      const tile = code?.split('.')?.[0] || code
+      const edit = code?.split('.')?.[1]
+  
+      drawDataUrl({
+        url: tiles[tile]?.img,
+        color: tiles[tile]?.color,
+        index: i,
+        edit,
+        ctx: elements.ctx
       })
     })
-    animateMap() // TODO maybe only trigger this if map has animation
+    animateMap()
   }
 
 
@@ -420,18 +461,12 @@ function init() {
     elements.mapImage.classList.add('transition')
     const entryPoint = mapData[map.key].entry[key]
     if (!entryPoint) return // this added to prevent error when user walks too fast
-    
-    map.noWallList = entryPoint.noWall || ['b','do','gr']
 
     setLocation(entryPoint.map)
     bear.pos = entryPoint.cell
 
     setWidthAndHeightAndResize()
     const { sprite } = elements
-    turnSprite({
-      e: bear.facingDirection, 
-      actor: bear, sprite
-    })
 
     spawnCharacter()
     // startCellAnimations(map.animInterval)
@@ -446,15 +481,7 @@ function init() {
         actor: bear, sprite
       })
       
-      // TODO indicate where the walls are - OLD doesn't work
-      // map.map.forEach((c, i) =>{
-      //   if (map.noWallList.includes(c)) {
-      //     map.mapImageTiles[i].classList.add('no_wall_show')
-      //     map.mapImageTiles[i].setAttribute('letter_code', c)
-      //   }  
-      // })
       checkAndTriggerEvent()
-
     }, 400)
   }
 
@@ -629,6 +656,16 @@ function init() {
     setWidthAndHeight()
     map.start = centerOfMap(map.width, map.height)
     resize()
+    turnSprite({
+      e: bear.facingDirection, 
+      actor: bear, 
+      sprite: elements.sprite
+    })
+    elements.mapImage.classList.add('transition')
+    clearTimeout(map.transitionTimer)
+    map.transitionTimer = setTimeout(()=> {
+      elements.mapImage.classList.remove('transition')
+    }, 500)
   }
 
   const checkAndContinueEvent = ({ act, index }) =>{ 
@@ -750,6 +787,8 @@ function init() {
   
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], handleKeyAction)
+
+  resizeCanvas(elements.drawboard, map.cellD)
 }
 
 window.addEventListener('DOMContentLoaded', init)

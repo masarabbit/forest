@@ -348,6 +348,16 @@ function init() {
       }
       outputTile()
     })
+    addClickEvent('make_map_into_bg', ()=> {
+      console.log('click',  artboard.toDataURL())
+      artboard.parentNode.style.background = `url(${artboard.toDataURL()})`
+      artboard.classList.add('bg_mode')
+      const { cellD, column, row } = artData
+      aCtx.clearRect(0, 0, column * cellD, row * cellD)
+
+      artData.tiles = Array(column * row).fill('')
+      input.codesBox[0].value = artData.tiles
+    })
   })
   mouse.down(artboard, 'add', ()=> artData.draw = true)
   mouse.up(artboard, 'add', ()=> artData.draw = false)

@@ -43,6 +43,8 @@ const resizeCanvas = (target, w, h) =>{
   target.setAttribute('height', h || w)
 }
 
+const degToRad = deg => deg / (180 / Math.PI)
+
 export {
   setWidthAndHeight,
   setTargetSize,
@@ -52,5 +54,6 @@ export {
   isObject,
   randomDirection,
   resizeCanvas,
-  mouse
+  mouse,
+  degToRad
 }

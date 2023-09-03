@@ -13,16 +13,18 @@ const map = {
   mapImageTiles: null,
   animInterval: null,
   animCounter: 0,
-  noWallList: ['zd','br','as'],
-  noLeftEdgeList: ['pu','g'],
+  // noWallList: ['zd','br','as'],
+  // noLeftEdgeList: ['pu','g'],
   key: 'one',
   spawnData: [],
   sprites: null,
   map: [],
+  wall: [],
   eventIndex: 0,
   activeEvent: null,
   eventChainActors: [],
   completedEvents: [],
+  transitionTimer: null,
 }
 
 const bear = {

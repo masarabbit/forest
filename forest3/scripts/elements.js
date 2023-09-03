@@ -4,7 +4,9 @@
   const elements = {
     ctx: null,
     locationCtx: null,
-    spriteSheets: document.querySelectorAll('.sprite_sheet'),
+    drawboard: document.querySelector('.drawboard'),
+    dCtx: null,
+    // spriteSheets: document.querySelectorAll('.sprite_sheet'),
     transitionCover: document.querySelector('.transition_cover'),
     eventCover: document.querySelector('.event_cover'),
     touchToggle: document.querySelector('.touch_toggle'),
@@ -23,6 +25,8 @@
     spriteFace: document.querySelector('.face'),
     startButton: document.querySelector('.start_button'),
   }
+
+  elements.dCtx = elements.drawboard.getContext('2d')
 
   export {
     elements,
