@@ -74,28 +74,28 @@ function init() {
     elements[ctx].imageSmoothingEnabled = false
   }
 
-  const animateMap = () => {
-    clearInterval(map.animInterval)
-    map.animInterval = setInterval(()=> {
-      map.animCounter++
-      if (map.animCounter === 6) map.animCounter = 0
-      map.map.forEach((code, i) =>{
-        const tile = code?.split('.')?.[0] || code
-        const edit = code?.split('.')?.[1]
+  // const animateMap = () => {
+  //   clearInterval(map.animInterval)
+  //   map.animInterval = setInterval(()=> {
+  //     map.animCounter++
+  //     if (map.animCounter === 6) map.animCounter = 0
+  //     map.map.forEach((code, i) =>{
+  //       const tile = code?.split('.')?.[0] || code
+  //       const edit = code?.split('.')?.[1]
       
-        if (tiles[tile]?.frames && tiles[tile]?.sequence) {
-          const { frames, sequence } = tiles[tile]
+  //       if (tiles[tile]?.frames && tiles[tile]?.sequence) {
+  //         const { frames, sequence } = tiles[tile]
 
-          drawDataUrl({
-            url: frames[sequence[map.animCounter]],
-            index: i,
-            edit,
-            ctx: elements.ctx
-          })
-        }
-      })
-    }, 500)
-  }
+  //         drawDataUrl({
+  //           url: frames[sequence[map.animCounter]],
+  //           index: i,
+  //           edit,
+  //           ctx: elements.ctx
+  //         })
+  //       }
+  //     })
+  //   }, 500)
+  // }
 
   const createLocationMark = () => {
     elements.mark = document.createElement('div')
@@ -178,7 +178,7 @@ function init() {
         ctx: elements.ctx
       })
     })
-    animateMap()
+    // animateMap()
   }
 
 
