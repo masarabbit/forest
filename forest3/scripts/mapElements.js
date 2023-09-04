@@ -17,9 +17,10 @@ const oCtx = overlay.getContext('2d')
 const drawboard = document.querySelector('.drawboard')
 const dCtx = drawboard?.getContext('2d')
 
+
 const elements = {
   cursor: document.querySelector('.cursor'),
-  spriteSheets: document.querySelectorAll('.sprite_sheet'),
+  // spriteSheets: document.querySelectorAll('.sprite_sheet'),
   palette: document.querySelector('.palette'),
   alts: document.querySelectorAll('.alt'),
   copyButtons: document.querySelectorAll('.copy'),
@@ -30,7 +31,13 @@ const elements = {
   selectBox: null,
   paletteCells: null,
   output: document.querySelector('.output'),
+  spriteSheet: document.querySelector('.sprite_sheet'),
+  sCtx: null,
 }
+
+elements.sCtx = elements.spriteSheet?.getContext('2d')
+
+
 
 export {
   input,

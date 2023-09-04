@@ -142,7 +142,7 @@ function init() {
       })
     })  
   }
-  populatePalette()
+
 
   // reads from url
   const query = window.location.hash
@@ -215,7 +215,36 @@ function init() {
   addLabelDisplay()
   outputTile()
   resize()
-  
+  populatePalette()
+
+
+  const tilesList = Object.keys(tiles).map(tile => {
+    // TODO this array can be changed per tile
+    return ['a', 'b', 'c', 'ah', 'bh', 'ch', 'av', 'bv', 'cv', 'avh', 'bvh', 'cbh'].map(append => `${tile}.${append}`)
+  }).flat(1)
+
+  artData.column = 20
+  artData.row = Math.round(tilesList.length / artData.column)
+
+  resizeCanvas({
+    canvas: elements.spriteSheet,
+    w: artData.cellD * artData.column, h: artData.cellD * artData.row
+  })
+  tilesList.forEach((code, i) => {
+    const tile = code?.split('.')?.[0] || code
+    const edit = code?.split('.')?.[1]
+
+    drawDataUrl({
+      url: tiles[tile]?.img,
+      color: tiles[tile]?.color,
+      index: i,
+      edit,
+      ctx: elements.sCtx,
+      // overrideD: 32
+    })  
+  })
+
+  // TODO once this sprite sheet is made, then forest3 can be partly reverted to use the old sprite sheet logic
   
   // ********************
   // ** eventlisteners **
