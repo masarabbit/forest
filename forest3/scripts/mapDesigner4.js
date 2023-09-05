@@ -1,4 +1,4 @@
-import { tiles } from './data/tileData.js'
+import { tiles, tileTypes } from './data/tileData.js'
 import { artData } from './mapState.js'
 import { drawPos, grid, resize, drawDataUrl } from './artUtils/draw.js'
 import { createSelectBox, copySelection, paste, select  } from './artUtils/select.js'
@@ -217,25 +217,54 @@ function init() {
   resize()
   populatePalette()
 
+  // const flattenedTilesList = Object.keys(tiles).map(tile => {
+  //   return tiles[tile]?.frames ? tiles[tile].frames.map((_, i) => `${tile}*${i}`) : `${tile}*${0}`
+  // }).flat(1).map(unsplit => unsplit.split('*'))
+
+  // const tilesList = flattenedTilesList.map(tile => {
+
+  //   return tileTypes[tiles[tile[0]].type].map(append => {
+  //     return [`${tile[0]}${append ? `.${append}` : ''}`, tile[1]]
+  //   })
+  // }).flat(1)
+
 
   const tilesList = Object.keys(tiles).map(tile => {
-    // TODO this array can be changed per tile
-    return ['a', 'b', 'c', 'ah', 'bh', 'ch', 'av', 'bv', 'cv', 'avh', 'bvh', 'cbh'].map(append => `${tile}.${append}`)
+    return {
+      tile,
+      frames: tiles[tile]?.frames ? tiles[tile].frames.map((_, i) => i) : [0]
+    }
+  }).map(tileData => {
+    return tileTypes[tiles[tileData.tile].type].map(append => {
+      return tileData.frames.map(frameIndex => {
+        return [`${tileData.tile}${append ? `.${append}` : ''}`, frameIndex]
+      })
+    }).flat(1)
   }).flat(1)
 
-  artData.column = 20
+  console.log('test 1', tilesList)
+
+
+  // TODO change this to not use artData but something like spriteData
+
+  artData.column = 40
   artData.row = Math.round(tilesList.length / artData.column)
+  artData.cellD = 32
 
   resizeCanvas({
     canvas: elements.spriteSheet,
     w: artData.cellD * artData.column, h: artData.cellD * artData.row
   })
   tilesList.forEach((code, i) => {
-    const tile = code?.split('.')?.[0] || code
-    const edit = code?.split('.')?.[1]
+    const tile = code[0]?.split('.')?.[0] || code[0]
+    const edit = code[0]?.split('.')?.[1]
+
+    const url = tiles[tile]?.frames 
+      ? tiles[tile].frames[code[1]] 
+      : tiles[tile]?.img
 
     drawDataUrl({
-      url: tiles[tile]?.img,
+      url,
       color: tiles[tile]?.color,
       index: i,
       edit,
@@ -243,6 +272,10 @@ function init() {
       // overrideD: 32
     })  
   })
+
+  // artData.column = input.column.value
+  // artData.row = input.row.value
+  // artData.cellD = input.cellD.value
 
   // TODO once this sprite sheet is made, then forest3 can be partly reverted to use the old sprite sheet logic
   

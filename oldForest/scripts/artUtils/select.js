@@ -1,7 +1,7 @@
 import { artData, copyData } from '../mapState.js'
 import { elements, aCtx, input, overlay } from '../mapElements.js'
 import { resizeCanvas, styleTarget, mouse, nearestN, update } from './mapUtils.js'
-import { drawPos, resize } from './oldDraw.js'
+import { drawPos, resize } from './draw.js'
 
 
 // copyColors, paintCanvas,
@@ -162,7 +162,7 @@ const copySelection = ({ crop, cut }) => {
     const { column, cellD } = artData
     copyData.move = true
     const offset = ((y / cellD) * column) + x / cellD
-    console.log('mapIndex', offset)
+
     copyTiles({
       offset,
       w: w / artData.cellD,
@@ -192,8 +192,6 @@ const copySelection = ({ crop, cut }) => {
   }
 }
 
-
-
 const paste = () => {
   if (copyData.tiles.length){
     const { cellD, column } = artData
@@ -202,7 +200,7 @@ const paste = () => {
     const width = w / cellD
     copyData.index = Array(width * (h / cellD)).fill('').map((_, i) => {
       return index + i + Math.floor(i / width) * (column - width)
-    })  
+    }) 
     copyData.index.forEach((index, i) => {
       artData.tiles[index] = copyData.tiles[i] 
     })
