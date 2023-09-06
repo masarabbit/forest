@@ -38,9 +38,9 @@ const mouse = {
   leave: (t, e, a) => addEvents(t, e, a, ['mouseleave', 'touchmove'])
 }
 
-const resizeCanvas = (target, w, h) =>{
-  target.setAttribute('width', w)
-  target.setAttribute('height', h || w)
+const resizeCanvas = ({ canvas, w, h }) =>{
+  canvas.setAttribute('width', w)
+  canvas.setAttribute('height', h || w)
 }
 
 const degToRad = deg => deg / (180 / Math.PI)

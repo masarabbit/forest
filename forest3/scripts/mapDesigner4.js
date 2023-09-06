@@ -1,4 +1,4 @@
-import { tiles, tilesList } from './data/tileData.js'
+import { tiles, tilesList, tileSheetData, tileX, tileY } from './data/tileData.js'
 import { artData } from './mapState.js'
 import { drawPos, grid, resize, drawDataUrl } from './artUtils/draw.js'
 import { createSelectBox, copySelection, paste, select  } from './artUtils/select.js'
@@ -22,14 +22,6 @@ import mapData from './data/mapData.js'
 
 function init() {
 
-  const tileSheetData = {
-    column: 30,
-    row: Math.round(tilesList.length / 30),
-    cellD: 16
-  }
-
-  const tileX = index => (index % tileSheetData.column) * tileSheetData.cellD
-  const tileY = index => Math.floor(index / tileSheetData.column) * tileSheetData.cellD
 
   const createSpriteSheet = () => {
     resizeCanvas({
@@ -193,13 +185,13 @@ function init() {
     elements.paletteCells = document.querySelectorAll('.palette_cell')
 
     elements.paletteCells.forEach((canvas, i) => {
-      if (i < tilesList.length) {
-        resizeCanvas({ canvas, w: 32 })
-        const ctx = canvas.getContext('2d')
-        const index = tilesList.map(t => t.join('*')).indexOf(canvas.dataset.tile)
-        ctx.imageSmoothingEnabled = false
-        ctx.drawImage(elements.spriteSheet, tileX(index), tileY(index), 16, 16, 0, 0, 32, 32)
-      }
+      // if (i < tilesList.length) {
+      resizeCanvas({ canvas, w: 32 })
+      const ctx = canvas.getContext('2d')
+      const index = tilesList.map(t => t.join('*')).indexOf(canvas.dataset.tile)
+      ctx.imageSmoothingEnabled = false
+      ctx.drawImage(elements.spriteSheet, tileX(index), tileY(index), 16, 16, 0, 0, 32, 32)
+      // }
     })
 
     elements.paletteCells.forEach((palette, i) =>{
@@ -322,8 +314,8 @@ function init() {
 
   mapLinkCells.forEach((link, i)=>{
     link.addEventListener('click',()=>{
-      const { iWidth, iHeight, map } = mapData[mapKeys[i]]
-      const url = `${iWidth}#${iHeight}#${artData.cellD}#${map.replaceAll(',','-')}#${i}`
+      const { column, row, map } = mapData[mapKeys[i]]
+      const url = `${column}#${row}#${artData.cellD}#${map.replaceAll(',','-')}#${i}`
       window.location.hash = url      
       location.reload(true)
     })

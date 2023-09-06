@@ -1,6 +1,6 @@
 const map = {
   height: 0, width: 0,
-  iHeight: 0, iWidth: 0,
+  row: 0, column: 0,
   start: 0,
   cellD: 32,
   minicellD: 0, 

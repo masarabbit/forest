@@ -6,7 +6,6 @@
     locationCtx: null,
     drawboard: document.querySelector('.drawboard'),
     dCtx: null,
-    // spriteSheets: document.querySelectorAll('.sprite_sheet'),
     transitionCover: document.querySelector('.transition_cover'),
     eventCover: document.querySelector('.event_cover'),
     touchToggle: document.querySelector('.touch_toggle'),
@@ -24,9 +23,12 @@
     indicator: document.querySelector('.indicator'),
     spriteFace: document.querySelector('.face'),
     startButton: document.querySelector('.start_button'),
+    spriteSheet: document.querySelector('.sprite_sheet'),
+    sCtx: null,
   }
 
   elements.dCtx = elements.drawboard.getContext('2d')
+  elements.sCtx = elements.spriteSheet.getContext('2d')
 
   export {
     elements,

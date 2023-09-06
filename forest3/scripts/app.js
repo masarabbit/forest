@@ -15,10 +15,7 @@ import { setWidthAndHeight, setTargetSize, setTargetPos, adjustRectSize, centerO
 import { map, bear, walkDirections } from './state.js'
 import { setSpritePos, turnSprite, spriteWrapper } from './utils/sprite.js'
 import { addTouchAction } from './utils/touchControl.js'
-import { 
-  tiles, editConfig
-  // plainColors, animationTiles, blank 
-} from './data/tileData.js'
+import { tiles, editConfig, tilesList, tileSheetData,  tileX, tileY } from './data/tileData.js'
 import { elements } from './elements.js'
 
 // bear.pause is used for pausing during animation as well as talking
@@ -34,14 +31,14 @@ function init() {
     map.key = key
     setWidthAndHeight()
     
-    const { iWidth, iHeight } = mapData[map.key]   
-    map.iHeight = iHeight
-    map.iWidth = iWidth
-    drawMap(iWidth, iHeight)
+    const { column, row } = mapData[map.key]   
+    map.row = row
+    map.column = column
+    drawMap(column, row)
   }
   
-  const mapX = () => bear.pos % map.iWidth  
-  const mapY = () => Math.floor(bear.pos / map.iWidth)
+  const mapX = () => bear.pos % map.column  
+  const mapY = () => Math.floor(bear.pos / map.column)
 
   const noWall = pos =>{    
     const { spawnData, map:mapcode
@@ -55,12 +52,43 @@ function init() {
     return map.wall[pos] !== '$'
   }
 
+  const createSpriteSheet = () => {
+    resizeCanvas({
+      canvas: elements.spriteSheet,
+      w: tileSheetData.cellD * tileSheetData.column, 
+      h: tileSheetData.cellD * tileSheetData.row
+    })
+    const triggerLast = {
+      count: 0,
+      limit: tilesList.length - 1,
+      action: ()=> elements.startButton.classList.remove('display_none')
+    }
+    tilesList.forEach((code, i) => {
+      const tile = code[0]?.split('.')?.[0] || code[0]
+      const edit = code[0]?.split('.')?.[1]
+  
+      const url = tiles[tile]?.frames 
+        ? tiles[tile].frames[code[1]] 
+        : tiles[tile]?.img
+  
+      drawDataUrl({
+        url,
+        color: tiles[tile]?.color,
+        index: i,
+        edit,
+        ctx: elements.sCtx,
+        gridData: tileSheetData,
+        triggerLast
+      })  
+    })
+  }
+
 
   const outputLocationWall = ({ ctx, i, tile }) => {
-    const { iWidth } = map
+    const { column } = map
     const d = 4
-    const mapX = (i % iWidth) * d
-    const mapY = Math.floor(i / iWidth) * d
+    const mapX = (i % column) * d
+    const mapY = Math.floor(i / column) * d
     ctx.fillStyle = tile === '$' ? '#a2fcf0' : '#06a1a1'
     ctx.fillRect(mapX, mapY, d, d)
   }
@@ -69,33 +97,28 @@ function init() {
     target.innerHTML = ''
     const canvas = document.createElement('canvas')
     target.appendChild(canvas)
-    resizeCanvas(canvas, w, h)
+    resizeCanvas({ canvas, w, h })
     elements[ctx] = canvas.getContext('2d')
     elements[ctx].imageSmoothingEnabled = false
   }
 
-  // const animateMap = () => {
-  //   clearInterval(map.animInterval)
-  //   map.animInterval = setInterval(()=> {
-  //     map.animCounter++
-  //     if (map.animCounter === 6) map.animCounter = 0
-  //     map.map.forEach((code, i) =>{
-  //       const tile = code?.split('.')?.[0] || code
-  //       const edit = code?.split('.')?.[1]
-      
-  //       if (tiles[tile]?.frames && tiles[tile]?.sequence) {
-  //         const { frames, sequence } = tiles[tile]
+  const animateMap = () => {
+    const { cellD: d, column } = map
+    clearInterval(map.animInterval)
+    map.animInterval = setInterval(()=> {
+      map.animCounter++
+      if (map.animCounter === 6) map.animCounter = 0
 
-  //         drawDataUrl({
-  //           url: frames[sequence[map.animCounter]],
-  //           index: i,
-  //           edit,
-  //           ctx: elements.ctx
-  //         })
-  //       }
-  //     })
-  //   }, 500)
-  // }
+      map.map.forEach((code, i) =>{
+        const tile = code?.split('.')?.[0] || code
+        if (tiles[tile]?.frames && tiles[tile]?.sequence) {
+          outputFromSpriteSheet({ 
+            d, column, code, i, offset: tiles[tile].sequence[map.animCounter] 
+          })
+        }
+      })
+    }, 500)
+  }
 
   const createLocationMark = () => {
     elements.mark = document.createElement('div')
@@ -106,7 +129,7 @@ function init() {
   }
 
   const drawLocationMap = () => {
-    createCanvas(elements.location, 'locationCtx', map.iWidth * 4, map.iHeight * 4)
+    createCanvas(elements.location, 'locationCtx', map.column * 4, map.row * 4)
     map.wall.forEach((tile, i) =>{
       outputLocationWall({ 
         ctx: elements.locationCtx, 
@@ -115,11 +138,11 @@ function init() {
     })
   }
 
-  const placeTile = ({ mapIndex, color, url, ctx }) =>{
-    // const { cellD: d, column } = artData
-    const { cellD: d, iWidth } = map
-    const mapX = (mapIndex % iWidth) * d
-    const mapY = Math.floor(mapIndex / iWidth) * d
+
+  const placeTile = ({ mapIndex, color, url, ctx, gridData, triggerLast }) =>{
+    const { cellD: d, column } = gridData
+    const mapX = (mapIndex % column) * d
+    const mapY = Math.floor(mapIndex / column) * d
   
     if (color === 'transparent') {
       ctx.clearRect(mapX, mapY, d, d)
@@ -127,20 +150,24 @@ function init() {
       ctx.imageSmoothingEnabled = false
       ctx.fillStyle = color || '#a2fcf0'
       ctx.fillRect(mapX, mapY, d, d)
-    
     }
   
     if (url) ctx.drawImage(elements.drawboard, mapX, mapY, d, d)
+    if (triggerLast) {
+      triggerLast.count++
+      if (triggerLast.count === triggerLast.limit) triggerLast.action()
+    }
   }
 
 
-  const drawDataUrl = ({ url, color, index, edit, ctx }) => {
+
+  const drawDataUrl = ({ url, color, index, edit, ctx, gridData = map, triggerLast }) => {
     const { dCtx } = elements
     const img = new Image()
     img.onload = () => {
       const { naturalWidth: w, naturalHeight: h } = img
       dCtx.imageSmoothingEnabled = false
-      resizeCanvas(elements.drawboard, w, h)
+      resizeCanvas({ canvas: elements.drawboard, w, h })
       if (edit) {
         dCtx.save()
         dCtx.translate(w / 2, h / 2)
@@ -151,34 +178,35 @@ function init() {
       dCtx.drawImage(img, 0, 0, w, h)
       dCtx.restore()
       
-      placeTile({ mapIndex: index, ctx, url, edit, color })
+      placeTile({ mapIndex: index, ctx, url, edit, color, gridData, triggerLast  })
     }
     if (url) {
       img.src = url
     } else {
-      placeTile({ mapIndex: index, ctx, color })
+      placeTile({ mapIndex: index, ctx, color, gridData, triggerLast  })
     }
   }
 
+  const outputFromSpriteSheet = ({ d, column, code, i, offset = 0 }) => {
+    const mapX = (i % column) * d
+    const mapY = Math.floor(i / column) * d
+    const { ctx } = elements 
+    const index = tilesList.map(t => t[0]).indexOf(code) + offset
+
+    ctx.imageSmoothingEnabled = false
+    ctx.drawImage(elements.spriteSheet, tileX(index), tileY(index), 16, 16, mapX, mapY, d, d)
+  }
 
   const drawMap = (w, h) => {
     map.map = decompress(mapData[map.key].map)
     map.wall = decompress(mapData[map.key].wall)
-    createCanvas(elements.mapImage, 'ctx', w * map.cellD, h * map.cellD)
+    const { cellD: d, column } = map
+    createCanvas(elements.mapImage, 'ctx', w * d, h * d)
 
-    map.map.forEach((code, i) =>{
-      const tile = code?.split('.')?.[0] || code
-      const edit = code?.split('.')?.[1]
-  
-      drawDataUrl({
-        url: tiles[tile]?.img,
-        color: tiles[tile]?.color,
-        index: i,
-        edit,
-        ctx: elements.ctx
-      })
+    map.map.forEach((code, i) => {
+      outputFromSpriteSheet({ d, column, code, i })
     })
-    // animateMap()
+    animateMap()
   }
 
 
@@ -231,12 +259,12 @@ function init() {
     if (map.spawnData.length) map.spawnData.forEach(m => clearInterval(m.interval))
     map.spawnData.length = 0
     // elements.mapImage.innerHTML = '' // TODO need to clear old sprites from elements.mapImage
-    const { iWidth, cellD } = map 
+    const { column, cellD } = map 
 
     mapData[map.key].characters?.forEach((c, i)=>{
       const { pos, avatar, motion } = c
-      const sx = Math.floor(pos % iWidth) * cellD
-      const sy = Math.floor(pos / iWidth) * cellD
+      const sx = Math.floor(pos % column) * cellD
+      const sy = Math.floor(pos / column) * cellD
       map.spawnData[i] = {
         ...c,
         interval: null,
@@ -451,8 +479,8 @@ function init() {
         return
       }
     }
-    const { spawnData, iWidth } = map
-    const targetDirection = { r: 1, l: -1, u: -iWidth, d: iWidth }[bear.facingDirection[0]]
+    const { spawnData, column } = map
+    const targetDirection = { r: 1, l: -1, u: -column, d: column }[bear.facingDirection[0]]
     const talkTarget = bear.talkTarget || spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
     talk(talkTarget)
   }
@@ -511,7 +539,7 @@ function init() {
     if (!dir || bear.pause) return
     const isBear = actor === bear
 
-    const { iWidth, cellD, map:mapcode } = map
+    const { column, cellD, map:mapcode } = map
     const { x, y } = map.mapXY
     // prevents bear from turning away from ladder
     turnSprite({
@@ -522,8 +550,8 @@ function init() {
     const { diff, para, dist } = {
       right: { diff: 1, para: 'left', dist: -cellD },
       left: { diff: -1, para: 'left', dist: cellD },
-      up: { diff: -iWidth, para: 'top', dist: cellD },
-      down: { diff: iWidth, para: 'top', dist: -cellD }
+      up: { diff: -column, para: 'top', dist: cellD },
+      down: { diff: column, para: 'top', dist: -cellD }
     }[dir] 
 
     if (noWall(actor.pos + diff)) { 
@@ -615,7 +643,7 @@ function init() {
   }
 
   const resize = () =>{
-    const { width, height, iWidth, iHeight, cellD, start } = map
+    const { width, height, column, row, cellD, start } = map
     positionSprite(start)
     // update offset margins
     setPos('left', mapX() * -cellD + ((Math.floor(width / 2) - 1) * cellD))  
@@ -634,14 +662,14 @@ function init() {
     map.minicellD = Math.floor(cellD / 8)
     adjustRectSize({
       target: elements.location, 
-      w: iWidth, h: iHeight, 
+      w: column, h: row, 
       cellD: map.minicellD, 
       cells: map.locationTiles
     })
     // setup map image
     adjustRectSize({ 
       target: elements.mapImage, 
-      w: iWidth, h: iHeight, 
+      w: column, h: row, 
       cellD, 
       // cells: map.mapImageTiles
     })
@@ -789,7 +817,8 @@ function init() {
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], handleKeyAction)
 
-  resizeCanvas(elements.drawboard, map.cellD)
+  resizeCanvas({ canvas: elements.drawboard, w: map.cellD })
+  createSpriteSheet()
 }
 
 window.addEventListener('DOMContentLoaded', init)

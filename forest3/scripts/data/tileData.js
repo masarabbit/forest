@@ -18,7 +18,7 @@ const editConfig = {
 }
 
 const tileTypes = {
-  Q: ['', 'a', 'b', 'c', 'ah', 'bh', 'ch', 'av', 'bv', 'cv', 'avh', 'bvh', 'cbh'],
+  Q: ['', 'a', 'b', 'c', 'h', 'v', 'ah', 'bh', 'ch', 'av', 'bv', 'cv', 'avh', 'bvh', 'cbh'],
   X: [''],
   L: ['', 'a', 'b', 'c'],
   H: ['', 'a'],
@@ -243,12 +243,21 @@ const tilesList = Object.keys(tiles).map(tile => {
   }).flat(1)
 }).flat(1)
 
+const tileSheetData = {
+  column: 30,
+  row: Math.round(tilesList.length / 30),
+  cellD: 16
+}
+
+const tileX = index => (index % tileSheetData.column) * tileSheetData.cellD
+const tileY = index => Math.floor(index / tileSheetData.column) * tileSheetData.cellD
+
 export {
   tiles,
   editConfig,
   tileTypes,
-  tilesList
-  // plainColors,
-  // animationTiles,
-  // blank,
+  tilesList,
+  tileSheetData,
+  tileX,
+  tileY
 }
