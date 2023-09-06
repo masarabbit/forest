@@ -10,6 +10,7 @@ const artData = {
   gridColor: 'lightgrey',
   erase: false,
   tiles: [],
+  showFullPalette: true,
 }
 
 const copyData = {

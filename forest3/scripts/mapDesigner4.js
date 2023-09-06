@@ -1,4 +1,4 @@
-import { tiles, tileTypes } from './data/tileData.js'
+import { tiles, tilesList } from './data/tileData.js'
 import { artData } from './mapState.js'
 import { drawPos, grid, resize, drawDataUrl } from './artUtils/draw.js'
 import { createSelectBox, copySelection, paste, select  } from './artUtils/select.js'
@@ -21,6 +21,48 @@ import {
 import mapData from './data/mapData.js'
 
 function init() {
+
+  const tileSheetData = {
+    column: 30,
+    row: Math.round(tilesList.length / 30),
+    cellD: 16
+  }
+
+  const tileX = index => (index % tileSheetData.column) * tileSheetData.cellD
+  const tileY = index => Math.floor(index / tileSheetData.column) * tileSheetData.cellD
+
+  const createSpriteSheet = () => {
+    resizeCanvas({
+      canvas: elements.spriteSheet,
+      w: tileSheetData.cellD * tileSheetData.column, 
+      h: tileSheetData.cellD * tileSheetData.row
+    })
+    const triggerLast = {
+      count: 0,
+      limit: tilesList.length - 1,
+      action: populatePalette
+    }
+    tilesList.forEach((code, i) => {
+      const tile = code[0]?.split('.')?.[0] || code[0]
+      const edit = code[0]?.split('.')?.[1]
+  
+      const url = tiles[tile]?.frames 
+        ? tiles[tile].frames[code[1]] 
+        : tiles[tile]?.img
+  
+      drawDataUrl({
+        url,
+        color: tiles[tile]?.color,
+        index: i,
+        edit,
+        ctx: elements.sCtx,
+        gridData: tileSheetData,
+        triggerLast
+      })  
+    })
+  }
+
+
 
   const mapKeys = Object.keys(mapData)
 
@@ -115,7 +157,9 @@ function init() {
     elements.cursor.style.left = `${e.pageX}px`
   }
 
-  const populatePalette = () =>{
+
+  
+  const populateCompactPalette = () =>{
     const tilesList = Object.keys(tiles)
     elements.palette.innerHTML = tilesList.map(t =>`<canvas class="palette_cell tile" data-tile="${t}"></canvas>`).join('')
     elements.paletteCells = document.querySelectorAll('.palette_cell')
@@ -138,6 +182,31 @@ function init() {
       palette.addEventListener('click', e =>{
         input.letter.value = e.target.dataset.tile
         input.editKey.value = ''
+        outputTile()
+      })
+    })  
+  }
+
+
+  const populatePalette = () =>{
+    elements.palette.innerHTML = tilesList.map(t =>`<canvas class="palette_cell tile" data-tile="${t.join('*')}"></canvas>`).join('')
+    elements.paletteCells = document.querySelectorAll('.palette_cell')
+
+    elements.paletteCells.forEach((canvas, i) => {
+      if (i < tilesList.length) {
+        resizeCanvas({ canvas, w: 32 })
+        const ctx = canvas.getContext('2d')
+        const index = tilesList.map(t => t.join('*')).indexOf(canvas.dataset.tile)
+        ctx.imageSmoothingEnabled = false
+        ctx.drawImage(elements.spriteSheet, tileX(index), tileY(index), 16, 16, 0, 0, 32, 32)
+      }
+    })
+
+    elements.paletteCells.forEach((palette, i) =>{
+      palette.addEventListener('click', ()=>{
+        const letters = tilesList[i][0].split('.')
+        input.letter.value = letters[0]
+        input.editKey.value = letters[1] || ''
         outputTile()
       })
     })  
@@ -215,67 +284,22 @@ function init() {
   addLabelDisplay()
   outputTile()
   resize()
-  populatePalette()
-
-  // const flattenedTilesList = Object.keys(tiles).map(tile => {
-  //   return tiles[tile]?.frames ? tiles[tile].frames.map((_, i) => `${tile}*${i}`) : `${tile}*${0}`
-  // }).flat(1).map(unsplit => unsplit.split('*'))
-
-  // const tilesList = flattenedTilesList.map(tile => {
-
-  //   return tileTypes[tiles[tile[0]].type].map(append => {
-  //     return [`${tile[0]}${append ? `.${append}` : ''}`, tile[1]]
-  //   })
-  // }).flat(1)
+  createSpriteSheet()
+  // setTimeout(()=> {
+  //   populatePalette()
+  // }, 1000)
 
 
-  const tilesList = Object.keys(tiles).map(tile => {
-    return {
-      tile,
-      frames: tiles[tile]?.frames ? tiles[tile].frames.map((_, i) => i) : [0]
-    }
-  }).map(tileData => {
-    return tileTypes[tiles[tileData.tile].type].map(append => {
-      return tileData.frames.map(frameIndex => {
-        return [`${tileData.tile}${append ? `.${append}` : ''}`, frameIndex]
-      })
-    }).flat(1)
-  }).flat(1)
-
-  console.log('test 1', tilesList)
 
 
-  // TODO change this to not use artData but something like spriteData
 
-  artData.column = 40
-  artData.row = Math.round(tilesList.length / artData.column)
-  artData.cellD = 32
+  //** create spriteSheet */
 
-  resizeCanvas({
-    canvas: elements.spriteSheet,
-    w: artData.cellD * artData.column, h: artData.cellD * artData.row
-  })
-  tilesList.forEach((code, i) => {
-    const tile = code[0]?.split('.')?.[0] || code[0]
-    const edit = code[0]?.split('.')?.[1]
 
-    const url = tiles[tile]?.frames 
-      ? tiles[tile].frames[code[1]] 
-      : tiles[tile]?.img
 
-    drawDataUrl({
-      url,
-      color: tiles[tile]?.color,
-      index: i,
-      edit,
-      ctx: elements.sCtx,
-      // overrideD: 32
-    })  
-  })
 
-  // artData.column = input.column.value
-  // artData.row = input.row.value
-  // artData.cellD = input.cellD.value
+
+
 
   // TODO once this sprite sheet is made, then forest3 can be partly reverted to use the old sprite sheet logic
   
@@ -371,6 +395,40 @@ function init() {
     input.editKey.value = input.editKey.value.split('').sort().join('')
   }
 
+  const makeMapIntoBg = () => {
+    artboard.parentNode.style.background = `url(${artboard.toDataURL()})`
+    artboard.classList.add('bg_mode')
+    const { cellD, column, row } = artData
+    aCtx.clearRect(0, 0, column * cellD, row * cellD)
+
+    artData.tiles = Array(column * row).fill('')
+    input.codesBox[0].value = artData.tiles
+  }
+
+  const switchPalette = () => {
+    artData.showFullPalette = !artData.showFullPalette
+    artData.showFullPalette
+      ? populatePalette()
+      : populateCompactPalette()
+  }
+
+  const rotateTile = () => {
+    if (['a', 'b', 'c'].some(code => input.editKey.value.includes(code))) {
+      if (input.editKey.value.includes('a')) {
+        addEditCode('a')
+        addEditCode('b')
+      } else if (input.editKey.value.includes('b')) {
+        addEditCode('b')
+        addEditCode('c')
+      } else {
+        addEditCode('c')
+      }
+    } else {
+      addEditCode('a')
+    }
+    outputTile()
+  }
+
   elements.buttons.forEach(b =>{
     const addClickEvent = (className, event) =>{
       if (b.classList.contains(className)) b.addEventListener('click', event)
@@ -394,32 +452,9 @@ function init() {
       addEditCode('v')
       outputTile()
     })
-    addClickEvent('rotate', ()=> {
-      if (['a', 'b', 'c'].some(code => input.editKey.value.includes(code))) {
-        if (input.editKey.value.includes('a')) {
-          addEditCode('a')
-          addEditCode('b')
-        } else if (input.editKey.value.includes('b')) {
-          addEditCode('b')
-          addEditCode('c')
-        } else {
-          addEditCode('c')
-        }
-      } else {
-        addEditCode('a')
-      }
-      outputTile()
-    })
-    addClickEvent('make_map_into_bg', ()=> {
-      console.log('click',  artboard.toDataURL())
-      artboard.parentNode.style.background = `url(${artboard.toDataURL()})`
-      artboard.classList.add('bg_mode')
-      const { cellD, column, row } = artData
-      aCtx.clearRect(0, 0, column * cellD, row * cellD)
-
-      artData.tiles = Array(column * row).fill('')
-      input.codesBox[0].value = artData.tiles
-    })
+    addClickEvent('rotate', rotateTile)
+    addClickEvent('make_map_into_bg', makeMapIntoBg)
+    addClickEvent('switch_palette', switchPalette)
   })
   mouse.down(artboard, 'add', ()=> artData.draw = true)
   mouse.up(artboard, 'add', ()=> artData.draw = false)

@@ -230,10 +230,24 @@ const tiles = {
   },
 }
 
+const tilesList = Object.keys(tiles).map(tile => {
+  return {
+    tile,
+    frames: tiles[tile]?.frames ? tiles[tile].frames.map((_, i) => i) : [0]
+  }
+}).map(tileData => {
+  return tileTypes[tiles[tileData.tile].type].map(append => {
+    return tileData.frames.map(frameIndex => {
+      return [`${tileData.tile}${append ? `.${append}` : ''}`, frameIndex]
+    })
+  }).flat(1)
+}).flat(1)
+
 export {
   tiles,
   editConfig,
-  tileTypes
+  tileTypes,
+  tilesList
   // plainColors,
   // animationTiles,
   // blank,

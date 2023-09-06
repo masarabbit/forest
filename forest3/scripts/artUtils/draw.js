@@ -33,7 +33,7 @@ const grid = {
 
 
 
-const drawDataUrl = ({ url, color, index, edit, ctx, overrideD }) => {
+const drawDataUrl = ({ url, color, index, edit, ctx, overrideD, gridData = artData, triggerLast }) => {
   const img = new Image()
   img.onload = () => {
     const { naturalWidth: w, naturalHeight: h } = img
@@ -52,12 +52,12 @@ const drawDataUrl = ({ url, color, index, edit, ctx, overrideD }) => {
     dCtx.drawImage(img, 0, 0, w, h)
     dCtx.restore()
     
-    placeTile({ mapIndex: index, ctx, url, edit, color, overrideD })
+    placeTile({ mapIndex: index, ctx, url, edit, color, overrideD, gridData, triggerLast })
   }
   if (url) {
     img.src = url
   } else {
-    placeTile({ mapIndex: index, ctx, color, overrideD })
+    placeTile({ mapIndex: index, ctx, color, overrideD, gridData, triggerLast })
   }
 }
 
@@ -69,8 +69,8 @@ const drawPos = (e, cellD) => {
   }
 }
 
-const placeTile = ({ mapIndex, color, url, ctx, overrideD }) =>{
-  const { cellD, column } = artData
+const placeTile = ({ mapIndex, color, url, ctx, overrideD, gridData, triggerLast }) =>{
+  const { cellD, column } = gridData
   const d = overrideD || cellD
   const mapX = (mapIndex % column) * d
   const mapY = Math.floor(mapIndex / column) * d
@@ -81,10 +81,13 @@ const placeTile = ({ mapIndex, color, url, ctx, overrideD }) =>{
     ctx.imageSmoothingEnabled = false
     ctx.fillStyle = color || '#a2fcf0'
     ctx.fillRect(mapX, mapY, d, d)
-  
   }
 
   if (url) ctx.drawImage(drawboard, mapX, mapY, d, d)
+  if (triggerLast) {
+    triggerLast.count++
+    if (triggerLast.count === triggerLast.limit) triggerLast.action()
+  }
 }
 
 const generateMap = () =>{
