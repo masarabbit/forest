@@ -697,10 +697,7 @@ input:checked + .slider:before {
 }
 
 @keyframes slide-in-from-left {
-  0% { 
-    left: -100vh; 
-    opacity: 0;
-  }
+  0% { left: -100vh; }
   50% {
     opacity: 0;
   }
@@ -713,7 +710,13 @@ input:checked + .slider:before {
 
 @keyframes slide-in-from-right {
   0% { right: -100vh; }
-  95% { right: 25px; }
+  50% {
+    opacity: 0;
+  }
+  95% { 
+    right: 25px;
+    opacity: 1; 
+  }
   100% { right: 15px }
 }
 

@@ -151,7 +151,7 @@ const mapData = {
       100: { event: 'transport', gateway: 'portal2' },
     },
     map: 'ac1,c2,ac1,c7,ac2,c9,ac1,c4,ac1,c2,ac1,c6,ac2,c3,w12,c1,ac1,c6,w3,v1,w6,v1,w1,ac1,c5,w18,c2,w2,v1,w6,v1,w8,c2,ac1,c1,w3,v1,w9,v1,w2,c1,ac1,c2,w16,ac2,c1,ac2,c2,ac2,c3,ac1,c13,ac1,c6,ac2,c3,ac2,c2',
-    wall: '$42,12,$8,12,$6,18,$2,18,$4,16,$4,16,$42',
+    walls: '$42,12,$8,12,$6,18,$2,18,$4,16,$4,16,$42',
     entry: {
       portal2: {
         map: 'one',
