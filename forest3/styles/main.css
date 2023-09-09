@@ -302,7 +302,7 @@ a:hover {
   --w: 26px;
   --h: 15px;
   width: calc(var(--w) * 4);
-  height: calc(var(--h) * 4);
+  height: 56px; /* (--h - 1) * 4 */
   background-size: calc(var(--w) * 4) calc(var(--h) * 4) !important; 
   animation: bop infinite 2s;
   background-repeat: no-repeat;
@@ -313,7 +313,7 @@ a:hover {
     background-position: 0 0;
   }
   50% {
-    background-position: 0 5px;
+    background-position: 0 4px;
   }
 }
 
@@ -354,7 +354,7 @@ a:hover {
 .text_display {
   position: fixed;
   width: 100%;
-  height: 180px;
+  height: 190px;
 }
 
 .event_cover {
@@ -387,9 +387,9 @@ a:hover {
 
 
 .next {
-  position: fixed;
+  position: absolute;
   bottom: 40px;
-  right: 30px;
+  right: 15px;
   border: 0px;
   padding: 10px;
   font-size: 16px;
@@ -413,6 +413,22 @@ a:hover {
   bottom: -100px;
 }
 
+.text_display {
+  transition: 0.4s;
+}
+
+.text_display:not(.hidden) {
+  background-color: #4f443d;
+}
+
+.text_display_container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .next.hide {
   opacity: 0;
   pointer-events: none;
@@ -424,7 +440,7 @@ a:hover {
   height: 100%;
   padding: 25px 30px 0;
   /* background-color: rgba(3, 31, 92, 0.753); */
-  background-color: #4f443d;
+  /* background-color: #4f443d; */
 }
 
 .dialog_box.face_displayed {
@@ -435,7 +451,9 @@ a:hover {
 .choice {
   position: absolute;
   right: 100vh;
-  top: -20px;
+  bottom: 20px;
+  /* transform: translateY(-100%); */
+  /* top: -100px; */
   /* background-color: rgb(3, 31, 92); */
   background-color: #392a20d8;
   display: flex;
@@ -680,14 +698,14 @@ input:checked + .slider:before {
 
 @keyframes slide-in-from-left {
   0% { left: -100vh; }
-  95% { left: 30px; }
-  100% { left: 20px; }
+  95% { left: 25px; }
+  100% { left: 15px; }
 }
 
 @keyframes slide-in-from-right {
   0% { right: -100vh; }
-  95% { right: 60px; }
-  100% { right: 50px; }
+  95% { right: 25px; }
+  100% { right: 15px }
 }
 
 @keyframes slide-in-from-bottom {
@@ -842,3 +860,9 @@ canvas {
 /* .control :nth-child(4) {
   margin: 10px 10px 10px 30px;
 } */
+
+
+.start_button.hidden {
+  opacity: 0;
+  pointer-events: none;
+}

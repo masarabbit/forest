@@ -61,7 +61,7 @@ function init() {
     const triggerLast = {
       count: 0,
       limit: tilesList.length - 1,
-      action: ()=> elements.startButton.classList.remove('display_none')
+      action: ()=> elements.startButton.classList.remove('hidden')
     }
     tilesList.forEach((code, i) => {
       const tile = code[0]?.split('.')?.[0] || code[0]
@@ -321,7 +321,7 @@ function init() {
   const showDialog = ({ talkTarget, facingDirection, dialog }) =>{
     bear.isTalking = true
     // talkTarget.pause = true //TODO check if this is necessary
-    elements.texts[0].parentNode.classList.remove('hidden')
+    elements.texts[0].parentNode.parentNode.classList.remove('hidden')
     if (facingDirection) turnSprite({
       e: facingDirection,
       actor: talkTarget, 
@@ -390,7 +390,7 @@ function init() {
       talkTarget: null,
       isTalking: false
     })
-    elements.texts[0].parentNode.classList.add('hidden')
+    elements.texts[0].parentNode.parentNode.classList.add('hidden')
     elements.texts[1].classList.remove('face_displayed')
     elements.texts.forEach(t => t.innerText = '')
     elements.transitionCover.innerHTML = ''
