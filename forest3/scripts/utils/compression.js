@@ -9,6 +9,22 @@ const decode = arr =>{
   }).join('')
 }
 
+const compress = value =>{
+  const originalArray = value.split(',')
+  let count = 0
+  const record = []
+
+  originalArray.forEach((letter, i)=>{
+    const next = i > originalArray.length ? '' : originalArray[i + 1]
+    count++
+    if (letter === next) return
+    record.push([letter, count])
+    count = 0 
+  })
+
+  return record.map(x=> x[0] + x[1])
+}
+
 const decompress = arr =>{
   const output = []
   const input = Array.isArray(arr) ? arr : arr.split(',')
@@ -24,5 +40,6 @@ const decompress = arr =>{
 
 export {
   decode,
+  compress,
   decompress
 }

@@ -91,7 +91,30 @@ const placeTile = ({ mapIndex, color, url, ctx, overrideD, gridData, triggerLast
 }
 
 const generateMap = () =>{
-  if (!artData.tiles.length) return
+  if (!artData.tiles.length) return 
+  // ;[
+  //   {
+  //     key: 'tiles',
+  //     ctx: aCtx
+  //   },
+  //   {
+  //     key: 'walls',
+  //     ctx: elements.wCtx
+  //   }
+  // ].forEach(data => {
+  //   artData[data.key].forEach((code, i) =>{
+  //     const tile = code?.split('.')?.[0] || code
+  //     const edit = code?.split('.')?.[1]
+  
+  //     drawDataUrl({
+  //       url: tiles[tile]?.img,
+  //       color: tiles[tile]?.color,
+  //       index: i,
+  //       edit,
+  //       ctx: data.ctx
+  //     })
+  //   })
+  // })
   artData.tiles.forEach((code, i) =>{
     const tile = code?.split('.')?.[0] || code
     const edit = code?.split('.')?.[1]
@@ -104,12 +127,20 @@ const generateMap = () =>{
       ctx: aCtx
     })
   })
+
+  artData.walls.forEach((code, i) =>{
+    drawDataUrl({
+      color: tiles[code]?.color,
+      index: i,
+      ctx: elements.wCtx
+    })
+  })
 }
 
 
 const resize = () =>{
   const { column, row, cellD } = artData
-  ;[overlay, artboard].forEach(b =>{
+  ;[overlay, artboard, elements.wallBoard].forEach(b =>{
     resizeCanvas({
       canvas: b,
       w: column * cellD,

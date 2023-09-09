@@ -3,6 +3,8 @@ import { artData } from './mapState.js'
 import { drawPos, grid, resize, drawDataUrl } from './artUtils/draw.js'
 import { createSelectBox, copySelection, paste, select  } from './artUtils/select.js'
 
+import { compress, decompress } from './utils/compression.js'
+
 import {
   input,
   artboard,
@@ -58,34 +60,21 @@ function init() {
 
   const mapKeys = Object.keys(mapData)
 
-  const compress = value =>{
-    const originalArray = value.split(',')
-    let count = 0
-    const record = []
+  // const compress = value =>{
+  //   const originalArray = value.split(',')
+  //   let count = 0
+  //   const record = []
 
-    originalArray.forEach((letter,i)=>{
-      const next = i > originalArray.length ? '' : originalArray[i + 1]
-      count++
-      if (letter === next) return
-      record.push([letter,count])
-      count = 0 
-    })
+  //   originalArray.forEach((letter, i)=>{
+  //     const next = i > originalArray.length ? '' : originalArray[i + 1]
+  //     count++
+  //     if (letter === next) return
+  //     record.push([letter,count])
+  //     count = 0 
+  //   })
 
-    return record.map(x=> x[0] + x[1])
-  }
-
-  const decompress = value =>{
-    const output = []
-    value.split(',').forEach(x=>{
-      const letter = x.split('').filter(y => y * 0 !== 0).join('')
-      const repeat = x.split('').filter(y => y * 0 === 0).join('') || 1
-
-      for (let i = 0; i < repeat; i++){
-        output.push(letter)
-      }
-    })
-    return output
-  }
+  //   return record.map(x=> x[0] + x[1])
+  // }
 
   const updateCodesDisplay = (box, arr) =>{
     box.value = `${arr.map(ele => ele).join(',')}`
@@ -94,6 +83,9 @@ function init() {
 
   const generateFromCode = () =>{
     artData.tiles = input.codesBox[0].value.split(',')
+    
+    // TODO testing
+    artData.walls = input.codesBox[2].value.split(',')
     resize()
   }
 
@@ -140,8 +132,8 @@ function init() {
     mapGenCells.forEach(grid => grid.classList.toggle('index_display'))
   }
 
-  const compressCode = () =>{
-    input.codesBox[1].value = compress(input.codesBox[0].value)
+  const compressCode = i =>{
+    input.codesBox[i + 1].value = compress(input.codesBox[i].value)
   }
 
   const handleCursor = e =>{
@@ -220,6 +212,8 @@ function init() {
     artData.tiles = decompress(queryArray[4].replaceAll('-',','))
     input.codesBox[0].value = artData.tiles
     if (queryArray[5]) input.indexIndicator.value = queryArray[5]
+    if (queryArray[6]) input.codesBox[2].value = decompress(mapData[queryArray[6]].wall)
+
     generateFromCode()
   }
 
@@ -235,23 +229,34 @@ function init() {
     const { cellD: d, column } = artData
     const { x, y } = drawPos(e, d)
     const { value: key } = input.letter
-    const { value: edit } = input.editKey
+
     const mapIndex = ((y / d - 1) * column) + x / d - 1
 
-    if (!artData.erase 
+    if (!artData.erase
       // && (tileIndex !== -1 || tile === blank || plainColors[tile])
       ) {
-
-      drawDataUrl({
-        url: tiles[key]?.img,
-        color: tiles[key]?.color,
-        index: mapIndex,
-        edit,
-        ctx: aCtx
-      })  
-
-      artData.tiles[mapIndex] = `${key}${edit ? `.${edit}` : ''}`
-      updateCodesDisplay(input.codesBox[0], artData.tiles) 
+        const { value: edit } = input.editKey  
+        
+        if (!artData.showWalls) {
+          drawDataUrl({
+            url: tiles[key]?.img,
+            color: tiles[key]?.color,
+            index: mapIndex,
+            edit,
+            ctx: aCtx
+          })  
+    
+          artData.tiles[mapIndex] = `${key}${edit ? `.${edit}` : ''}`
+          updateCodesDisplay(input.codesBox[0], artData.tiles) 
+      } else {
+        const color = key === 'zz' ? null : tiles['$'].color
+        drawDataUrl({
+          color,
+          index: mapIndex,
+          ctx: elements.wCtx
+        })  
+      }
+  
     }
   }
 
@@ -315,15 +320,19 @@ function init() {
   mapLinkCells.forEach((link, i)=>{
     link.addEventListener('click',()=>{
       const { column, row, map } = mapData[mapKeys[i]]
-      const url = `${column}#${row}#${artData.cellD}#${map.replaceAll(',','-')}#${i}`
+      const url = `${column}#${row}#${artData.cellD}#${map.replaceAll(',','-')}#${i}#${mapKeys[i]}`
       window.location.hash = url      
       location.reload(true)
     })
   })
 
   elements.copyButtons.forEach((copyButton, i) =>{
-    copyButton.addEventListener('click',()=>copyText(input.codesBox[i]))
+    copyButton.addEventListener('click', ()=>copyText(input.codesBox[i]))
   })
+
+  // elements.compressButtons.forEach((compressButton, i) =>{
+  //   compressButton.addEventListener('click', ()=>compressCode(i))
+  // })
 
   input.cellD.addEventListener('change',()=> {
     artData.cellD = +input.cellD.value
@@ -341,7 +350,7 @@ function init() {
     generateFromCode()
   })
 
-  input.column.addEventListener('change',()=> {
+  input.column.addEventListener('change', ()=> {
     const newColumn = +input.column.value
     const updatedCodes = [[]]
     let count = 0
@@ -371,9 +380,15 @@ function init() {
   })
 
   elements.indexToggleButton.addEventListener('click', toggleIndex)
-  input.codesBox[0].addEventListener('change', compressCode)
+
+  input.codesBox[0].addEventListener('change', ()=> compressCode(0))
   input.codesBox[1].addEventListener('change',()=>{   
     input.codesBox[0].value = decompress(input.codesBox[1].value)
+  })
+
+  input.codesBox[2].addEventListener('change', ()=> compressCode(2))
+  input.codesBox[3].addEventListener('change', ()=>{   
+    input.codesBox[2].value = decompress(input.codesBox[3].value)
   })
 
   ;[input.letter, input.editKey].forEach(input => {
@@ -426,8 +441,9 @@ function init() {
       if (b.classList.contains(className)) b.addEventListener('click', event)
     }
     addClickEvent('generate', generateFromCode)
+    // addClickEvent('generate_walls', generateFromCode) // TODO might not need it
     addClickEvent('grid_display', toggleGrid)
-    addClickEvent('compress', compressCode)
+    // addClickEvent('compress', compressCode) // TODO might not need it
     addClickEvent('download', ()=> downloadImage(artboard, 'map', true))
     addClickEvent('display_index', ()=> artData.number = !artData.number)
     addClickEvent('select_state', select)
@@ -435,8 +451,8 @@ function init() {
     addClickEvent('paste_selection', paste)
     addClickEvent('cut_selection', ()=> copySelection({ cut: true }))
     addClickEvent('crop_selection', ()=> copySelection({ crop: true }))
-    addClickEvent('eraser', ()=> update('letter', 'zz'))
-    addClickEvent('flip_h', ()=> {
+    addClickEvent('eraser', ()=> update('letter', input.letter.value === 'zz' ? '' : 'zz'))
+    addClickEvent('flip_h', ()=> {s
       addEditCode('h')
       outputTile()
     })
@@ -447,6 +463,10 @@ function init() {
     addClickEvent('rotate', rotateTile)
     addClickEvent('make_map_into_bg', makeMapIntoBg)
     addClickEvent('switch_palette', switchPalette)
+    addClickEvent('toggle_walls', ()=> {
+      elements.wallBoard.classList.toggle('hide')
+      artData.showWalls = !artData.showWalls
+    })
   })
   mouse.down(artboard, 'add', ()=> artData.draw = true)
   mouse.up(artboard, 'add', ()=> artData.draw = false)

@@ -460,7 +460,7 @@ function init() {
       const text = eventPoint.text[count]
       bear.textCount++
       bear.pause = true
-      elements.texts[0].parentNode.classList.remove('hidden')
+      elements.texts[0].parentNode.parentNode.classList.remove('hidden')
       updateNextButtonText(count, eventPoint.text)
       displayTextGradual(text, 0)
       if (eventPoint.art && !elements.transitionCover.innerHTML) elements.transitionCover.innerHTML = `<div class="art_work"><img src=${eventPoint.art} /></div>`

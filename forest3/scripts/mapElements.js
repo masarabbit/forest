@@ -24,6 +24,7 @@ const elements = {
   palette: document.querySelector('.palette'),
   alts: document.querySelectorAll('.alt'),
   copyButtons: document.querySelectorAll('.copy'),
+  // compressButtons: document.querySelectorAll('.compress'),
   indexToggleButton: document.querySelector('.display_index'),
   buttons: document.querySelectorAll('.btn'),
   mapLinks: document.querySelector('.map_link'),
@@ -33,9 +34,12 @@ const elements = {
   output: document.querySelector('.output'),
   spriteSheet: document.querySelector('.sprite_sheet'),
   sCtx: null,
+  wallBoard: document.querySelector('.wallboard'),
+  wCtx: null,
 }
 
 elements.sCtx = elements.spriteSheet?.getContext('2d')
+elements.wCtx = elements.wallBoard?.getContext('2d')
 
 
 

@@ -752,12 +752,13 @@ button.icon:hover {
 .overlay {
   background-color: transparent;
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   transition: 0.5s;
   /* animation: display forwards 0.5s; */
 }
 
 
+.wallboard.hide,
 .overlay.hide {
   /* animation: fade forwards 0.5s; */
   opacity: 0;
@@ -770,9 +771,8 @@ button.icon:hover {
   pointer-events: auto;
 }
 
-.artboard.freeze,
-.overlay.freeze {
-  pointer-events: none;
+.freeze {
+  pointer-events: none !important;
 }
 
 
@@ -802,3 +802,11 @@ button.icon:hover {
   right: 20px;
   top: 6px;
 } */
+
+.wallboard {
+  z-index: 1;
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  transition: 0.5s;
+}
