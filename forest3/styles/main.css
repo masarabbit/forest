@@ -697,8 +697,17 @@ input:checked + .slider:before {
 }
 
 @keyframes slide-in-from-left {
-  0% { left: -100vh; }
-  95% { left: 25px; }
+  0% { 
+    left: -100vh; 
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  95% { 
+    left: 25px;
+    opacity: 1; 
+  }
   100% { left: 15px; }
 }
 
@@ -804,62 +813,6 @@ canvas {
 .blink {
   animation: blink infinite 1s;
 }
-
-
-/* .map_image_tile::after,
-.map_image_tile {
-  background: var(--bg);
-  background-position: calc(var(--h) * 32px) calc(var(--v) * 32px);
-  image-rendering: pixelated;
-  width: 32px;
-  height: 32px;
-}
-
-.map_image_tile {
-  background-size: calc(9 * var(--cell-d)) calc(6 * var(--cell-d)) !important;
-  background-color: #a2fcf0;
-}
-
-.v,
-.p,
-.rp,
-.b,
-.bd {
-  background-image: none;
-}
-
-.p { background-color: #fff; }
-.rp { background-color: #58d3d8; }
-.b { background-color: #a2fcf0; }
-.bd { background-color: #0d8799; }
-
-.rh::after {
-  background-position: calc(5 * var(--cell-d)) !important;
-}
-.ra::after {
-  background-position: calc(4 * var(--cell-d)) !important;
-}
-.rb::after {
-  background-position: calc(3 * var(--cell-d)) !important;
-}
-.rd::after {
-  background-position: calc(2 * var(--cell-d)) !important;
-}
-.re::after{ 
-  background-position: var(--cell-d) !important;
-}
-
-.river::after {
-  position: absolute;
-  content: '';
-  background: var(--river);
-  background-size: calc(6 * var(--cell-d)) var(--cell-d) !important;
-  animation: 1s blink infinite;
-} */
-
-/* .control :nth-child(4) {
-  margin: 10px 10px 10px 30px;
-} */
 
 
 .start_button.hidden {

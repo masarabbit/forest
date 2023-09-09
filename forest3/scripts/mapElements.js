@@ -24,7 +24,7 @@ const elements = {
   palette: document.querySelector('.palette'),
   alts: document.querySelectorAll('.alt'),
   copyButtons: document.querySelectorAll('.copy'),
-  // compressButtons: document.querySelectorAll('.compress'),
+  compressButtons: document.querySelectorAll('.compress'),
   indexToggleButton: document.querySelector('.display_index'),
   buttons: document.querySelectorAll('.btn'),
   mapLinks: document.querySelector('.map_link'),
@@ -41,7 +41,20 @@ const elements = {
 elements.sCtx = elements.spriteSheet?.getContext('2d')
 elements.wCtx = elements.wallBoard?.getContext('2d')
 
-
+const tilesData = [
+  {
+    input: input.codesBox[0],
+    tiles: 'tiles',
+    blank: 'zz',
+    ctx: aCtx,
+  },
+  {
+    input: input.codesBox[2],
+    tiles: 'walls',
+    blank: '',
+    ctx: elements.wCtx,
+  }
+]
 
 export {
   input,
@@ -51,5 +64,6 @@ export {
   oCtx,
   elements,
   drawboard,
-  dCtx
+  dCtx,
+  tilesData
 }

@@ -10,7 +10,8 @@ import {
   artboard,
   overlay,
   elements,
-  aCtx
+  aCtx,
+  tilesData
 } from './mapElements.js'
 
 import {
@@ -34,7 +35,10 @@ function init() {
     const triggerLast = {
       count: 0,
       limit: tilesList.length - 1,
-      action: populatePalette
+      action: ()=> {
+        populatePalette()
+        switchPalette()
+      }
     }
     tilesList.forEach((code, i) => {
       const tile = code[0]?.split('.')?.[0] || code[0]
@@ -60,22 +64,6 @@ function init() {
 
   const mapKeys = Object.keys(mapData)
 
-  // const compress = value =>{
-  //   const originalArray = value.split(',')
-  //   let count = 0
-  //   const record = []
-
-  //   originalArray.forEach((letter, i)=>{
-  //     const next = i > originalArray.length ? '' : originalArray[i + 1]
-  //     count++
-  //     if (letter === next) return
-  //     record.push([letter,count])
-  //     count = 0 
-  //   })
-
-  //   return record.map(x=> x[0] + x[1])
-  // }
-
   const updateCodesDisplay = (box, arr) =>{
     box.value = `${arr.map(ele => ele).join(',')}`
     window.location.hash = `${input.column.value}#${input.row.value}#${input.cellD.value}#${compress(input.codesBox[0].value).join('-')}`
@@ -83,8 +71,6 @@ function init() {
 
   const generateFromCode = () =>{
     artData.tiles = input.codesBox[0].value.split(',')
-    
-    // TODO testing
     artData.walls = input.codesBox[2].value.split(',')
     resize()
   }
@@ -133,6 +119,7 @@ function init() {
   }
 
   const compressCode = i =>{
+    console.log('compress code', i)
     input.codesBox[i + 1].value = compress(input.codesBox[i].value)
   }
 
@@ -177,13 +164,11 @@ function init() {
     elements.paletteCells = document.querySelectorAll('.palette_cell')
 
     elements.paletteCells.forEach((canvas, i) => {
-      // if (i < tilesList.length) {
       resizeCanvas({ canvas, w: 32 })
       const ctx = canvas.getContext('2d')
       const index = tilesList.map(t => t.join('*')).indexOf(canvas.dataset.tile)
       ctx.imageSmoothingEnabled = false
       ctx.drawImage(elements.spriteSheet, tileX(index), tileY(index), 16, 16, 0, 0, 32, 32)
-      // }
     })
 
     elements.paletteCells.forEach((palette, i) =>{
@@ -212,7 +197,7 @@ function init() {
     artData.tiles = decompress(queryArray[4].replaceAll('-',','))
     input.codesBox[0].value = artData.tiles
     if (queryArray[5]) input.indexIndicator.value = queryArray[5]
-    if (queryArray[6]) input.codesBox[2].value = decompress(mapData[queryArray[6]].wall)
+    if (queryArray[6]) input.codesBox[2].value = decompress(mapData[queryArray[6]].walls)
 
     generateFromCode()
   }
@@ -282,23 +267,8 @@ function init() {
   outputTile()
   resize()
   createSpriteSheet()
-  // setTimeout(()=> {
-  //   populatePalette()
-  // }, 1000)
 
 
-
-
-
-  //** create spriteSheet */
-
-
-
-
-
-
-
-  // TODO once this sprite sheet is made, then forest3 can be partly reverted to use the old sprite sheet logic
   
   // ********************
   // ** eventlisteners **
@@ -330,52 +300,58 @@ function init() {
     copyButton.addEventListener('click', ()=>copyText(input.codesBox[i]))
   })
 
-  // elements.compressButtons.forEach((compressButton, i) =>{
-  //   compressButton.addEventListener('click', ()=>compressCode(i))
-  // })
+  elements.compressButtons.forEach((compressButton, i) =>{
+    compressButton.addEventListener('click', ()=> compressCode(i === 0 ? 0 : 2))
+  })
 
   input.cellD.addEventListener('change',()=> {
     artData.cellD = +input.cellD.value
     generateFromCode()
   })
 
+
   input.row.addEventListener('change',()=> {
     const newRow = +input.row.value
-    const diff = Math.abs(newRow - artData.row) 
-    input.codesBox[0].value = newRow > artData.row
-      ?  [...artData.tiles, ...Array(diff * artData.column).fill('transparent')]
-      :  artData.tiles.slice(0, artData.tiles.length - (diff * artData.column))
+    const diff = Math.abs(newRow - artData.row)  
+    tilesData.forEach(data => {
+      data.input.value = newRow > artData.row
+      ?  [...artData[data.tiles], ...Array(diff * artData.column).fill(data.blank)]
+      :  artData[data.tiles].slice(0, artData[data.tiles].length - (diff * artData.column))
+      artData[data.tiles] = data.input.value 
+    })
     artData.row = newRow
-    artData.tiles = input.codesBox[0].value
     generateFromCode()
   })
 
   input.column.addEventListener('change', ()=> {
     const newColumn = +input.column.value
-    const updatedCodes = [[]]
-    let count = 0
-    let index = 0
-    artData.tiles.forEach(code =>{
-      if (count === +artData.column) {
-        count = 0
-        index++
-        updatedCodes.push([])
-      }
-      count++
-      updatedCodes[index].push(code)
+    tilesData.forEach(data => {
+      const updatedCodes = [[]]
+      let count = 0
+      let index = 0
+      artData[data.tiles].forEach(code =>{
+        if (count === +artData.column) {
+          count = 0
+          index++
+          updatedCodes.push([])
+        }
+        count++
+        updatedCodes[index].push(code)
+      })
+  
+      data.input.value = updatedCodes.map(codes =>{
+        const diff = Math.abs(newColumn - artData.column)
+        if (newColumn > artData.column){
+          return [...codes, ...Array(diff).fill(data.blank)]
+        } else {
+          return codes.slice(0, codes.length - diff)
+        }
+      }).join(',')
+  
+      artData[data.tiles] = data.input.value
     })
 
-    input.codesBox[0].value = updatedCodes.map(codes =>{
-      const diff = Math.abs(newColumn - artData.column) //TODO adjust arrays
-      if (newColumn > artData.column){
-        return [...codes, ...Array(diff).fill('transparent')]
-      } else {
-        return codes.slice(0, codes.length - diff)
-      }
-    }).join(',')
-
     artData.column = newColumn
-    artData.tiles = input.codesBox[0].value
     generateFromCode()
   })
 
@@ -441,18 +417,20 @@ function init() {
       if (b.classList.contains(className)) b.addEventListener('click', event)
     }
     addClickEvent('generate', generateFromCode)
-    // addClickEvent('generate_walls', generateFromCode) // TODO might not need it
     addClickEvent('grid_display', toggleGrid)
-    // addClickEvent('compress', compressCode) // TODO might not need it
     addClickEvent('download', ()=> downloadImage(artboard, 'map', true))
     addClickEvent('display_index', ()=> artData.number = !artData.number)
     addClickEvent('select_state', select)
     addClickEvent('copy_selection', copySelection)
-    addClickEvent('paste_selection', paste)
+    addClickEvent('paste_selection', ()=> {
+      tilesData.forEach(data => {
+        paste({ data })
+      })
+    })
     addClickEvent('cut_selection', ()=> copySelection({ cut: true }))
     addClickEvent('crop_selection', ()=> copySelection({ crop: true }))
     addClickEvent('eraser', ()=> update('letter', input.letter.value === 'zz' ? '' : 'zz'))
-    addClickEvent('flip_h', ()=> {s
+    addClickEvent('flip_h', ()=> {
       addEditCode('h')
       outputTile()
     })

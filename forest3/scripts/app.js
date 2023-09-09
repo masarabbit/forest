@@ -49,7 +49,7 @@ function init() {
     // prevents sprite walking beyond edge
     // if (bear.facingDirection === 'left' && noLeftEdgeList.some(c => mapcode[pos + 1] === c)) return false
     // return noWallList.some(c => mapcode[pos] === c)
-    return map.wall[pos] !== '$'
+    return map.walls[pos] !== '$'
   }
 
   const createSpriteSheet = () => {
@@ -130,7 +130,7 @@ function init() {
 
   const drawLocationMap = () => {
     createCanvas(elements.location, 'locationCtx', map.column * 4, map.row * 4)
-    map.wall.forEach((tile, i) =>{
+    map.walls.forEach((tile, i) =>{
       outputLocationWall({ 
         ctx: elements.locationCtx, 
         i, d: 4, tile
@@ -199,7 +199,7 @@ function init() {
 
   const drawMap = (w, h) => {
     map.map = decompress(mapData[map.key].map)
-    map.wall = decompress(mapData[map.key].wall)
+    map.walls = decompress(mapData[map.key].walls)
     const { cellD: d, column } = map
     createCanvas(elements.mapImage, 'ctx', w * d, h * d)
 

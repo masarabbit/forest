@@ -1,9 +1,9 @@
 import { artData, copyData } from '../mapState.js'
-import { elements, aCtx, input, overlay } from '../mapElements.js'
+import { elements, aCtx, overlay, tilesData } from '../mapElements.js'
 import { resizeCanvas, styleTarget, mouse, nearestN, update } from './mapUtils.js'
 import { drawPos, resize } from './draw.js'
 
-
+// TODO possibly copy and edit walls at the same time as map tiles
 // copyColors, paintCanvas,
 
 const client = (e, type) => e.type[0] === 'm' ? e[`client${type}`] : e.touches[0][`client${type}`]
@@ -135,9 +135,9 @@ const createSelectBox = e =>{
 
 
 // TODO this isn't working as expected. Not returning the selected area
-const copyTiles = ({ offset, w, h, data, cut }) =>{
+const copyTiles = ({ offset, w, h, copyData, tiles, cut }) =>{
   const { cellD, column } = artData
-  if (!cut) data.length = 0
+  if (!cut) copyData.length = 0
   const tilesToCut = []
   for (let i = 0; i < w * h; i++) {
     const x = i % w * cellD
@@ -146,10 +146,10 @@ const copyTiles = ({ offset, w, h, data, cut }) =>{
     if (cut){ 
       tilesToCut.push(mapIndex + offset)
     } else {
-      data.push(artData.tiles[mapIndex + offset])
+      copyData.push(artData[tiles][mapIndex + offset])
     }
   }
-  if (cut) data.tiles = artData.tiles.map((tile, i) => tilesToCut.includes(i) ? 'zz' : tile)
+  if (cut) copyData[tiles] = artData[tiles].map((tile, i) => tilesToCut.includes(i) ? 'zz' : tile)
 }
 
 
@@ -162,29 +162,37 @@ const copySelection = ({ crop, cut }) => {
     const { column, cellD } = artData
     copyData.move = true
     const offset = ((y / cellD) * column) + x / cellD
-
-    copyTiles({
-      offset,
-      w: w / artData.cellD,
-      h: h / artData.cellD,
-      data: copyData.tiles
-    })
-    if (cut) {
-      aCtx.clearRect(x, y, w, h) 
-      copyTiles({ 
+    
+    tilesData.forEach(data => {
+      copyTiles({
         offset,
         w: w / artData.cellD,
         h: h / artData.cellD,
-        data: artData,
-        cut: true,
+        copyData: copyData[data.tiles],
+        tiles: data.tiles
       })
-      input.codesBox[0].value = artData.tiles
-    }  
+      if (cut) {
+        data.ctx.clearRect(x, y, w, h) 
+        copyTiles({ 
+          offset,
+          w: w / artData.cellD,
+          h: h / artData.cellD,
+          copyData: artData,
+          cut: true,
+          tiles: data.tiles
+        })
+        data.input.value = artData[data.tiles]
+      }  
+    })
+  
     if (crop) {
-      paste()
-      artData.tiles = copyData.tiles
+      tilesData.forEach(data => {
+        paste({ data, crop: true })
+        artData[data.tiles] = copyData[data.tiles]
+      })
       update('column', w / cellD)
       update('row', h / cellD)
+      // When cropping, we need to resize after updating column and row
       resize()
       copyData.defPos = { x: 0, y: 0 }
       select()
@@ -192,8 +200,8 @@ const copySelection = ({ crop, cut }) => {
   }
 }
 
-const paste = () => {
-  if (copyData.tiles.length){
+const paste = ({ data, crop }) => {
+  if (copyData[data.tiles].length){
     const { cellD, column } = artData
     const { size: { w, h }, defPos: { x, y } } = copyData
     const index = (((y + cellD) / cellD - 1) * column) + (x + cellD) / cellD - 1
@@ -202,10 +210,10 @@ const paste = () => {
       return index + i + Math.floor(i / width) * (column - width)
     }) 
     copyData.index.forEach((index, i) => {
-      artData.tiles[index] = copyData.tiles[i] 
+      artData[data.tiles][index] = copyData[data.tiles][i] 
     })
-    input.codesBox[0].value = artData.tiles
-    resize()  
+    data.input.value = artData[data.tiles]
+    if (!crop) resize()  
 
     // TODO add some sort of effect to show that it's pasted? (difficult to see right now)
   }

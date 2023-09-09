@@ -29,6 +29,7 @@ const copyData = {
   move: false,
   crop: false,
   tiles: [],
+  walls: [],
   index: [],
 }
 

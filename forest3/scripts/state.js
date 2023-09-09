@@ -19,7 +19,7 @@ const map = {
   spawnData: [],
   sprites: null,
   map: [],
-  wall: [],
+  walls: [],
   eventIndex: 0,
   activeEvent: null,
   eventChainActors: [],
