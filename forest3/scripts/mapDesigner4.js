@@ -119,7 +119,6 @@ function init() {
   }
 
   const compressCode = i =>{
-    console.log('compress code', i)
     input.codesBox[i + 1].value = compress(input.codesBox[i].value)
   }
 
