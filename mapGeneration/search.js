@@ -1,4 +1,4 @@
-import mapData from '../data/mapGenData.js'
+import mapData from './mapGenData.js'
 
 
 const gridToMap = (w, h) => new Array(w * h).fill('')

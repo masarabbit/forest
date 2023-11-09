@@ -1,9 +1,5 @@
-// import { setTargetSize } from './utils/utils.js'
-import svgData from './data/svgData.js'
-import { svgWrapper } from './data/svg.js'
-import { decode } from './utils/compression.js'
-import mapData from './data/mapGenData.js'
-import { defaultMemory, triggerMotion } from './utils/search.js'
+import mapData from './mapGenData.js'
+import { defaultMemory, triggerMotion } from './search.js'
 
 function init() {
 
@@ -13,26 +9,6 @@ function init() {
     document.execCommand('copy')
   }
 
-  const populateWithSvg = (key, target) =>{
-    if (svgData[key]){
-      const { svg, color, subColor, rotate, flip, frameNo, speed } = svgData[key]
-      let colorAction = ''
-      colorAction = typeof(color) === 'function' ? color() : color
-
-      const svgContent = 
-      `${svgWrapper({
-        content: decode(subColor ? svg(subColor) : svg()),
-        color: colorAction || '',
-        rotate: rotate || 0,
-        flip,
-        wrapper: frameNo ? 'anim_wrapper' : 'svg_wrap',
-        frameNo,
-        speed
-      })}`
-      
-      target.innerHTML = svgContent
-    } 
-  }
 
   const setTargetSize = (target, w, h) => {
     target.setAttribute('style', `width:${w}px; height:${h}px; --width:${w}px; --height: ${h}px;`)  
@@ -45,7 +21,7 @@ function init() {
   const x = i => i % mapData.w
   const edge = key => (mapData[key] - 1)
   
-  // console.log(y(599))
+
   const createGrid = () =>{
     const { w, h, cellD: d, grid } = mapData
     setTargetSize(grid, w * d, h * d)
@@ -72,16 +48,6 @@ function init() {
       if (i === w * h - 1) code = 'cd'
       return code
     })
-    // document.querySelectorAll('.cell').forEach((c, i) =>{
-    //   
-    //   const { width: w, height: h } = mapData
-    //   if ([0, edge('height')].includes(y(i))) c.innerHTML = 'x'
-    //   if ([0, edge('width')].includes(x(i))) c.innerHTML = 'x'
-    //   if ((y(i) + x(i)) === 0) c.innerHTML = 'y'
-    //   if (i === w - 1) c.innerHTML = 't'
-    //   if (i === w * h - w) c.innerHTML = 'p'
-    //   if (i === w * h - 1) c.innerHTML = 'r'
-    // })
   }
 
   const cellsWithLetterX = x => mapData.codes.map((c, i) => c === x ? i : null).filter(c => c)
@@ -114,15 +80,9 @@ function init() {
 
     mapData.codes = mapData.codes.map((c, i) => randomPaths.includes(i) ? 'E' : c)
 
-    // mapData.codes = mapData.codes.map((c, i) => randomExitIndexs.includes(i) ? 'E' : c)
   }
 
-  // const addClasses = () =>{
-  //   document.querySelectorAll('.cell').forEach((c, i) =>{
-  //     c.classList.add(mapData.codes[i])
-  //     c.innerHTML = mapData.codes[i]
-  //   })
-  // }
+
 
   const addClasses = () =>{
     mapData.mapTiles = document.querySelectorAll('.cell')
@@ -150,7 +110,6 @@ function init() {
     const availableArea = mapData.codes.filter(c => c * 0 === 0)
     const randomSeeds = new Array(randomNo(2, 8)).fill('').map(() => randomIndex(availableArea))
     console.log(randomSeeds)
-    // const randomSeeds = [47, 417, 237, 308]
     // TODO currently lake can block path from entrace, so maybe need to define path first then make sure lake doesn't block it
     
     const lake = arr =>{
@@ -167,26 +126,16 @@ function init() {
     mapData.codes = mapData.codes.map((c, i) => {
       return randomLakes.includes(i) ? 's' : c
     }) 
-    // mapData.codes = mapData.codes.map((c, i) => randomSeeds.includes(i) ? 's' : c) 
-    // console.log(mapData.codes)
     mapData.output.innerHTML = mapData.codes.join(',')
   }
 
-  const triggerPopulateWithSvg = () =>{
-    document.querySelectorAll('.cell').forEach(c =>{
-      populateWithSvg(c.innerHTML, c)
-    })
-  }
+
   
   addEdge()
   addEntrances()
   createLakes()
   addClasses()
-  // triggerPopulateWithSvg()
-  // const createBaseArea = () =>
 
-  // console.log(mapData.height)
-  // console.log(edge('height'))
   mapData.searchMemory = defaultMemory(mapData.w, mapData.h)
   
   document.querySelector('.copy').addEventListener('click', ()=>{
