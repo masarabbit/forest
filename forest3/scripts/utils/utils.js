@@ -35,7 +35,7 @@ const mouse = {
   move: (t, e, a) => addEvents(t, e, a, ['mousemove', 'touchmove']),
   down: (t, e, a) => addEvents(t, e, a, ['mousedown', 'touchstart']),
   enter: (t, e, a) => addEvents(t, e, a, ['mouseenter', 'touchstart']),
-  leave: (t, e, a) => addEvents(t, e, a, ['mouseleave', 'touchmove'])
+  leave: (t, e, a) => addEvents(t, e, a, ['mouseleave'])
 }
 
 const resizeCanvas = ({ canvas, w, h }) =>{

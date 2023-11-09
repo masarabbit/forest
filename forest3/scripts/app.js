@@ -395,7 +395,6 @@ function init() {
     elements.texts.forEach(t => t.innerText = '')
     elements.transitionCover.innerHTML = ''
     elements.spriteFace.innerHTML = ''
-    // control.classList.remove('deactivate')
     toggleControl('remove')
 
     if (event && !map.completedEvents.some(e => e === event.act)){
@@ -413,7 +412,6 @@ function init() {
     const nextButton = elements.controlButtons[0]
     elements.texts[1].classList.add('face_displayed')
     elements.texts[0].innerHTML = bear.talkTarget.name
-    // control.classList.add('deactivate')
     toggleControl('add')
 
     if (count < eventPoint.text.length){
@@ -454,7 +452,6 @@ function init() {
 
   const investigate = (count, eventPoint) =>{
     if (count < eventPoint.text.length){
-      // control.classList.add('deactivate')
       toggleControl('add')
       // displays text and answer
       const text = eventPoint.text[count]
@@ -498,7 +495,6 @@ function init() {
     const { sprite } = elements
 
     spawnCharacter()
-    // startCellAnimations(map.animInterval)
 
     setTimeout(()=> {
       elements.mapImage.classList.remove('transition')

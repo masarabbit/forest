@@ -1,13 +1,3 @@
-const decode = arr =>{
-  return arr.split('').map(c => {
-    if (c === 'D') return '<path d="M'
-    if (c === 'F') return '<path fill="#fff" d="M'
-    if (c === '/') return '/>'
-    if (c === 'N') return '-1' 
-    if (c === 'T') return '-2'
-    return c
-  }).join('')
-}
 
 const compress = value =>{
   const originalArray = value.split(',')
@@ -39,7 +29,6 @@ const decompress = arr =>{
 }
 
 export {
-  decode,
   compress,
   decompress
 }
