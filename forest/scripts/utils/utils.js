@@ -5,9 +5,9 @@ import { elements } from '../elements.js'
 const setWidthAndHeight = () =>{
   const { offsetWidth: w, offsetHeight: h } = elements.wrapper
   const pWidth = w < 800 ? w : 800
-  map.width = 2 * Math.floor((pWidth / map.cellD) / 2)
+  map.width = Math.floor((pWidth / map.cellD))
   const pHeight = h < 600 ? h : 600
-  map.height = 2 * Math.floor((pHeight / map.cellD) / 2)
+  map.height = Math.floor((pHeight / map.cellD))
 }
 
 

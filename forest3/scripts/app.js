@@ -553,19 +553,18 @@ function init() {
     if (noWall(actor.pos + diff)) { 
       if (isBear) {
         setPos(para, (para === 'left' ? x : y ) + dist)
+        actor.pos += diff
+        
+        // trigger event based on bear position
+        checkAndTriggerEvent()
+        elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
+        setTargetPos(elements.mark, mapX() * 4, mapY() * 4)
       } else {
         actor[para] -= dist // note that dist needs to be flipped around
         actor.spawn.parentNode.style[para] = `${actor[para]}px`
+        actor.pos += diff
       } 
-      actor.pos += diff
     }  
-
-    if(isBear) {
-      // trigger event based on bear position
-      checkAndTriggerEvent()
-      elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
-      setTargetPos(elements.mark, mapX() * 4, mapY() * 4)
-    }
   }
 
   const select = () =>{

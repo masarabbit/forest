@@ -60,6 +60,9 @@ body {
 .map_cover {
   height: 400px;
   width: 800px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAADtJREFUWEft10ERADAMArBW9CzPRndTQR/BAFx+dAUz504H+8sAAgQIECBAgAABAgQIECCwQ+CvSD7kB6O0a0FtUcGvAAAAAElFTkSuQmCC);
+  background-repeat: repeat;
+  image-rendering: pixelated;
 }
 
 .sprite_container {
