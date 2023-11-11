@@ -1,4 +1,4 @@
-import { mouse, setTargetPos } from './utils.js'
+import { mouse, setPos } from './utils.js'
 import { touchControl } from '../state.js'
 
 
@@ -10,7 +10,7 @@ const drag = (el, pos, x, y) =>{
   const newX = el.offsetLeft - pos.a
   const newY = el.offsetTop - pos.b
   if (distanceBetween({ x: 0, y: 0 }, { x: newX, y: newY }) < 35) {
-    setTargetPos({ el, x: newX, y: newY })
+    setPos({ el, x: newX, y: newY })
     touchControl.direction = Math.abs(newX) < Math.abs(newY)
       ? newY < 0 ? 'up' : 'down'
       : newX < 0 ? 'left' : 'right'
@@ -44,7 +44,7 @@ const addTouchAction = (el, handleKeyAction) =>{
     mouse.up(document, 'remove', onLetGo)
     mouse.move(document,'remove', onDrag)
     el.style.transition = '0.2s'
-    setTargetPos({ el, x: 0, y: 0 })
+    setPos({ el, x: 0, y: 0 })
     setTimeout(()=>{
       el.style.transition = '0s'
     }, 200)

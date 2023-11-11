@@ -3,8 +3,9 @@
 const elements = {
   wrapper: document.querySelector('.wrapper'),
   mapCover: document.querySelector('.map-cover'), 
-  bear: document.querySelector('.sprite-container'), 
+  player: document.querySelector('.sprite-container'), 
   spriteCheck: document.querySelector('.sprite-check'), 
+  // mapImageWrapper: document.querySelector('.map-image-wrapper'),
   mapImage: {
     el: document.querySelector('.map-image'),
     ctx: null,

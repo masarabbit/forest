@@ -27,7 +27,7 @@ const mouse = {
   leave: (t, e, a) => addEvents(t, e, a, ['mouseleave'])
 }
 
-const setTargetPos = ({ el, x, y }) => Object.assign(el.style, { left: `${x}px`, top: `${y}px` })
+const setPos = ({ el, x, y }) => Object.assign(el.style, { left: `${x}px`, top: `${y}px` })
 
 export {
   degToRad,
@@ -36,5 +36,5 @@ export {
   clampMax,
   setStyles,
   mouse,
-  setTargetPos
+  setPos
 }
