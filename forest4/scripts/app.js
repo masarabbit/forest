@@ -30,7 +30,6 @@ function init() {
     const { offsetWidth: w, offsetHeight: h } = elements.wrapper
     const { d } = settings
 
-    // we should be separating settings.map.w and mapCover width, because mapCover width is dynamic based on screen width
     settings.map.w = 2 * Math.floor((clampMax(w, 800) / d) / 2)
     settings.map.h = 2 * Math.floor((clampMax(h, 600) / d) / 2)
     setStyles(settings.map)
@@ -59,14 +58,14 @@ function init() {
 
 
 
-  const setUpCanvas = ({ canvas, ctx, w, h }) => {
+  const setUpCanvas = ({ canvas, w, h }) => {
     resizeCanvas({
-      canvas,
+      canvas: canvas.el,
       w: w * settings.d,
       h: h * settings.d,
     })
-    elements[ctx] = canvas.getContext('2d')
-    elements[ctx].imageSmoothingEnabled = false
+    canvas.ctx = canvas.el.getContext('2d')
+    canvas.ctx.imageSmoothingEnabled = false
   }
 
 
@@ -79,14 +78,13 @@ function init() {
       key,
       d: settings.d,
       data: decompress(mapData[key].map),
-      column: mapData[key].w,
+      column: mapData[key].w, // column and row remains static, while w, and h adapts to screenWidth
       row: mapData[key].h,
     }
     setUpCanvas({
       canvas: elements.mapImage,
       w: settings.map.w,
       h: settings.map.h,
-      ctx: 'ctx'
     })
 
     settings.map.data.forEach((code, i) => {

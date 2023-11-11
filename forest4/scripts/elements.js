@@ -5,19 +5,25 @@ const elements = {
   mapCover: document.querySelector('.map-cover'), 
   bear: document.querySelector('.sprite-container'), 
   spriteCheck: document.querySelector('.sprite-check'), 
-  mapImage: document.querySelector('.map-image'),
-  ctx: null,
-  spriteSheet: document.querySelector('.sprite-sheet'),
-  sCtx: null,
-  drawboard: document.querySelector('.drawboard'),
-  dCtx: null,
+  mapImage: {
+    el: document.querySelector('.map-image'),
+    ctx: null,
+  },
+  spriteSheet: {
+    el: document.querySelector('.sprite-sheet'),
+    ctx: null,
+  },
+  drawboard: {
+    el: document.querySelector('.drawboard'),
+    ctx: null,
+  },
   startButton: document.querySelector('.start-button'),
   control: document.querySelector('.control'),
   controlButtons: document.querySelectorAll('.control-button'),
 }
 
-elements.dCtx = elements.drawboard.getContext('2d')
-elements.sCtx = elements.spriteSheet.getContext('2d')
+elements.drawboard.ctx = elements.drawboard.el.getContext('2d')
+elements.spriteSheet.ctx = elements.spriteSheet.el.getContext('2d')
 
 export {
   elements

@@ -18,7 +18,7 @@ const placeTile = ({ mapIndex, color, url, ctx, gridData, triggerLast }) =>{
     ctx.fillRect(mapX, mapY, d, d)
   }
 
-  if (url) ctx.drawImage(elements.drawboard, mapX, mapY, d, d)
+  if (url) ctx.drawImage(elements.drawboard.el, mapX, mapY, d, d)
   if (triggerLast) {
     triggerLast.count++
     if (triggerLast.count === triggerLast.limit) triggerLast.action()
@@ -26,12 +26,12 @@ const placeTile = ({ mapIndex, color, url, ctx, gridData, triggerLast }) =>{
 }
 
 const drawDataUrl = ({ url, color, index, edit, ctx, gridData, triggerLast }) => {
-  const { dCtx } = elements
+  const { ctx: dCtx } = elements.drawboard
   const img = new Image()
   img.onload = () => {
     const { naturalWidth: w, naturalHeight: h } = img
     dCtx.imageSmoothingEnabled = false
-    resizeCanvas({ canvas: elements.drawboard, w, h })
+    resizeCanvas({ canvas: elements.drawboard.el, w, h })
     if (edit) {
       dCtx.save()
       dCtx.translate(w / 2, h / 2)
@@ -53,7 +53,7 @@ const drawDataUrl = ({ url, color, index, edit, ctx, gridData, triggerLast }) =>
 
 const createSpriteSheet = () => {
   resizeCanvas({
-    canvas: elements.spriteSheet,
+    canvas: elements.spriteSheet.el,
     w: tileSheetData.d * tileSheetData.w, 
     h: tileSheetData.d * tileSheetData.h
   })
@@ -75,7 +75,7 @@ const createSpriteSheet = () => {
       color: tiles[tile]?.color,
       index: i,
       edit,
-      ctx: elements.sCtx,
+      ctx: elements.spriteSheet.ctx,
       gridData: tileSheetData,
       triggerLast
     })  
@@ -89,8 +89,8 @@ const outputFromSpriteSheet = ({ code, i, offset = 0 }) => {
   const mapY = Math.floor(i / column) * d
   const index = tilesList.map(t => t[0]).indexOf(code) + offset
 
-  elements.ctx.imageSmoothingEnabled = false
-  elements.ctx.drawImage(elements.spriteSheet, tileX(index), tileY(index), 16, 16, mapX, mapY, d, d)
+  elements.mapImage.ctx.imageSmoothingEnabled = false
+  elements.mapImage.ctx.drawImage(elements.spriteSheet.el, tileX(index), tileY(index), 16, 16, mapX, mapY, d, d)
 }
 
 const animateMap = () => {
