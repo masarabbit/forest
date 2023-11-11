@@ -3,7 +3,7 @@ import { tiles, editConfig, tilesList, tileSheetData,  tileX, tileY } from './da
 import { elements } from './elements.js'
 import { degToRad, resizeCanvas } from './utils/utils.js'
 
-import { settings } from './settings.js'
+import { settings } from './state.js'
 
 const placeTile = ({ mapIndex, color, url, ctx, gridData, triggerLast }) =>{
   const { d, w } = gridData

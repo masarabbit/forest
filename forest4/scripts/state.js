@@ -14,7 +14,14 @@ const settings = {
   },
 }
 
+const touchControl = {
+  active: false,
+  timer: null,
+  direction: null,
+}
+
 
 export {
-  settings
+  settings,
+  touchControl
 }

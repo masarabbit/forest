@@ -12,6 +12,8 @@ const elements = {
   drawboard: document.querySelector('.drawboard'),
   dCtx: null,
   startButton: document.querySelector('.start-button'),
+  control: document.querySelector('.control'),
+  controlButtons: document.querySelectorAll('.control-button'),
 }
 
 elements.dCtx = elements.drawboard.getContext('2d')

@@ -1,9 +1,9 @@
 import { elements } from './elements.js'
-import { settings } from './settings.js'
+import { settings } from './state.js'
 import { decompress } from './utils/compression.js'
 import { clampMax, resizeCanvas, setStyles } from './utils/utils.js'
 import { createSpriteSheet, outputFromSpriteSheet, animateMap } from './mapDraw.js'
-
+import { addTouchAction } from './utils/touchControl.js'
 
 
 function init() {
@@ -106,6 +106,10 @@ function init() {
   createSpriteSheet()
 
   elements.startButton.addEventListener('click', () => createMap('one'))
+
+  addTouchAction(elements.control.childNodes[1].childNodes[1], e => {
+    console.log(e)
+  })
 
 }
 
