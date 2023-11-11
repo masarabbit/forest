@@ -162,6 +162,7 @@ function init() {
 
 
   const drawDataUrl = ({ url, color, index, edit, ctx, gridData = map, triggerLast }) => {
+    console.log(gridData)
     const { dCtx } = elements
     const img = new Image()
     img.onload = () => {
@@ -639,6 +640,7 @@ function init() {
 
   const resize = () =>{
     const { width, height, column, row, cellD, start } = map
+
     positionSprite(start)
     // update offset margins
     setPos('left', mapX() * -cellD + ((Math.floor(width / 2) - 1) * cellD))  
