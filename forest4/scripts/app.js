@@ -6,8 +6,8 @@ import { addTouchAction } from './utils/touchControl.js'
 import { investigate, select, showDialog, walk, transport } from './fieldActions.js'
 
 
-// TODO add start animation
 // TODO add mapDesigner
+// TODO add touch toggle
 
 
 function init() {
@@ -108,8 +108,9 @@ function init() {
   elements.startButton.addEventListener('click', e => {
     e.preventDefault()
     player.pause = false
-    elements.startButton.classList.add('disable')
+    // elements.startButton.classList.add('disable')
     transport('start')
+    elements.transitionCover.classList.remove('intro')
   })
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk({ actor: player, dir }))

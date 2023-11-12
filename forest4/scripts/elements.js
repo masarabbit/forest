@@ -5,7 +5,6 @@ const elements = {
   mapCover: document.querySelector('.map-cover'), 
   eventCover: document.querySelector('.event-cover'),
   player: document.querySelector('.player'), 
-  spriteCheck: document.querySelector('.sprite-check'), 
   transitionCover: document.querySelector('.transition-cover'),
   mapImage: {
     el: document.querySelector('.map-image'),

@@ -54,7 +54,6 @@ body {
 
 .map-cover {
   /* border: 1px solid blue; */
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAADtJREFUWEft10ERADAMArBW9CzPRndTQR/BAFx+dAUz504H+8sAAgQIECBAgAABAgQIECCwQ+CvSD7kB6O0a0FtUcGvAAAAAElFTkSuQmCC);
   background-repeat: repeat;
   image-rendering: pixelated;
 }
@@ -111,7 +110,6 @@ div:has(.location-indicator) {
   transition: 0.2s;
   width: 100%;
   height: 100%;
-  pointer-events: none;
   z-index: 5;
 }
 
@@ -128,6 +126,7 @@ div:has(.location-indicator) {
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 }
 
 .artwork img {
@@ -140,15 +139,17 @@ div:has(.location-indicator) {
 }
 
 
-
-/* .transition-cover.intro {
+.transition-cover.intro {
   background-color: rgb(6, 161, 161);
   transition: 0.3s;
-} */
+  /* z-index: 999; */
+}
+
 
 .transition-cover:not(.intro) * {
   opacity: 0;
   animation: none;
+  pointer-events: none;
 }
 
 .bear {
@@ -159,28 +160,17 @@ div:has(.location-indicator) {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAAAQCAYAAADOFPsRAAAAAXNSR0IArs4c6QAAAbdJREFUWEftWVtuwzAMi6+5/XY32E6x3WD9Xa+ZQQVUqIokSk2axEH7EyA1bdGU6EfaoH6fp7eRXv2cL03+5b0/Gp75SL5Z7t58PRM/Een79+8ax9fH+01ECsB6b4nXM16KJ3lkuGvx1sK/BNRZOAyDTtguBeQqpCcT0JUZVWCP+ENVoJGYE2tFAlp9SGveG57ikdVXjX8L/M1CPdtgEjTxkZUsifeSR8ZibbKkU0R9eEmEOETja/HkfOlYlhz/JaCY3cMIKDNNr4HeOmhZD2XaHHzFxpH1yb6iCrDirVTQ2vi7Xeg4jtczIPq11u5w3L53PPFAHKI1fAv8xEKRd9M6Y5HgCpiLR8lTcYBKBXNbZKNIwLXxu14D51pwBa8FRImoN1Fb4XdbgXrXi86ieg2s4rMV6DnAVnizApGNRRaKsFkLrArwDAE5VpQ8kjPaTFUsODN+eJXGgenzVfYcI4llrqMsEbK7WGqXwaMJ1P2wDTMXzzo9EdH52Up4vvzW82/FPtlNWjfn2ctsJk/PJb9mrDm+tEKLR8Zh9Dw88jVCJ4QXi3kciLIik4FZkpV2cyehMlZPbf8BqazoPk0l8uEAAAAASUVORK5CYII=);
 }
 
-/* .sprite-check {
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  background-color: pink;
-  opacity: 0.5;
-} */
-
 canvas {
   position: absolute;
 }
 
 .map-image-wrapper {
   transition: 0.5s;
-  border: 1px solid red;
 }
 
 .map-image-wrapper.transition {
   transition: 0s;
 }
-
-
 
 
 .control {
@@ -485,4 +475,106 @@ a:hover {
     opacity: 1; 
   }
   100% { right: 15px }
+}
+
+/* --- intro animation  ---- */
+
+
+.intro-box {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.intro-box button {
+  border: 0;
+  padding: 5px;
+  background-color: #a2fcf0;
+  margin-top: 20px;
+}
+
+.intro-box button:hover {
+  background-color: rgb(231, 255, 125);
+}
+
+.transition-cover.intro .intro_box button {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.intro-img {
+  position: relative;
+  overflow: hidden;
+  width: 300px;
+  height: 192px;
+  background-color: #57d4d9;
+}
+
+.waves {
+  position: absolute;
+  --wave-size: 64px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAE9JREFUOE9jDL9y8z8DBYCRJgZ8vvII7CZeHTmCbkNxAbpGYgyijRcIuhtJAf1dgB4uRLsAVwATbQCucBmEBhCTeJC9A/cCOakQZNDAhwEA60NK6u+iNxUAAAAASUVORK5CYII=);
+  image-rendering: pixelated;
+  width: var(--wave-size);
+  height: var(--wave-size);
+  background-size: var(--wave-size)!important; 
+  animation: left-to-right infinite 3s;
+  left: -64px;
+}
+
+.waves:nth-child(2) {
+  top: 64px;
+  animation-delay: 1s;
+}
+
+.waves:nth-child(3) {
+  top: 128px;
+  animation-delay: 2s;
+}
+
+@keyframes left-to-right {
+  0% {
+    left: -64px;
+  }
+  100% {
+    left: 364px;
+  }
+}
+
+.bear-on-duck {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAPCAYAAAD6Ud/mAAAAAXNSR0IArs4c6QAAALVJREFUOE/Fk1sWgyAMRCc7cLUugm5WVxBPIlgSHmqxLV/AibmZGSR8vth9SgDyOzkfyxxuMJnZcogI6U72APogXoLpQNPshykgfsBTkIekBhF2DJBPXlPm1ag8M9760t40zeAlvP3dVXXtMnnUrBsBtTIdtU76qn3erlpGyZGUsQm6lVG0U2tPX4IUxQjyjC+Dbjz9olRU/Qek1rj/aERJ07qfgr4BKzLKbXrKwurzfiKPVo8NdspmEFmxViEAAAAASUVORK5CYII=);
+  image-rendering: pixelated;
+  --w: 26px;
+  --h: 15px;
+  width: calc(var(--w) * 4);
+  height: 56px; /* (--h - 1) * 4 */
+  background-size: calc(var(--w) * 4) calc(var(--h) * 4) !important; 
+  animation: bop infinite 2s;
+  background-repeat: no-repeat;
+}
+
+@keyframes bop {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 0 4px;
+  }
+}
+
+
+.start-button.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.start-button:hover {
+  background-color: white;
 }
