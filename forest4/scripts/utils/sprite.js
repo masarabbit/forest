@@ -15,8 +15,6 @@ const frames = {
 
 const turnSprite = ({ dir, actor, animate }) => {
   // const dir = e || 'down'
-
-
   actor.facingDirection = dir
   const { frameOffset } = actor
   const { d } = settings

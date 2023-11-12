@@ -28,6 +28,7 @@ const mouse = {
 }
 
 const setPos = ({ el, x, y }) => Object.assign(el.style, { left: `${x}px`, top: `${y}px` })
+const randomDirection = () => ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)]
 
 export {
   degToRad,
@@ -36,5 +37,6 @@ export {
   clampMax,
   setStyles,
   mouse,
-  setPos
+  setPos,
+  randomDirection
 }

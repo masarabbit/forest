@@ -30,15 +30,16 @@ const player = {
   pos: 464,
   frameOffset: 0,
   animationTimer: null,
-  el: document.querySelector('.player'),
+  el: elements.player,
   sprite: document.querySelector('.player').childNodes[1],
   facingDirection: 'down'
 }
 
 
 
+
 export {
   settings,
   touchControl,
-  player
+  player,
 }

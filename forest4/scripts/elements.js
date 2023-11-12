@@ -3,7 +3,7 @@
 const elements = {
   wrapper: document.querySelector('.wrapper'),
   mapCover: document.querySelector('.map-cover'), 
-  player: document.querySelector('.sprite-container'), 
+  player: document.querySelector('.player'), 
   spriteCheck: document.querySelector('.sprite-check'), 
   // mapImageWrapper: document.querySelector('.map-image-wrapper'),
   mapImage: {

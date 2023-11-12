@@ -1,12 +1,14 @@
 import { elements } from './elements.js'
+import { walkDirections, getWalkConfig } from './data/config.js'
 import { settings, player } from './state.js'
 import avatars from './data/avatars.js'
 import { decompress } from './utils/compression.js'
-import { clampMax, resizeCanvas, setStyles, setPos } from './utils/utils.js'
+import { clampMax, resizeCanvas, setStyles, setPos, randomDirection } from './utils/utils.js'
 import { createSpriteSheet, outputFromSpriteSheet, animateMap } from './mapDraw.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { turnSprite } from './utils/sprite.js'
 import { mapData } from './data/mapData.js'
+
 
 
 function init() {
@@ -40,84 +42,51 @@ function init() {
   }
 
   const noWall = pos =>{    
-    const {
-        // spawnData, 
-        data } = settings.map
-    if (!data[pos] || player.pos === pos 
-      // || spawnData.some(s => s.pos === pos)
-      ) return false
-
+    const { map: { data }, npcs } = settings
+    if (!data[pos] || player.pos === pos || npcs.some(s => s.pos === pos)) return false
     return settings.map.walls[pos] !== '$'
   }
 
-  const walk = (actor, dir) => {
+
+
+  const walk = ({ actor, dir }) => {
     // if (!dir || bear.pause) return
     // const isBear = actor === bear
-
-    const { map: { column }, d } = settings
+  
     turnSprite({ dir, actor, animate: true })
+    const { diff, para, dist } = getWalkConfig(dir) 
 
-    const { diff, para, dist } = {
-      right: { diff: 1, para: 'x', dist: -d },
-      left: { diff: -1, para: 'x', dist: d },
-      up: { diff: -column, para: 'y', dist: d },
-      down: { diff: column, para: 'y', dist: -d }
-    }[dir] 
-
-    // console.log(diff, para, dist, settings.mapXY)
     if (noWall(actor.pos + diff)) {
-      settings.mapImage[para] += dist
+      if (actor === player) {
+        settings.mapImage[para] += dist
+        setStyles(settings.mapImage)
+        // checkAndTriggerEvent()
+        // elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
+      } else {
+        actor[para] -= dist // note that dist needs to be flipped around
+        setPos(actor)
+      }
       actor.pos += diff
-      setStyles(settings.mapImage)
     }
-
-
-    // if (noWall(actor.pos + diff)) { 
-    //   if (isBear) {
-    //     setPos(para, (para === 'left' ? x : y ) + dist)
-    //     actor.pos += diff
-        
-    //     // trigger event based on bear position
-    //     checkAndTriggerEvent()
-    //     elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
-    //     setTargetPos(elements.mark, mapX() * 4, mapY() * 4)
-    //   } else {
-    //     actor[para] -= dist // note that dist needs to be flipped around
-    //     actor.spawn.parentNode.style[para] = `${actor[para]}px`
-    //     actor.pos += diff
-    //   } 
-    // }  
   }
 
-  const npcMotion = npc =>{
-    // const { spawnData, sprites } = map
-    const { pause, motion, motionIndex: index } = npc
-    console.log('npc', npc, pause, motion, index)
-    if (pause || !settings.isWindowActive) return
-    // if (motion === 'randomWalk') {
-    //   spriteWalk({
-    //     dir: randomDirection(),
-    //     actor: spawnData[i], sprite: sprites[i], 
-    //   })
-    // } else if (motion === 'randomTurn') {
-    //   if (Math.random() < 0.5)
-    //   turnSprite({
-    //     e: randomDirection(), 
-    //     actor: spawnData[i], sprite: sprites[i],
-    //   })
-    // } else if (motion.includes('facing')) {
-    //   turnSprite({
-    //     e: walkDirections[motion.split('-')[1]], 
-    //     actor: spawnData[i], sprite: sprites[i],
-    //   })
-    // } else if (Array.isArray(motion)) {
-    //   // if motion[index] is 0, it would be falsy so spriteWalk is skipped
-    //   if (motion[index]) spriteWalk({
-    //     dir: walkDirections[motion[index]],
-    //     actor: spawnData[i], sprite: sprites[i], 
-    //   })
-    //   spawnData[i].motionIndex = index === motion.length - 1 ? 0 : index + 1
-    // }
+  const npcMotion = actor =>{
+    if (actor.pause || !settings.isWindowActive) return
+
+    const { motion, motionIndex: index } = actor
+    if (motion === 'randomWalk') {
+      walk({ actor, dir: randomDirection() })
+    } else if (motion === 'randomTurn') {
+      if (Math.random() < 0.5)
+      turnSprite({ actor, dir: randomDirection() })
+    } else if (motion.includes('facing')) {
+      turnSprite({
+      actor, dir: walkDirections[motion.split('-')[1]] }) //TODO possibly revisit this to simplify
+    } else if (Array.isArray(motion)) {
+      // if motion[index] is 0, it would be falsy so walk is skipped
+      if (motion[index]) walk({ actor, dir: walkDirections[motion[index]] })
+      actor.motionIndex = index === motion.length - 1 ? 0 : index + 1
+    }
   }
 
   const spawnNpcs = () =>{
@@ -138,24 +107,25 @@ function init() {
         frameOffset: 0,
         face: avatars[avatar].face,
         el: Object.assign(document.createElement('div'), 
-          { className: 'sprite-container overflow-hidden',
-            innerHTML: `<div class="sprite ${avatars[avatar].sprite}"></div>`
+          { className: 'sprite-container overflow-hidden npc',
+            innerHTML: `<div><div class="sprite ${avatars[avatar].sprite}"></div></div>` 
+            //npc need additional div so transition isn't applied to transform: scale(-1, 1)
           }),
-        motionIndex: Array.isArray(motion) ? 0 : null,
-        pause: false
+        // motionIndex: Array.isArray(motion) ? 0 : null, // TODO maybe fine to have this as 0
+        motionIndex: 0,
+        // pause: false
       }
-      settings.npcs[i].sprite = settings.npcs[i].el.childNodes[0]
+      settings.npcs[i].sprite = settings.npcs[i].el.childNodes[0].childNodes[0]
       setPos(settings.npcs[i])
-
       settings.mapImage.el.appendChild(settings.npcs[i].el)   
-      npcMotion(settings.npcs[i])
-      // settings.npcs[i].interval = setInterval(()=>{
-      //   npcMotion(i)
-      // }, avatars[avatar].speed)
+
+      settings.npcs[i].interval = setInterval(()=>{
+        npcMotion(settings.npcs[i])
+      }, avatars[avatar].speed)
 
       turnSprite({
-        dir: defaultDir, 
-        actor: settings.npcs[i]
+        actor: settings.npcs[i],
+        dir: defaultDir
       })
     })
   }
@@ -215,7 +185,7 @@ function init() {
   elements.startButton.addEventListener('click', () => createMap('one'))
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], dir => {
-    walk(player, dir)
+    walk({ actor: player, dir })
   })
 
 }

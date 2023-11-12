@@ -31,9 +31,10 @@ body {
   pointer-events: none;
 }
 
-.right {
+.right:not(.npc) {
   transform: scale(-1, 1);
 }
+
 
 .wrapper {
   position: fixed;
@@ -63,6 +64,14 @@ body {
   height: var(--c);
   z-index: 1;
 } */
+.npc {
+  transition: 1s;
+}
+
+.npc.right > div {
+  transform: scale(-1, 1);
+}
+
 
 .sprite-container {
   position: absolute;
