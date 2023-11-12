@@ -40,9 +40,15 @@ const player = {
   walkingDirection: '',
   walkingInterval: '',
   isTalking: false,
+  talkTarget: null,
+  answering: false,
   pause: true,
+  textCount: 0,
+  prevChoices: {},
+  dialogHistory: [],
+  dialog: {},
+  dialogKey: null,
 }
-
 
 
 

@@ -22,6 +22,11 @@ const elements = {
   control: document.querySelector('.control'),
   controlButtons: document.querySelectorAll('.control-button'),
   indicator: document.querySelector('.indicator'),
+  texts: document.querySelectorAll('.text'),
+  // touchToggle: document.querySelector('.touch-toggle'),
+  control: document.querySelector('.control'),
+  artwork: document.querySelector('.artwork'),
+  spriteFace: document.querySelector('.face'),
 }
 
 elements.drawboard.ctx = elements.drawboard.el.getContext('2d')

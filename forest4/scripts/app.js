@@ -3,7 +3,7 @@ import { walkDirections, getWalkConfig } from './data/config.js'
 import { settings, player } from './state.js'
 import avatars from './data/avatars.js'
 import { decompress } from './utils/compression.js'
-import { resizeCanvas, setStyles, setPos, randomDirection, convertKey } from './utils/utils.js'
+import { resizeCanvas, setStyles, setPos, randomDirection } from './utils/utils.js'
 import { createSpriteSheet, outputFromSpriteSheet, animateMap,   adjustMapWidthAndHeight, mapX, mapY } from './mapDraw.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { turnSprite } from './utils/sprite.js'
@@ -204,9 +204,9 @@ function init() {
   }
 
 
-  const handleTalk = e =>{
-    const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
+  const handleTalk = key =>{
     if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
+      console.log('talk!')
       // const { answering, options, choice, isTalking, textCount } = player
       // const { sprites } = map
   
@@ -233,6 +233,87 @@ function init() {
     }
   }
 
+  const toggleControl = action =>{
+    elements.control.classList[action]('deactivate')
+    // elements.touchToggle.parentNode.classList[action]('deactivate')
+  }
+
+  const updateNextButtonText = (count, text) => {
+    elements.controlButtons[0].innerHTML = count === text.length - 1? 'end' : 'next'
+  }
+
+  const displayTextGradual = (t, i) =>{
+    elements.texts[1].innerHTML = t.slice(0, i)
+    if (i < t.length) {
+      setTimeout(()=>{
+        displayTextGradual(t, i + 1)
+      }, 30)
+    }
+  }
+
+  const clearText = () =>{
+    const event = player.dialogKey && player.dialog[player.dialogKey].event
+
+    Object.assign(player, {
+      textCount: 0,
+      prevChoices: {},
+      pause: false,
+      answering: false,
+      dialogHistory: [],
+      dialog: {},
+      dialogKey: null,
+      talkTarget: null,
+      isTalking: false
+    })
+    elements.texts[0].parentNode.parentNode.classList.add('hidden')
+    elements.texts[1].classList.remove('face_displayed')
+    elements.texts.forEach(t => t.innerText = '')
+    elements.artwork.innerHTML = ''
+    elements.spriteFace.innerHTML = ''
+    toggleControl('remove')
+
+    // if (event && !map.completedEvents.some(e => e === event.act)){
+    //   map.activeEvent = event.act
+    //   eventAnimation({ act: event.act.sequences, index: map.eventIndex })
+    // } else {
+    //   map.eventIndex = 0
+    // }
+  }
+
+  const investigate = (count, eventPoint) =>{
+   
+    if (count < eventPoint.text.length){
+      console.log(eventPoint)
+      toggleControl('add')
+      // displays text and answer
+      const text = eventPoint.text[count]
+      player.textCount++
+      player.pause = true
+      elements.texts[0].parentNode.parentNode.classList.remove('hidden')
+      updateNextButtonText(count, eventPoint.text)
+      displayTextGradual(text, 0)
+      if (eventPoint.art && !elements.artwork.innerHTML) elements.artwork.innerHTML = `<img src=${eventPoint.art} />`
+      // TODO add trigger for event?
+      return
+    }
+    clearText() 
+  }
+
+  const check = count =>{
+    const event = settings.map.events[player.pos]
+    if (event?.key) {
+      const eventPoint = settings.map.eventContents[event.key]
+      if (player.facingDirection === eventPoint.direction) {
+        investigate(count, eventPoint)
+        return
+      }
+    }
+    // const { spawnData, column } = map
+    // const targetDirection = { r: 1, l: -1, u: -column, d: column }[bear.facingDirection[0]]
+    // const talkTarget = bear.talkTarget || spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
+    // talk(talkTarget)
+  }
+
   const handleWalk = dir =>{
     if (player.walkingDirection !== dir){
       clearInterval(player.walkingInterval)
@@ -245,20 +326,26 @@ function init() {
     }
   }
 
+  const handleKeyAction = e => {
+    const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
+    if (player.isTalking) {
+      handleTalk(key)
+    } else if (e.key && e.key[0] === 'A'){
+      handleWalk(key)
+    } else if ([' ', 'enter'].includes(key)) {
+      check(player.textCount)
+    }
+  }
+
   window.addEventListener('keyup', () => {
     player.walkingDirection = null
     clearInterval(player.walkingInterval)
   })
-  window.addEventListener('keydown', e => {
-    if (player.isTalking) {
-      handleTalk(convertKey(e))
-    } else if (e.key[0] === 'A'){
-      handleWalk(convertKey(e))
-    } else if ([' ', 'Enter'].includes(e.key)) {
-      console.log('check')
-    }
-  })
+  window.addEventListener('keydown', handleKeyAction)
 
+  elements.controlButtons.forEach(c =>{
+    c.addEventListener('click', ()=> handleKeyAction(c.dataset.c))
+  })
 
 
   window.addEventListener('resize', ()=> {

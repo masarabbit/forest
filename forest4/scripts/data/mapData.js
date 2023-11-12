@@ -15,6 +15,7 @@ const mapData = {
       14: { event: 'transport', gateway: 'portal1' },
       15: { event: 'transport', gateway: 'portal1' },
       464: { event: 'event-animation', act: 'greeting' },
+      249: { event: 'check', key: 'art1' },
     },
     eventContents: {
       hello: { first: { text: ['hello!'], }, },
@@ -23,6 +24,15 @@ const mapData = {
           text: ['hello!', 'test'], 
           face: ['happy', 'sad'], 
         },
+      },
+      art1: {
+        text: [
+          'hello! I\'m a tree!',
+          'yeah!'
+        ],
+        art: 'http://masahito.co.uk/img/icecream_bunny.png',
+        // item: null,
+        direction: 'up'
       },
       apple: {
         first: { 
