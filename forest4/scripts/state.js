@@ -24,6 +24,12 @@ const settings = {
     w: 0,
     h: 0
   },
+  location: {
+    el: elements.location.el.parentNode,
+    canvas: elements.location.el,
+    w: 0,
+    h: 0,
+  },
 }
 
 const touchControl = {

@@ -14,7 +14,7 @@ const mapData = {
     events: {
       14: { event: 'transport', gateway: 'portal1' },
       15: { event: 'transport', gateway: 'portal1' },
-      464: { event: 'event-animation', act: 'greeting' },
+      // 464: { event: 'event-animation', act: 'greeting' },
       249: { event: 'check', key: 'art1' },
     },
     eventContents: {

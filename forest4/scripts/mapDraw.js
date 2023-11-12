@@ -140,10 +140,11 @@ const adjustMapWidthAndHeight = () =>{
   }, 500)
 }
 
-const setUpCanvas = ({ canvas, w, h }) => {
+const setUpCanvas = ({ canvas, w, h, d }) => {
   resizeCanvas({
     canvas: canvas.el,
-    w, h
+    w: w * d, 
+    h: h * d
   })
   canvas.ctx = canvas.el.getContext('2d')
   canvas.ctx.imageSmoothingEnabled = false

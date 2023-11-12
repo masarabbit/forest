@@ -59,14 +59,23 @@ body {
   image-rendering: pixelated;
 }
 
-/* .npc-container {
-  position: relative;
-  overflow: hidden;
-  --c: 32px;
-  width: var(--c);
-  height: var(--c);
-  z-index: 1;
-} */
+div:has(.location-indicator) {
+  top: 15px;
+  left: 15px;
+  position: absolute;
+  opacity: 0.8;
+}
+
+.mark {
+  background-color: rgb(231, 255, 125);
+  border-radius: 50%;
+  position: absolute;
+  transition: 0.5s;
+  width: 4px;
+  height: 4px;
+}
+
+
 .npc {
   transition: 1s;
 }

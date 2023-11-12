@@ -6,7 +6,8 @@ import { addTouchAction } from './utils/touchControl.js'
 import { investigate, select, showDialog, walk, transport } from './fieldActions.js'
 
 
-// TODO add location map
+// TODO add start animation
+// TODO add mapDesigner
 
 
 function init() {
@@ -15,7 +16,6 @@ function init() {
   window.addEventListener('focus', ()=> settings.isWindowActive = true)
   window.addEventListener('blur', ()=> settings.isWindowActive = false)
 
-  
 
   const displayChoiceDetails = () =>{
     elements.indicator.innerHTML = (   
@@ -49,7 +49,6 @@ function init() {
       }
     }
   }
-
 
   const check = count =>{
     const event = settings.map.events[player.pos]
@@ -92,9 +91,7 @@ function init() {
     }
   }
 
-
   createSpriteSheet()
-
 
   window.addEventListener('keyup', () => {
     player.walkingDirection = null

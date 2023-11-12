@@ -11,8 +11,8 @@ const walkDirections = {
   td: 'down',
   tr: 'right',
   tl: 'left',
-  tk: 'talk',
-  re: 'resume',
+  // tk: 'talk',
+  // re: 'resume',
 }
 
 const getWalkConfig = dir => {

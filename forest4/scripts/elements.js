@@ -19,6 +19,11 @@ const elements = {
     el: document.querySelector('.drawboard'),
     ctx: null,
   },
+  location: {
+    el: document.querySelector('.location-indicator'),
+    ctx: null,
+    mark: document.querySelector('.mark'),
+  },
   startButton: document.querySelector('.start-button'),
   control: document.querySelector('.control'),
   controlButtons: document.querySelectorAll('.control-button'),
@@ -32,6 +37,7 @@ const elements = {
 
 elements.drawboard.ctx = elements.drawboard.el.getContext('2d')
 elements.spriteSheet.ctx = elements.spriteSheet.el.getContext('2d')
+elements.location.ctx = elements.location.el.getContext('2d')
 
 export {
   elements

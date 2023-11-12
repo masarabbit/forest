@@ -12,9 +12,11 @@ import { mapData } from './data/mapData.js'
 
 const transition = () =>{
   elements.transitionCover.classList.add('transition')
+  elements.location.mark.classList.add('d-none')
   player.pause = true
   setTimeout(()=> {
     elements.transitionCover.classList.remove('transition')
+    elements.location.mark.classList.remove('d-none')
     player.pause = false
   }, 500)
 }
@@ -276,6 +278,7 @@ const walk = ({ actor, dir }) => {
       setStyles(settings.mapImage)
       player.pos += diff
       checkAndTriggerEvent()
+      setPos({ el: elements.location.mark, x: mapX() * 4, y: mapY() * 4 })
       elements.indicator.innerHTML = `pos:${player.pos} dataX:${mapX()} dataY:${mapY()}`
     } else {
       actor[para] -= dist // note that dist needs to be flipped around
@@ -311,11 +314,22 @@ const createMap = key => {
   settings.mapImage.w = w * d
   settings.mapImage.h = h * d
 
-  setUpCanvas({
-    canvas: elements.mapImage,
-    w: w * d, 
-    h: h * d
-  })
+  setUpCanvas({ canvas: elements.mapImage, w, h, d })
+
+  // create location map
+  settings.location.w = w * 4
+  settings.location.h = h * 4
+  setStyles(settings.location)
+  setUpCanvas({ canvas: elements.location, w, h, d: 4 })
+  setPos({ el: elements.location.mark, x: mapX() * 4, y: mapY() * 4 })
+}
+
+const outputLocationWall = ({ i, tile, d }) => {
+  const { column } = settings.map
+  const mapX = (i % column) * d
+  const mapY = Math.floor(i / column) * d
+  elements.location.ctx.fillStyle = tile === '$' ? '#a2fcf0' : '#06a1a1'
+  elements.location.ctx.fillRect(mapX, mapY, d, d)
 }
 
 const transport = portal => {
@@ -333,6 +347,11 @@ const transport = portal => {
     settings.mapImage.el.classList.remove('transition')
     settings.map.data.forEach((code, i) => {
       outputFromSpriteSheet({ code, i })
+    })
+    settings.map.walls.forEach((tile, i) =>{
+      outputLocationWall({ 
+        i, d: 4, tile
+      })
     })
     animateMap()
     spawnNpcs()
