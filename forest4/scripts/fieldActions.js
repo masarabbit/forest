@@ -1,12 +1,23 @@
 import { elements } from './elements.js'
 import { player } from './state.js'
 import { animateCell } from './utils/animation.js'
-import { spriteWrapper, turnSprite } from './utils/sprite.js'
+import { spriteWrapper, turnSprite, spawnNpcs, clearNpcs } from './utils/sprite.js'
 import { settings } from './state.js'
 import { decompress } from './utils/compression.js'
 import { walkDirections, getWalkConfig } from './data/config.js'
 import { setStyles, isObject, setPos } from './utils/utils.js'
-import { mapX, mapY } from './mapDraw.js'
+import { outputFromSpriteSheet, animateMap, mapX, mapY, setUpCanvas, adjustMapWidthAndHeight } from './mapDraw.js'
+import { mapData } from './data/mapData.js'
+
+
+const transition = () =>{
+  elements.transitionCover.classList.add('transition')
+  player.pause = true
+  setTimeout(()=> {
+    elements.transitionCover.classList.remove('transition')
+    player.pause = false
+  }, 500)
+}
 
 const toggleControl = action =>{
   elements.control.classList[action]('deactivate')
@@ -23,6 +34,15 @@ const displayTextGradual = (t, i) =>{
     setTimeout(()=>{
       displayTextGradual(t, i + 1)
     }, 30)
+  }
+}
+
+const resumeOrEndEvent = event => {
+  if (event && !settings.completedEvents.some(e => e === event.act)){
+    settings.activeEvent = event.act
+    eventAnimation({ act: event.act.sequences, index: settings.eventIndex })
+  } else {
+    settings.eventIndex = 0
   }
 }
 
@@ -47,12 +67,7 @@ const clearText = () =>{
   elements.spriteFace.innerHTML = ''
   toggleControl('remove')
 
-  if (event && !settings.completedEvents.some(e => e === event.act)){
-    settings.activeEvent = event.act
-    eventAnimation({ act: event.act.sequences, index: settings.eventIndex })
-  } else {
-    settings.eventIndex = 0
-  }
+  resumeOrEndEvent(event)
 }
 
 
@@ -130,7 +145,7 @@ const displayText = (count, prev) =>{
       interval: player.talkTarget.interval
     })
     player.textCount++
-    // TODO check why bear is pausing at this timing and not elsewhere
+    // TODO check why player is pausing at this timing and not elsewhere
     player.pause = true
     displayTextGradual(text, 0)
     if (eventPoint.choice && count === eventPoint.text.length - 1) {
@@ -175,7 +190,6 @@ const checkAndContinueEvent = ({ act, index }) =>{
 }
 
 const endEvent = () => {
-  console.log('end')
   // only add to completed events when event is non repeat type
   !settings.map.eventContents[settings.activeEvent]?.repeat && settings.completedEvents.push(settings.activeEvent)
   settings.eventIndex = 0
@@ -189,7 +203,6 @@ const animateActor = ({ frame, actor }) =>{
   const dir = walkDirections[frame]
   const isPlayer = actor === 'player'
   const actorData = getActorData(actor)
-  // const actorSprite = isPlayer ? elements.sprite : actorData.spawn.childNodes[0]
   if (!isPlayer) {
     actorData.pause = true
   }
@@ -216,7 +229,6 @@ const chainAnimation = ({ act, index, actorData, motionIndex }) =>{
 
 const eventAnimation = ({ act, index }) =>{
   if (act[index] === 'end'){
-    console.log('end 2')
     endEvent()
   } else if (act[index]?.gateway) {
     transport(act[index].gateway)
@@ -231,7 +243,6 @@ const eventAnimation = ({ act, index }) =>{
         actorData.motionIndex = 0
         chainAnimation({ act, index, actorData, motionIndex: actorData.motionIndex })
       } else {
-        console.log('else animate actor')
         animateActor({ frame, actor })
       }
     })
@@ -252,8 +263,6 @@ const noWall = pos =>{
   if (!data[pos] || player.pos === pos || npcs.some(s => s.pos === pos)) return false
   return settings.map.walls[pos] !== '$'
 }
-
-
 
 const walk = ({ actor, dir }) => {
   if (!dir || player.pause) return
@@ -276,10 +285,75 @@ const walk = ({ actor, dir }) => {
   }
 }
 
+const checkAndTriggerEvent = () => {
+  const event = settings.map.events[player.pos]
+  if (event) {
+    const { gateway, act } = event
+    if (gateway) setTimeout(()=> transport(gateway), 200)
+    if (act && !settings.completedEvents.some(e => e === act)) {
+      triggerEventAnimation(act)
+    }
+  }
+}
+
+const createMap = key => {
+  settings.map = {
+    ...settings.map,
+    ...mapData[key],
+    key,
+    d: settings.d,
+    data: decompress(mapData[key].map),
+    walls: decompress(mapData[key].walls),
+    column: mapData[key].w, // column and row remains static, while w, and h adapts to screenWidth
+    row: mapData[key].h,
+  }
+  const { w, h, d } = settings.map
+  settings.mapImage.w = w * d
+  settings.mapImage.h = h * d
+
+  setUpCanvas({
+    canvas: elements.mapImage,
+    w: w * d, 
+    h: h * d
+  })
+}
+
+const transport = portal => {
+  transition()
+  settings.mapImage.el.classList.add('transition')
+  const entryPoint = mapData[settings.map.key].entry[portal]
+  if (!entryPoint) return // this added to prevent error when user walks too fast
+
+  player.pos = entryPoint.pos
+  createMap(entryPoint.map)
+  adjustMapWidthAndHeight()
+  clearNpcs()
+
+  setTimeout(()=> {
+    settings.mapImage.el.classList.remove('transition')
+    settings.map.data.forEach((code, i) => {
+      outputFromSpriteSheet({ code, i })
+    })
+    animateMap()
+    spawnNpcs()
+    // createLocationMark()
+    turnSprite({ 
+      actor: player,
+      dir: entryPoint.dir
+    })
+    
+    checkAndTriggerEvent()
+  }, 300)
+}
+
+
+
 export {
   investigate,
   select,
   showDialog,
   triggerEventAnimation,
-  walk
+  walk,
+  checkAndTriggerEvent,
+  transport
 }

@@ -140,6 +140,15 @@ const adjustMapWidthAndHeight = () =>{
   }, 500)
 }
 
+const setUpCanvas = ({ canvas, w, h }) => {
+  resizeCanvas({
+    canvas: canvas.el,
+    w, h
+  })
+  canvas.ctx = canvas.el.getContext('2d')
+  canvas.ctx.imageSmoothingEnabled = false
+}
+
 export {
   drawDataUrl,
   createSpriteSheet,
@@ -148,4 +157,5 @@ export {
   adjustMapWidthAndHeight,
   mapX,
   mapY,
+  setUpCanvas
 }

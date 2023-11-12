@@ -1,4 +1,9 @@
 import { settings } from '../state.js'
+import { setPos, randomDirection } from './utils.js'
+import avatars from '../data/avatars.js'
+import { walkDirections } from '../data/config.js'
+import { mapData } from '../data/mapData.js'
+import { walk } from '../fieldActions.js'
 
 const setSpritePos = (n, actor) =>{
   actor.spritePos = n
@@ -39,7 +44,76 @@ const spriteWrapper = ( { img, wrapper, frameNo, speed, frameSize = 64 } ) =>{
     `
 }
 
+
+const clearNpcs = () => {
+  if (settings.npcs.length) {
+    settings.npcs.forEach(npc => {
+      clearInterval(npc.interval)
+      settings.mapImage.el.removeChild(npc.el)
+    })
+  }
+  settings.npcs.length = 0
+}
+
+const npcMotion = actor =>{
+  if (actor.pause || !settings.isWindowActive) return
+
+  const { motion, motionIndex: index } = actor
+  if (motion === 'randomWalk') {
+    walk({ actor, dir: randomDirection() })
+  } else if (motion === 'randomTurn') {
+    if (Math.random() < 0.5)
+    turnSprite({ actor, dir: randomDirection() })
+  } else if (motion.includes('facing')) {
+    turnSprite({
+    actor, dir: walkDirections[motion.split('-')[1]] }) //TODO possibly revisit this to simplify
+  } else if (Array.isArray(motion)) {
+    // if motion[index] is 0, it would be falsy so walk is skipped
+    if (motion[index]) walk({ actor, dir: walkDirections[motion[index]] })
+    actor.motionIndex = index === motion.length - 1 ? 0 : index + 1
+  }
+}
+
+const spawnNpcs = () =>{
+  const { map: { column }, d } = settings
+  mapData[settings.map.key].npcs?.forEach((c, i)=>{
+    const { pos, avatar, defaultDir } = c
+
+    settings.npcs[i] = {
+      ...c,
+      interval: null,
+      x: Math.floor(pos % column) * d,
+      y: Math.floor(pos / column) * d,
+      animationTimer: null,
+      frameOffset: 0,
+      face: avatars[avatar].face,
+      el: Object.assign(document.createElement('div'), 
+        { className: 'sprite-container overflow-hidden npc',
+          innerHTML: `<div><div class="sprite ${avatars[avatar].sprite}"></div></div>` 
+          //npc need additional div so transition isn't applied to transform: scale(-1, 1)
+        }),
+      // motionIndex: Array.isArray(motion) ? 0 : null, // TODO maybe fine to have this as 0
+      motionIndex: 0,
+      // pause: false
+    }
+    settings.npcs[i].sprite = settings.npcs[i].el.childNodes[0].childNodes[0]
+    setPos(settings.npcs[i])
+    settings.mapImage.el.appendChild(settings.npcs[i].el)   
+
+    settings.npcs[i].interval = setInterval(()=>{
+      npcMotion(settings.npcs[i])
+    }, avatars[avatar].speed)
+
+    turnSprite({
+      actor: settings.npcs[i],
+      dir: defaultDir
+    })
+  })
+}
+
 export {
   turnSprite,
-  spriteWrapper
+  spriteWrapper,
+  clearNpcs,
+  spawnNpcs
 }
