@@ -9,6 +9,7 @@ const settings = {
   isWindowActive: false,
   npcs: [],
   completedEvents: [],
+  activeEvent: null,
   map: {
     el: elements.mapCover, 
     key: 'one',
@@ -35,7 +36,11 @@ const player = {
   animationTimer: null,
   el: elements.player,
   sprite: document.querySelector('.player').childNodes[1],
-  facingDirection: 'down'
+  facingDirection: 'down',
+  walkingDirection: '',
+  walkingInterval: '',
+  isTalking: false,
+  pause: true,
 }
 
 

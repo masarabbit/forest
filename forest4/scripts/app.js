@@ -3,7 +3,7 @@ import { walkDirections, getWalkConfig } from './data/config.js'
 import { settings, player } from './state.js'
 import avatars from './data/avatars.js'
 import { decompress } from './utils/compression.js'
-import { resizeCanvas, setStyles, setPos, randomDirection } from './utils/utils.js'
+import { resizeCanvas, setStyles, setPos, randomDirection, convertKey } from './utils/utils.js'
 import { createSpriteSheet, outputFromSpriteSheet, animateMap,   adjustMapWidthAndHeight, mapX, mapY } from './mapDraw.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { turnSprite } from './utils/sprite.js'
@@ -204,6 +204,62 @@ function init() {
   }
 
 
+  const handleTalk = e =>{
+    const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
+    if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
+      // const { answering, options, choice, isTalking, textCount } = player
+      // const { sprites } = map
+  
+      // if (isTalking) {
+      //   if (answering) {
+      //     options.forEach(option => option.classList.remove('selected'))
+      //     if (key === 'up' && choice > 0) bear.choice--
+      //     if (key === 'down' && choice < options.length - 1) bear.choice++
+      //     if ([' ', 'enter', 'right'].includes(key)) select()
+      //     // if (key === 'left') prevText()
+
+      //     // TODO development code. remove later
+      //     displayChoiceDetails()
+
+      //     options[bear.choice].classList.add('selected')
+      //     return
+      //   }
+      //   // if (key === 'left' && elements.texts[0].innerHTML) prevText()
+      // }
+      // if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
+      //   check(textCount)
+      //   return
+      // }
+    }
+  }
+
+  const handleWalk = dir =>{
+    if (player.walkingDirection !== dir){
+      clearInterval(player.walkingInterval)
+      player.walkingDirection = dir
+      player.walkingInterval = setInterval(()=>{
+        player.walkingDirection && !settings.activeEvent
+          ? walk({ actor: player, dir })
+          : clearInterval(player.walkingInterval)
+      }, 150)
+    }
+  }
+
+  window.addEventListener('keyup', () => {
+    player.walkingDirection = null
+    clearInterval(player.walkingInterval)
+  })
+  window.addEventListener('keydown', e => {
+    if (player.isTalking) {
+      handleTalk(convertKey(e))
+    } else if (e.key[0] === 'A'){
+      handleWalk(convertKey(e))
+    } else if ([' ', 'Enter'].includes(e.key)) {
+      console.log('check')
+    }
+  })
+
+
 
   window.addEventListener('resize', ()=> {
     adjustMapWidthAndHeight()
@@ -212,6 +268,8 @@ function init() {
   createSpriteSheet()
 
   elements.startButton.addEventListener('click', () => {
+    player.pause = false
+    elements.startButton.classList.add('disable')
     transport('start')
   })
 

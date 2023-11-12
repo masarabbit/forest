@@ -1,4 +1,5 @@
 const degToRad = deg => deg / (180 / Math.PI)
+const convertKey = e => e.key.toLowerCase().replace('arrow','')
 
 const resizeCanvas = ({ canvas, w, h }) =>{
   canvas.setAttribute('width', w)
@@ -38,5 +39,6 @@ export {
   setStyles,
   mouse,
   setPos,
-  randomDirection
+  randomDirection,
+  convertKey
 }

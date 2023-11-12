@@ -177,6 +177,10 @@ canvas {
   color: #a2fcf0ba;
 }
 
+button.disable {
+  pointer-events: none;
+}
+
 
 .touch-control {
   position: fixed;
