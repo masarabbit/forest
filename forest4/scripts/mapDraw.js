@@ -1,9 +1,9 @@
 
 import { tiles, editConfig, tilesList, tileSheetData,  tileX, tileY } from './data/tileData.js'
 import { elements } from './elements.js'
-import { degToRad, resizeCanvas } from './utils/utils.js'
+import { degToRad, resizeCanvas, clampMax, setStyles, setPos } from './utils/utils.js'
 
-import { settings } from './state.js'
+import { settings, player } from './state.js'
 
 const placeTile = ({ mapIndex, color, url, ctx, gridData, triggerLast }) =>{
   const { d, w } = gridData
@@ -110,9 +110,42 @@ const animateMap = () => {
   }, 500)
 }
 
+const mapX = () => player.pos % settings.map.column 
+const mapY = () => Math.floor(player.pos / settings.map.column)
+
+const getMapCoord = para => (Math.floor(settings.map[para] / 2) - 1) * settings.d
+
+const adjustMapWidthAndHeight = () =>{
+  const { offsetWidth: w, offsetHeight: h } = elements.wrapper
+  const { d } = settings
+
+  settings.map.w = 2 * Math.floor((clampMax(w, 800) / d) / 2)
+  settings.map.h = 2 * Math.floor((clampMax(h, 600) / d) / 2)
+  setStyles(settings.map)
+
+  const x = getMapCoord('w')
+  const y = getMapCoord('h')
+  
+  setPos({ el: elements.player, x, y })
+  
+  // adjust mapPosition
+  settings.mapImage.x = mapX() * -d + x
+  settings.mapImage.y = mapY() * -d + y
+  setStyles(settings.mapImage)
+
+  settings.mapImage.el.classList.add('transition')
+  clearTimeout(settings.transitionTimer)
+  settings.transitionTimer = setTimeout(()=> {
+    settings.mapImage.el.classList.remove('transition')
+  }, 500)
+}
+
 export {
   drawDataUrl,
   createSpriteSheet,
   outputFromSpriteSheet,
-  animateMap 
+  animateMap,
+  adjustMapWidthAndHeight,
+  mapX,
+  mapY,
 }

@@ -11,7 +11,150 @@ const mapData = {
       { pos: 152, avatar: 'bunny', defaultDir: 'down', event: 'apple', name: 'bunnio', motion: ['u', 'r', 'd', 'l'] },
       { pos: 313, avatar: 'bunny', defaultDir: 'right', event: 'tomato', name: 'tololo', motion: [0] },
     ],
-  }
+    events: {
+      14: { event: 'transport', gateway: 'portal1' },
+      15: { event: 'transport', gateway: 'portal1' },
+      464: { event: 'event-animation', act: 'greeting' },
+    },
+    eventContents: {
+      hello: { first: { text: ['hello!'], }, },
+      tomato: {
+        first: { 
+          text: ['hello!', 'test'], 
+          face: ['happy', 'sad'], 
+        },
+      },
+      apple: {
+        first: { 
+          text: ['how are you?', 'test'], 
+          choice: {
+            'okay': 's_1',
+            'not so good': 's_2',
+            'banana': 'banana'
+          }
+        },
+        s_1: {
+          text: ['yeah!'], 
+          choice: {
+            'yes': 's_3',
+            'no': 's_4'
+          }
+        },
+        s_2: {
+          text: ['really?'], 
+          choice: {
+            'yes': 's_3',
+            'no': 's_4'
+          }
+        },
+        s_3: { text: ['cool!','cool two'] },
+        s_4: { 
+          text: ['whatever'],
+          face: ['sad'] 
+        },  
+        banana: { 
+          text: ['banana!', 'bananananana!'],
+          // event: {
+          //   act: testAct,
+          // },
+        }  
+      },
+      test_event: {
+        first: { 
+          text: ['this is a test event', 'test test test'], 
+          choice: {
+            'yeah!': 's_1',
+            'yo!': 's_2',
+          },
+        },
+        s_1: {
+          text: ['ho!'], 
+          // event: {
+          //   act: testAct,
+          // },
+        },
+        s_2: {
+          text: ['takoyaki!'], 
+        },  
+      },
+      greeting: {
+        sequences: [
+          {
+            tololo: ['r', 'tr' ,'d4'],
+          },
+          {
+            tololo: { dialog: 'welcome' },
+          },
+        ],
+        repeat: false,
+      },
+      welcome: {
+        first: { 
+          text: ['welcome!', `is it the first time you've come here?`], 
+          choice: {
+            'yes': 's_1',
+            'no': 's_2',
+          },
+        },
+        s_1: {
+          text: ['I see,', `in that case, here's an intro...`], 
+          event: {
+            act: {
+              sequences: [ 
+                {
+                  tololo: ['u4', 'tl', 'tl', 'l', 'tr']
+                },
+              ],
+              repeat: false,
+            }
+          },  
+        },
+        s_2: {
+          text: ['ok! in that case, enjoy!'], 
+          event: {
+            act: {
+              sequences: [ 
+                {
+                  tololo: ['u4', 'tl', 'tl', 'l', 'tr']
+                },
+              ],
+              repeat: false,
+            }
+          },  
+        },
+      },
+    },
+    entry: {
+      //* change this to set where bear starts
+      start: {
+        map: 'one',
+        pos: 464,
+        dir: 'up',
+      },
+      portal1: {
+        map: 'test',
+        pos: 81,
+        dir: 'right',
+      },
+    },
+  },
+  test: {
+    w: 20,
+    h: 10,
+    events: {
+      80: { event: 'transport', gateway: 'portal2' },
+      100: { event: 'transport', gateway: 'portal2' },
+    },
+    map: 'ac1,c2,ac1,c7,ac2,c9,ac1,c4,ac1,c2,ac1,c6,ac2,c3,w12,c1,ac1,c6,w3,v1,w6,v1,w1,ac1,c5,w18,c2,w2,v1,w6,v1,w8,c2,ac1,c1,w3,v1,w9,v1,w2,c1,ac1,c2,w16,ac2,c1,ac2,c2,ac2,c3,ac1,c13,ac1,c6,ac2,c3,ac2,c2',
+    walls: '$42,12,$8,12,$6,18,$2,18,$4,16,$4,16,$42',
+    entry: {
+      portal2: {
+        map: 'one',
+        pos: 44,
+        dir: 'down',
+      },
+    }
+  },
 }
 
 export {

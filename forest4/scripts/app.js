@@ -3,12 +3,17 @@ import { walkDirections, getWalkConfig } from './data/config.js'
 import { settings, player } from './state.js'
 import avatars from './data/avatars.js'
 import { decompress } from './utils/compression.js'
-import { clampMax, resizeCanvas, setStyles, setPos, randomDirection } from './utils/utils.js'
-import { createSpriteSheet, outputFromSpriteSheet, animateMap } from './mapDraw.js'
+import { resizeCanvas, setStyles, setPos, randomDirection } from './utils/utils.js'
+import { createSpriteSheet, outputFromSpriteSheet, animateMap,   adjustMapWidthAndHeight, mapX, mapY } from './mapDraw.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { turnSprite } from './utils/sprite.js'
 import { mapData } from './data/mapData.js'
 
+
+// TODO add talk event
+// TODO add location map
+// TODO add events
+// TODO add auto events
 
 
 function init() {
@@ -17,28 +22,42 @@ function init() {
   window.addEventListener('focus', ()=> settings.isWindowActive = true)
   window.addEventListener('blur', ()=> settings.isWindowActive = false)
 
-  const mapX = () => player.pos % settings.map.column 
-  const mapY = () => Math.floor(player.pos / settings.map.column)
 
-  const getMapCoord = para => (Math.floor(settings.map[para] / 2) - 1) * settings.d
+  const transition = () =>{
+    elements.transitionCover.classList.add('transition')
+    player.pause = true
+    setTimeout(()=> {
+      elements.transitionCover.classList.remove('transition')
+      player.pause = false
+    }, 500)
+  }
 
-  const adjustMapWidthAndHeight = () =>{
-    const { offsetWidth: w, offsetHeight: h } = elements.wrapper
-    const { d } = settings
+  const transport = portal => {
+    transition()
+    settings.mapImage.el.classList.add('transition')
+    const entryPoint = mapData[settings.map.key].entry[portal]
+    if (!entryPoint) return // this added to prevent error when user walks too fast
 
-    settings.map.w = 2 * Math.floor((clampMax(w, 800) / d) / 2)
-    settings.map.h = 2 * Math.floor((clampMax(h, 600) / d) / 2)
-    setStyles(settings.map)
+    player.pos = entryPoint.pos
+    createMap(entryPoint.map)
+    adjustMapWidthAndHeight()
+    clearNpcs()
 
-    const x = getMapCoord('w')
-    const y = getMapCoord('h')
-    
-    setPos({ el: elements.player, x, y })
-    
-    // adjust mapPosition
-    settings.mapImage.x = mapX() * -d + x
-    settings.mapImage.y = mapY() * -d + y
-    setStyles(settings.mapImage)
+    setTimeout(()=> {
+      settings.mapImage.el.classList.remove('transition')
+      settings.map.data.forEach((code, i) => {
+        outputFromSpriteSheet({ code, i })
+      })
+      animateMap()
+      spawnNpcs()
+      // createLocationMark()
+      turnSprite({ 
+        actor: player,
+        dir: entryPoint.dir
+      })
+      
+      checkAndTriggerEvent()
+    }, 300)
   }
 
   const noWall = pos =>{    
@@ -47,12 +66,22 @@ function init() {
     return settings.map.walls[pos] !== '$'
   }
 
+  const checkAndTriggerEvent = () => {
+    const event = settings.map.events[player.pos]
+    console.log('event', event)
+    if (event) {
+      const { gateway, act } = event
+      if (gateway) setTimeout(()=> transport(gateway), 200)
+      // if (act && !settings.completedEvents.some(e => e === act)) {
+      //   triggerEventAnimation(act, key)
+      // }
+    }
+  }
 
 
   const walk = ({ actor, dir }) => {
-    // if (!dir || bear.pause) return
-    // const isBear = actor === bear
-  
+    if (!dir || player.pause) return
+
     turnSprite({ dir, actor, animate: true })
     const { diff, para, dist } = getWalkConfig(dir) 
 
@@ -60,13 +89,14 @@ function init() {
       if (actor === player) {
         settings.mapImage[para] += dist
         setStyles(settings.mapImage)
-        // checkAndTriggerEvent()
-        // elements.indicator.innerHTML = `x:${x} y:${y} pos:${bear.pos} dataX:${mapX()} dataY:${mapY()}`
+        player.pos += diff
+        checkAndTriggerEvent()
+        elements.indicator.innerHTML = `pos:${player.pos} dataX:${mapX()} dataY:${mapY()}`
       } else {
         actor[para] -= dist // note that dist needs to be flipped around
         setPos(actor)
+        actor.pos += diff
       }
-      actor.pos += diff
     }
   }
 
@@ -89,14 +119,20 @@ function init() {
     }
   }
 
-  const spawnNpcs = () =>{
-    if (settings.npcs.length) settings.npcs.forEach(npc => clearInterval(npc.interval))
+  const clearNpcs = () => {
+    if (settings.npcs.length) {
+      settings.npcs.forEach(npc => {
+        clearInterval(npc.interval)
+        settings.mapImage.el.removeChild(npc.el)
+      })
+    }
     settings.npcs.length = 0
-    // elements.mapImage.innerHTML = '' // TODO need to clear old sprites from elements.mapImage
-    const { map: { column }, d } = settings
+  }
 
+  const spawnNpcs = () =>{
+    const { map: { column }, d } = settings
     mapData[settings.map.key].npcs?.forEach((c, i)=>{
-      const { pos, avatar, motion, defaultDir } = c
+      const { pos, avatar, defaultDir } = c
 
       settings.npcs[i] = {
         ...c,
@@ -165,13 +201,6 @@ function init() {
       w: w * d, 
       h: h * d
     })
-
-    settings.map.data.forEach((code, i) => {
-      outputFromSpriteSheet({ code, i })
-    })
-    animateMap()
-    adjustMapWidthAndHeight()
-    spawnNpcs()
   }
 
 
@@ -182,7 +211,9 @@ function init() {
 
   createSpriteSheet()
 
-  elements.startButton.addEventListener('click', () => createMap('one'))
+  elements.startButton.addEventListener('click', () => {
+    transport('start')
+  })
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], dir => {
     walk({ actor: player, dir })

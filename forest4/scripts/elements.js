@@ -5,7 +5,7 @@ const elements = {
   mapCover: document.querySelector('.map-cover'), 
   player: document.querySelector('.player'), 
   spriteCheck: document.querySelector('.sprite-check'), 
-  // mapImageWrapper: document.querySelector('.map-image-wrapper'),
+  transitionCover: document.querySelector('.transition-cover'),
   mapImage: {
     el: document.querySelector('.map-image'),
     ctx: null,
@@ -21,6 +21,7 @@ const elements = {
   startButton: document.querySelector('.start-button'),
   control: document.querySelector('.control'),
   controlButtons: document.querySelectorAll('.control-button'),
+  indicator: document.querySelector('.indicator'),
 }
 
 elements.drawboard.ctx = elements.drawboard.el.getContext('2d')

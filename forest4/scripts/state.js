@@ -3,12 +3,15 @@ import { elements } from './elements.js'
 
 const settings = {
   d: 32,
+  transitionTimer: null,
   animInterval: null,
   animCounter: 0,
   isWindowActive: false,
   npcs: [],
+  completedEvents: [],
   map: {
     el: elements.mapCover, 
+    key: 'one',
   }, 
   mapImage: {
     el: elements.mapImage.el.parentNode,
@@ -27,7 +30,7 @@ const touchControl = {
 }
 
 const player = {
-  pos: 464,
+  pos: 0,
   frameOffset: 0,
   animationTimer: null,
   el: elements.player,
