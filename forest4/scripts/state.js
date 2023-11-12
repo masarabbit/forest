@@ -10,6 +10,8 @@ const settings = {
   npcs: [],
   completedEvents: [],
   activeEvent: null,
+  eventIndex: 0,
+  eventChainActors: [],
   map: {
     el: elements.mapCover, 
     key: 'one',

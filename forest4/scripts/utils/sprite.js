@@ -28,6 +28,18 @@ const turnSprite = ({ dir, actor, animate }) => {
   setSpritePos(m, actor)
 }
 
+const spriteWrapper = ( { img, wrapper, frameNo, speed, frameSize = 64 } ) =>{
+  const size = frameSize || 16
+  const width = size * (frameNo || 1)
+  return `
+    <div class="${wrapper}">
+      ${frameNo ? `<div class="img-bg" style="background-image: url(${img}); width:${width}px; height:${size}px; background-size: ${width}px ${size}px !important;" ${frameNo ? `data-frame_no="${frameNo}" data-current="0"` : ''}  ${speed ? `data-speed="${speed}"` : ''}>` : ''}
+      ${frameNo ? '</div>' : ''}
+    </div>
+    `
+}
+
 export {
-  turnSprite
+  turnSprite,
+  spriteWrapper
 }

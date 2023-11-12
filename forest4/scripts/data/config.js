@@ -6,13 +6,13 @@ const walkDirections = {
   d: 'down',
   r: 'right',
   l: 'left',
-  // s: 'stop',
-  // tu: 'up',
-  // td: 'down',
-  // tr: 'right',
-  // tl: 'left',
-  // tk: 'talk',
-  // re: 'resume',
+  s: 'stop',
+  tu: 'up',
+  td: 'down',
+  tr: 'right',
+  tl: 'left',
+  tk: 'talk',
+  re: 'resume',
 }
 
 const getWalkConfig = dir => {

@@ -1,19 +1,17 @@
 import { elements } from './elements.js'
-import { walkDirections, getWalkConfig } from './data/config.js'
+import { walkDirections } from './data/config.js'
 import { settings, player } from './state.js'
 import avatars from './data/avatars.js'
 import { decompress } from './utils/compression.js'
-import { resizeCanvas, setStyles, setPos, randomDirection } from './utils/utils.js'
-import { createSpriteSheet, outputFromSpriteSheet, animateMap,   adjustMapWidthAndHeight, mapX, mapY } from './mapDraw.js'
+import { resizeCanvas, setPos, randomDirection } from './utils/utils.js'
+import { createSpriteSheet, outputFromSpriteSheet, animateMap,   adjustMapWidthAndHeight } from './mapDraw.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { turnSprite } from './utils/sprite.js'
 import { mapData } from './data/mapData.js'
+import { investigate, select, showDialog, triggerEventAnimation, walk } from './fieldActions.js'
 
 
-// TODO add talk event
 // TODO add location map
-// TODO add events
-// TODO add auto events
 
 
 function init() {
@@ -60,45 +58,21 @@ function init() {
     }, 300)
   }
 
-  const noWall = pos =>{    
-    const { map: { data }, npcs } = settings
-    if (!data[pos] || player.pos === pos || npcs.some(s => s.pos === pos)) return false
-    return settings.map.walls[pos] !== '$'
-  }
+
+
 
   const checkAndTriggerEvent = () => {
     const event = settings.map.events[player.pos]
-    console.log('event', event)
     if (event) {
       const { gateway, act } = event
       if (gateway) setTimeout(()=> transport(gateway), 200)
-      // if (act && !settings.completedEvents.some(e => e === act)) {
-      //   triggerEventAnimation(act, key)
-      // }
-    }
-  }
-
-
-  const walk = ({ actor, dir }) => {
-    if (!dir || player.pause) return
-
-    turnSprite({ dir, actor, animate: true })
-    const { diff, para, dist } = getWalkConfig(dir) 
-
-    if (noWall(actor.pos + diff)) {
-      if (actor === player) {
-        settings.mapImage[para] += dist
-        setStyles(settings.mapImage)
-        player.pos += diff
-        checkAndTriggerEvent()
-        elements.indicator.innerHTML = `pos:${player.pos} dataX:${mapX()} dataY:${mapY()}`
-      } else {
-        actor[para] -= dist // note that dist needs to be flipped around
-        setPos(actor)
-        actor.pos += diff
+      if (act && !settings.completedEvents.some(e => e === act)) {
+        triggerEventAnimation(act)
       }
     }
   }
+
+
 
   const npcMotion = actor =>{
     if (actor.pause || !settings.isWindowActive) return
@@ -166,9 +140,6 @@ function init() {
     })
   }
   
-
-
-
   const setUpCanvas = ({ canvas, w, h }) => {
     resizeCanvas({
       canvas: canvas.el,
@@ -177,8 +148,6 @@ function init() {
     canvas.ctx = canvas.el.getContext('2d')
     canvas.ctx.imageSmoothingEnabled = false
   }
-
-
 
   const createMap = key => {
     console.log('create')
@@ -203,101 +172,39 @@ function init() {
     })
   }
 
+  const displayChoiceDetails = () =>{
+    elements.indicator.innerHTML = (   
+      `<div>
+        <p>bear textCount: ${player.textCount}</p>
+        <p>bear choice: ${player.choice}</p>
+        <p>bear prevchoice: ${player.prevChoice}</p>
+      </div>`
+    )
+  }
 
   const handleTalk = key =>{
     if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
-      console.log('talk!')
-      // const { answering, options, choice, isTalking, textCount } = player
-      // const { sprites } = map
-  
-      // if (isTalking) {
-      //   if (answering) {
-      //     options.forEach(option => option.classList.remove('selected'))
-      //     if (key === 'up' && choice > 0) bear.choice--
-      //     if (key === 'down' && choice < options.length - 1) bear.choice++
-      //     if ([' ', 'enter', 'right'].includes(key)) select()
-      //     // if (key === 'left') prevText()
+      const { answering, options, choice, isTalking, textCount } = player
+      if (isTalking) {
+        if (answering) {
+          options.forEach(option => option.classList.remove('selected'))
+          if (key === 'up' && choice > 0) player.choice--
+          if (key === 'down' && choice < options.length - 1) player.choice++
+          if ([' ', 'enter', 'right'].includes(key)) select()
 
-      //     // TODO development code. remove later
-      //     displayChoiceDetails()
-
-      //     options[bear.choice].classList.add('selected')
-      //     return
-      //   }
-      //   // if (key === 'left' && elements.texts[0].innerHTML) prevText()
-      // }
-      // if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
-      //   check(textCount)
-      //   return
-      // }
+          // TODO development code. remove later
+          displayChoiceDetails()
+          options[player.choice].classList.add('selected')
+          return
+        }
+      }
+      if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
+        check(textCount)
+        return
+      }
     }
   }
 
-  const toggleControl = action =>{
-    elements.control.classList[action]('deactivate')
-    // elements.touchToggle.parentNode.classList[action]('deactivate')
-  }
-
-  const updateNextButtonText = (count, text) => {
-    elements.controlButtons[0].innerHTML = count === text.length - 1? 'end' : 'next'
-  }
-
-  const displayTextGradual = (t, i) =>{
-    elements.texts[1].innerHTML = t.slice(0, i)
-    if (i < t.length) {
-      setTimeout(()=>{
-        displayTextGradual(t, i + 1)
-      }, 30)
-    }
-  }
-
-  const clearText = () =>{
-    const event = player.dialogKey && player.dialog[player.dialogKey].event
-
-    Object.assign(player, {
-      textCount: 0,
-      prevChoices: {},
-      pause: false,
-      answering: false,
-      dialogHistory: [],
-      dialog: {},
-      dialogKey: null,
-      talkTarget: null,
-      isTalking: false
-    })
-    elements.texts[0].parentNode.parentNode.classList.add('hidden')
-    elements.texts[1].classList.remove('face_displayed')
-    elements.texts.forEach(t => t.innerText = '')
-    elements.artwork.innerHTML = ''
-    elements.spriteFace.innerHTML = ''
-    toggleControl('remove')
-
-    // if (event && !map.completedEvents.some(e => e === event.act)){
-    //   map.activeEvent = event.act
-    //   eventAnimation({ act: event.act.sequences, index: map.eventIndex })
-    // } else {
-    //   map.eventIndex = 0
-    // }
-  }
-
-  const investigate = (count, eventPoint) =>{
-   
-    if (count < eventPoint.text.length){
-      console.log(eventPoint)
-      toggleControl('add')
-      // displays text and answer
-      const text = eventPoint.text[count]
-      player.textCount++
-      player.pause = true
-      elements.texts[0].parentNode.parentNode.classList.remove('hidden')
-      updateNextButtonText(count, eventPoint.text)
-      displayTextGradual(text, 0)
-      if (eventPoint.art && !elements.artwork.innerHTML) elements.artwork.innerHTML = `<img src=${eventPoint.art} />`
-      // TODO add trigger for event?
-      return
-    }
-    clearText() 
-  }
 
   const check = count =>{
     const event = settings.map.events[player.pos]
@@ -308,10 +215,13 @@ function init() {
         return
       }
     }
-    // const { spawnData, column } = map
-    // const targetDirection = { r: 1, l: -1, u: -column, d: column }[bear.facingDirection[0]]
-    // const talkTarget = bear.talkTarget || spawnData[spawnData.findIndex(actor => actor.pos === bear.pos + targetDirection)]
-    // talk(talkTarget)
+    const { column } = settings.map
+    const targetDirection = { r: 1, l: -1, u: -column, d: column }[player.facingDirection[0]]
+    const talkTarget = player.talkTarget || settings.npcs.find(npc => npc.pos === player.pos + targetDirection)
+    if (talkTarget) showDialog({
+      talkTarget, 
+      dir: { r: 'left', l: 'right', u: 'down', d: 'up' }[player.facingDirection[0]]
+    })
   }
 
   const handleWalk = dir =>{
@@ -337,6 +247,10 @@ function init() {
     }
   }
 
+
+  createSpriteSheet()
+
+
   window.addEventListener('keyup', () => {
     player.walkingDirection = null
     clearInterval(player.walkingInterval)
@@ -347,22 +261,16 @@ function init() {
     c.addEventListener('click', ()=> handleKeyAction(c.dataset.c))
   })
 
+  window.addEventListener('resize', adjustMapWidthAndHeight())
 
-  window.addEventListener('resize', ()=> {
-    adjustMapWidthAndHeight()
-  })
-
-  createSpriteSheet()
-
-  elements.startButton.addEventListener('click', () => {
+  elements.startButton.addEventListener('click', e => {
+    e.preventDefault()
     player.pause = false
     elements.startButton.classList.add('disable')
     transport('start')
   })
 
-  addTouchAction(elements.control.childNodes[1].childNodes[1], dir => {
-    walk({ actor: player, dir })
-  })
+  addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk({ actor: player, dir }))
 
 }
 

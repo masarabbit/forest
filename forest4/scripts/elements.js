@@ -3,6 +3,7 @@
 const elements = {
   wrapper: document.querySelector('.wrapper'),
   mapCover: document.querySelector('.map-cover'), 
+  eventCover: document.querySelector('.event-cover'),
   player: document.querySelector('.player'), 
   spriteCheck: document.querySelector('.sprite-check'), 
   transitionCover: document.querySelector('.transition-cover'),

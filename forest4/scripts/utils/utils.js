@@ -29,6 +29,7 @@ const mouse = {
 
 const setPos = ({ el, x, y }) => Object.assign(el.style, { left: `${x}px`, top: `${y}px` })
 const randomDirection = () => ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)]
+const isObject = target => Object.prototype.toString.call(target) === '[object Object]'
 
 export {
   degToRad,
@@ -39,4 +40,5 @@ export {
   mouse,
   setPos,
   randomDirection,
+  isObject
 }
