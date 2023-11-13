@@ -6,9 +6,9 @@ import { degToRad, resizeCanvas, clampMax, setStyles, setPos } from './utils/uti
 import { settings, player } from './state.js'
 
 const placeTile = ({ mapIndex, color, url, ctx, gridData, triggerLast }) =>{
-  const { d, w } = gridData
-  const mapX = (mapIndex % w) * d
-  const mapY = Math.floor(mapIndex / w) * d
+  const { d, column } = gridData
+  const mapX = (mapIndex % column) * d
+  const mapY = Math.floor(mapIndex / column) * d
 
   if (color === 'transparent') {
     ctx.clearRect(mapX, mapY, d, d)
@@ -54,8 +54,8 @@ const drawDataUrl = ({ url, color, index, edit, ctx, gridData, triggerLast }) =>
 const createSpriteSheet = () => {
   resizeCanvas({
     canvas: elements.spriteSheet.el,
-    w: tileSheetData.d * tileSheetData.w, 
-    h: tileSheetData.d * tileSheetData.h
+    w: tileSheetData.d * tileSheetData.column, 
+    h: tileSheetData.d * tileSheetData.row
   })
   const triggerLast = {
     count: 0,

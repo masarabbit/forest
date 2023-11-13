@@ -9,12 +9,12 @@ const degToRad = deg => deg / (180 / Math.PI)
 
 const grid = {
   draw: () => {
-    const { column, row, cellD, gridWidth } = artData
+    const { column, row, d, gridWidth } = artData
     const { width, height } = artboard.getBoundingClientRect()
   
     oCtx.strokeStyle = artData.gridColor
     oCtx.beginPath()
-    const pos = (n, type) => n === type ? n * cellD - gridWidth : n * cellD + gridWidth
+    const pos = (n, type) => n === type ? n * d - gridWidth : n * d + gridWidth
     for (let x = 0; x <= column; x += 1) {
       oCtx.moveTo(pos(x, column), gridWidth)
       oCtx.lineTo(pos(x, column), height - gridWidth)
@@ -61,17 +61,17 @@ const drawDataUrl = ({ url, color, index, edit, ctx, overrideD, gridData = artDa
   }
 }
 
-const drawPos = (e, cellD) => {
+const drawPos = (e, d) => {
   const { top, left } = artboard.getBoundingClientRect()
   return {
-    x: nearestN(e.pageX - left - window.scrollX, cellD),
-    y: nearestN(e.pageY - top - window.scrollY, cellD)
+    x: nearestN(e.pageX - left - window.scrollX, d),
+    y: nearestN(e.pageY - top - window.scrollY, d)
   }
 }
 
 const placeTile = ({ mapIndex, color, url, ctx, overrideD, gridData, triggerLast }) =>{
-  const { cellD, column } = gridData
-  const d = overrideD || cellD
+  const { d: gridD, column } = gridData
+  const d = overrideD || gridD
   const mapX = (mapIndex % column) * d
   const mapY = Math.floor(mapIndex / column) * d
 
@@ -116,18 +116,18 @@ const generateMap = () =>{
 
 
 const resize = () =>{
-  const { column, row, cellD } = artData
+  const { column, row, d } = artData
   ;[overlay, artboard, elements.wallBoard].forEach(b =>{
     resizeCanvas({
       canvas: b,
-      w: column * cellD,
-      h: row * cellD
+      w: column * d,
+      h: row * d
     })
   })
   styleTarget({
     target: elements.canvasWrapper,
-    w: column * cellD,
-    h: row * cellD
+    w: column * d,
+    h: row * d
   })
   if (artData.grid) grid.draw()
   generateMap()

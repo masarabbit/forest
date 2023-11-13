@@ -307,8 +307,6 @@ const createMap = key => {
     d: settings.d,
     data: decompress(mapData[key].map),
     walls: decompress(mapData[key].walls),
-    // column: mapData[key].w, // column and row remains static, while w, and h adapts to screenWidth
-    // row: mapData[key].h,
     w: mapData[key].column,
     h: mapData[key].row,
   }
@@ -357,7 +355,6 @@ const transport = portal => {
     })
     animateMap()
     spawnNpcs()
-    // createLocationMark()
     turnSprite({ 
       actor: player,
       dir: entryPoint.dir

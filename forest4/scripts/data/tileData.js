@@ -262,13 +262,13 @@ const tilesList = Object.keys(tiles).map(tile => {
 }).flat(1)
 
 const tileSheetData = {
-  w: tilesList.length,
-  h:  1,
+  column: tilesList.length,
+  row:  1,
   d: 16
 }
 
-const tileX = index => (index % tileSheetData.w) * tileSheetData.d
-const tileY = index => Math.floor(index / tileSheetData.w) * tileSheetData.d
+const tileX = index => (index % tileSheetData.column) * tileSheetData.d
+const tileY = index => Math.floor(index / tileSheetData.column) * tileSheetData.d
 
 export {
   tiles,

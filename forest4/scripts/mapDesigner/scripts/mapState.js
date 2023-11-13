@@ -4,7 +4,7 @@ const artData = {
   draw: false,
   grid: true,
   gridWidth: 0.5,
-  cellD: 20,
+  d: 20,
   row: 5,
   column: 5,
   gridColor: 'lightgrey',

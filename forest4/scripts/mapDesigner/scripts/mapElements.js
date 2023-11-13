@@ -1,7 +1,7 @@
 const input = {
   column: document.querySelector('.column'),
   row: document.querySelector('.row'),
-  cellD: document.querySelector('.cell_size'),
+  d: document.querySelector('.cell_size'),
   letter: document.querySelector('.letter'),
   editKey: document.querySelector('.edit_key'),
   codesBox: document.querySelectorAll('.codes'),
