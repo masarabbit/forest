@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="./styles/main.css" />
+  <script type="module" src ="./scripts/app.js" charset="utf-8"></script>
+
+  <title>map designer</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <nav>
+    map designer
+    <div class="input_wrap">
+      <label>column</label>
+      <input class="column input no" placeholder="column" value="5" />
+    </div>
+    <div class="input_wrap">
+      <label>row</label>
+      <input class="row input no" placeholder="row" value="5" />
+    </div>
+    <div class="input_wrap">
+      <label>cell size</label>
+      <input class="cell_size input no" placeholder="cell size" value="20" />
+    </div>
+    <div class="input_wrap">
+      <label>index</label>
+      <input class="index_indicator" value="0" />
+    </div>
+    <div class="input_wrap">
+      <label>key</label>
+      <input class="letter input" value="a" />
+    </div>
+    <div class="input_wrap">
+      <label>edit key</label>
+      <input class="edit_key input" value="" />
+    </div>
+
+
+      <!-- <button class="btn create_grid create icon alt" data-index="0" data-grid_class="cell" data-alt="create grid"></button>  -->
+      <button class="btn clear icon eraser alt" data-alt="eraser"></button>
+      <button class="btn grid_display icon hide alt" data-alt="hide grid"></button>
+      <button class="btn generate icon alt" data-alt="generate from code"></button> 
+      <button class="btn display_index icon alt" data-alt="display index"></button>  
+      <button class="btn download icon download_file alt" data-alt="download compiled png"></button>
+
+      <button class="btn rotate icon alt" data-alt="rotate"></button>
+      <button class="btn flip_h icon alt" data-alt="flip sprite horizontally"></button>
+      <button class="btn flip_v icon alt" data-alt="flip sprite vertically"></button>
+      <!-- <button class="btn generate_walls icon alt" data-alt="generate walls from code"></button>  -->
+
+      <canvas class="output"></canvas>
+  </nav>
+  <nav class="two">
+    <button class="btn select_state icon alt" data-alt="select"></button>
+    <button class="btn copy_selection icon alt" data-alt="copy"></button>
+    <button class="btn cut_selection icon alt" data-alt="cut"></button>
+    <button class="btn paste_selection icon alt" data-alt="paste"></button>
+    
+    <!-- <button class="btn move_selection alt" data-alt="move selection">move</button> -->
+    <button class="btn crop_selection alt icon" data-alt="crop"></button>
+    <!-- <button class="btn delete_selection alt" data-alt="delete selection">delete</button> -->
+    <button class="btn make_map_into_bg alt icon" data-alt="make map into bg"></button>
+    <button class="btn switch_palette alt" data-alt="switch palette">switch palettte</button>
+    <button class="btn toggle_walls alt" data-alt="switch palette">toggle walls</button>
+  </nav>
+
+  <div class="pagewrap">
+
+    <div class="canvas_wrapper">
+      <canvas class="overlay"></canvas>
+      <canvas class="wallboard hide"></canvas>
+      <canvas class="artboard"></canvas>
+    </div>
+    
+    <div class="map_link"></div>
+
+    <div class="palette"></div>
+    <textarea class="codes" spellcheck="false"></textarea>
+    <div class="mini_wrap">
+      <button class="copy icon alt" data-alt="copy code"></button>
+      <button class="btn compress icon alt" data-alt="compress code">c</button>
+    </div>
+
+
+    <textarea class="codes" spellcheck="false" placeholder="compressed"></textarea>
+    <div class="mini_wrap">
+      <button class="copy icon alt" data-alt="copy code"></button>
+    </div>
+
+    
+    <textarea class="codes" spellcheck="false" placeholder="walls"></textarea>
+    <div class="mini_wrap">
+      <button class="copy icon alt" data-alt="copy code"></button>
+      <button class="btn compress icon alt" data-alt="compress code">c</button>
+    </div>
+
+
+    <textarea class="codes" spellcheck="false" placeholder="compressed"></textarea>
+    <div class="mini_wrap">
+      <button class="copy icon alt" data-alt="copy code"></button>
+    </div>
+
+  </div>
+
+
+  <div class="cursor" data-text="test"><div></div></div>
+
+  <canvas class="drawboard display_none"></canvas>
+  <canvas class="sprite_sheet display_none"></canvas>
+</body>
+
+</html>

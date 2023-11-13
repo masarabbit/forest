@@ -3,10 +3,9 @@ import { elements } from './elements.js'
 import { settings, player } from './state.js'
 import { createSpriteSheet, adjustMapWidthAndHeight } from './mapDraw.js'
 import { addTouchAction } from './utils/touchControl.js'
-import { investigate, select, showDialog, walk, transport } from './fieldActions.js'
+import { investigate, select, showDialog, walk, transport } from './actions.js'
 
 
-// TODO add mapDesigner
 // TODO add touch toggle
 
 

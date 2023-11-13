@@ -3,7 +3,7 @@ import { setPos, randomDirection } from './utils.js'
 import avatars from '../data/avatars.js'
 import { walkDirections } from '../data/config.js'
 import { mapData } from '../data/mapData.js'
-import { walk } from '../fieldActions.js'
+import { walk } from '../actions.js'
 
 const setSpritePos = (n, actor) =>{
   actor.spritePos = n

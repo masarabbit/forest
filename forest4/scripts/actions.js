@@ -307,8 +307,10 @@ const createMap = key => {
     d: settings.d,
     data: decompress(mapData[key].map),
     walls: decompress(mapData[key].walls),
-    column: mapData[key].w, // column and row remains static, while w, and h adapts to screenWidth
-    row: mapData[key].h,
+    // column: mapData[key].w, // column and row remains static, while w, and h adapts to screenWidth
+    // row: mapData[key].h,
+    w: mapData[key].column,
+    h: mapData[key].row,
   }
   const { w, h, d } = settings.map
   settings.mapImage.w = w * d
