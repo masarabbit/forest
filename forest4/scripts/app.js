@@ -3,10 +3,7 @@ import { elements } from './elements.js'
 import { settings, player } from './state.js'
 import { createSpriteSheet, adjustMapWidthAndHeight } from './mapDraw.js'
 import { addTouchAction } from './utils/touchControl.js'
-import { investigate, select, showDialog, walk, transport } from './actions.js'
-
-
-// TODO add touch toggle
+import { investigate, select, showDialog, walk, transport, transition } from './actions.js'
 
 
 function init() {
@@ -104,15 +101,30 @@ function init() {
 
   window.addEventListener('resize', adjustMapWidthAndHeight())
 
-  elements.startButton.addEventListener('click', e => {
+  const start = e => {
     e.preventDefault()
-    player.pause = false
-    // elements.startButton.classList.add('disable')
-    transport('start')
     elements.transitionCover.classList.remove('intro')
-  })
+    transition()
+    setTimeout(()=> {
+      player.pause = false
+      transport('start')
+      if (e.touches?.length) {
+        elements.control.classList.remove('hide')
+        elements.touchToggle.innerText = 'touch: ON'
+      }
+    }, 400)
+  }
+
+  ;['click', 'touchstart'].forEach(action => elements.startButton.addEventListener(action, e => start(e)))
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk({ actor: player, dir }))
+
+  elements.touchToggle.addEventListener('click', e => {
+    e.preventDefault()
+    // not using deactivate here because deactivate gets triggered elsewhere
+    elements.control.classList.toggle('hide')
+    elements.touchToggle.innerText = elements.touchToggle.innerText === 'touch: ON' ? 'touch: OFF' : 'touch: ON'
+  })
 
 }
 

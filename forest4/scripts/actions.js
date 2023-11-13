@@ -18,12 +18,12 @@ const transition = () =>{
     elements.transitionCover.classList.remove('transition')
     elements.location.mark.classList.remove('d-none')
     player.pause = false
-  }, 500)
+  }, 400)
 }
 
 const toggleControl = action =>{
   elements.control.classList[action]('deactivate')
-  // elements.touchToggle.parentNode.classList[action]('deactivate')
+  elements.touchToggle.classList[action]('deactivate')
 }
 
 const updateNextButtonText = (count, text) => {
@@ -292,7 +292,7 @@ const checkAndTriggerEvent = () => {
   const event = settings.map.events[player.pos]
   if (event) {
     const { gateway, act } = event
-    if (gateway) setTimeout(()=> transport(gateway), 200)
+    if (gateway) setTimeout(()=> transport(gateway), 100)
     if (act && !settings.completedEvents.some(e => e === act)) {
       triggerEventAnimation(act)
     }
@@ -373,5 +373,6 @@ export {
   triggerEventAnimation,
   walk,
   checkAndTriggerEvent,
-  transport
+  transport,
+  transition
 }

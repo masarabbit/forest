@@ -28,7 +28,7 @@ const elements = {
   controlButtons: document.querySelectorAll('.control-button'),
   indicator: document.querySelector('.indicator'),
   texts: document.querySelectorAll('.text'),
-  // touchToggle: document.querySelector('.touch-toggle'),
+  touchToggle: document.querySelector('.touch-toggle'),
   control: document.querySelector('.control'),
   artwork: document.querySelector('.artwork'),
   spriteFace: document.querySelector('.face'),

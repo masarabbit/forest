@@ -1,0 +1,94 @@
+
+
+.intro-img {
+  position: relative;
+  overflow: hidden;
+  width: 300px;
+  height: 192px;
+  background-color: #57d4d9;
+}
+
+.waves {
+  position: absolute;
+  --wave-size: 64px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAE9JREFUOE9jDL9y8z8DBYCRJgZ8vvII7CZeHTmCbkNxAbpGYgyijRcIuhtJAf1dgB4uRLsAVwATbQCucBmEBhCTeJC9A/cCOakQZNDAhwEA60NK6u+iNxUAAAAASUVORK5CYII=);
+  image-rendering: pixelated;
+  width: var(--wave-size);
+  height: var(--wave-size);
+  background-size: var(--wave-size)!important; 
+  animation: left-to-right infinite 3s;
+  left: -64px;
+}
+
+.waves:nth-child(2) {
+  top: 64px;
+  animation-delay: 1s;
+}
+
+.waves:nth-child(3) {
+  top: 128px;
+  animation-delay: 2s;
+}
+
+.bear-on-duck {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAPCAYAAAD6Ud/mAAAAAXNSR0IArs4c6QAAALVJREFUOE/Fk1sWgyAMRCc7cLUugm5WVxBPIlgSHmqxLV/AibmZGSR8vth9SgDyOzkfyxxuMJnZcogI6U72APogXoLpQNPshykgfsBTkIekBhF2DJBPXlPm1ag8M9760t40zeAlvP3dVXXtMnnUrBsBtTIdtU76qn3erlpGyZGUsQm6lVG0U2tPX4IUxQjyjC+Dbjz9olRU/Qek1rj/aERJ07qfgr4BKzLKbXrKwurzfiKPVo8NdspmEFmxViEAAAAASUVORK5CYII=);
+  image-rendering: pixelated;
+  --w: 26px;
+  --h: 15px;
+  width: calc(var(--w) * 4);
+  height: 56px; /* (--h - 1) * 4 */
+  background-size: calc(var(--w) * 4) calc(var(--h) * 4) !important; 
+  animation: bop infinite 2s;
+  background-repeat: no-repeat;
+}
+
+@keyframes bop {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 0 4px;
+  }
+}
+
+@keyframes left-to-right {
+  0% {
+    left: -64px;
+  }
+  100% {
+    left: 364px;
+  }
+}
+
+@keyframes slide-in-from-left {
+  0% { left: -100%; }
+  50% { opacity: 0; }
+  95% { 
+    left: 25px;
+    opacity: 1; 
+  }
+  100% { left: 15px; }
+}
+
+@keyframes display-artwork {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slide-in-from-right {
+  0% { right: -100vh; }
+  50% {
+    opacity: 0;
+  }
+  95% { 
+    right: 25px;
+    opacity: 1; 
+  }
+  100% { right: 15px }
+}

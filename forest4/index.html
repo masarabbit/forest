@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/animation.css">
   <script type="module" src ="./scripts/app.js" charset="utf-8"></script>
 
   <title>forest4</title>
 </head>
 <body>
   
-  <div class="indicator"></div>
+
+  <div class="indicator d-none"></div>
   <div>
     <canvas class="location-indicator"></canvas>
     <div class="mark"></div>
@@ -28,6 +30,7 @@
       <button class="next control-button" data-c="enter">next</button>
     </div>
   </div>
+  <button class="touch-toggle green-btn">touch: OFF</button>
   <div class="transition-cover intro flex-center">
     <div class="intro-box">
       <div class="intro-img">
@@ -36,7 +39,7 @@
         <div class="waves"></div>
         <div class="bear-on-duck"></div>
       </div>
-      <button class="start-button hidden">start</button>
+      <button class="start-button green-btn hidden">start</button>
     </div>
     <div class="artwork"></div>
   </div>
@@ -53,7 +56,7 @@
     </div>  
   </div>
 
-  <div class="control">
+  <div class="control hide">
     <div class="touch-control">
       <div class="touch-circle"></div>
     </div>
