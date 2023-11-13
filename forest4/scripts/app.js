@@ -99,7 +99,7 @@ function init() {
     c.addEventListener('click', ()=> handleKeyAction(c.dataset.c))
   })
 
-  window.addEventListener('resize', adjustMapWidthAndHeight())
+  window.addEventListener('resize', adjustMapWidthAndHeight)
 
   const start = e => {
     e.preventDefault()
