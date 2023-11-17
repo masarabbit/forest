@@ -46,7 +46,7 @@ const player = {
   sprite: document.querySelector('.player').childNodes[1],
   facingDirection: 'down',
   walkingDirection: '',
-  walkingInterval: '',
+  walkingInterval: null,
   isTalking: false,
   talkTarget: null,
   answering: false,
