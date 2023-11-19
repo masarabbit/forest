@@ -7,23 +7,23 @@ import { drawPos, resize } from './draw.js'
 // copyColors, paintCanvas,
 
 const client = (e, type) => e.type[0] === 'm' ? e[`client${type}`] : e.touches[0][`client${type}`]
-const roundedClient = (e, type) => nearestN(client(e, type), artData.cellD)
+const roundedClient = (e, type) => nearestN(client(e, type), artData.d)
 
 
 const resizeBox = (e, box) =>{
-  const { cellD, column, row, gridWidth } = artData
+  const { d, column, row, gridWidth } = artData
   const { defPos, xy } = copyData
-  const { x, y } = drawPos(e, cellD)
+  const { x, y } = drawPos(e, d)
   const newXy = {
-    x: (x - cellD) / cellD + 1,
-    y: (y - cellD) / cellD + 1,
+    x: (x - d) / d + 1,
+    y: (y - d) / d + 1,
   }
   const xIncreased = newXy.x >= xy.x
   const yIncreased = newXy.y >= xy.y 
-  const xDiff = Math.abs(newXy.x, xy.x) * cellD
-  const yDiff = Math.abs(newXy.y, xy.y) * cellD
-  const adjustedXdiff = xDiff >= column * cellD ? column * cellD : xDiff
-  const adjustedYdiff = yDiff >= row * cellD ? row * cellD : yDiff
+  const xDiff = Math.abs(newXy.x, xy.x) * d
+  const yDiff = Math.abs(newXy.y, xy.y) * d
+  const adjustedXdiff = xDiff >= column * d ? column * d : xDiff
+  const adjustedYdiff = yDiff >= row * d ? row * d : yDiff
   const w = xIncreased ? adjustedXdiff - defPos.x + gridWidth : defPos.x - xDiff + (2 * gridWidth)
   const h = yIncreased ? adjustedYdiff - defPos.y + gridWidth : defPos.y - yDiff + (2 * gridWidth)
 
@@ -73,17 +73,17 @@ const addTouchAction = target =>{
     mouse.up(document, 'remove', onLetGo)
     mouse.move(document,'remove', onDrag)
     if (!copyData.move) {
-      const { cellD, gridWidth } = artData
+      const { d, gridWidth } = artData
       const { width, height } = target.getBoundingClientRect()
-      const { x, y } = drawPos(e, cellD)
+      const { x, y } = drawPos(e, d)
       Object.assign(copyData, {
         size: {
           w: width - gridWidth,
           h: height - gridWidth,
         },
         xy: {
-          x: (x - cellD) / cellD + 1,
-          y: (y - cellD) / cellD + 1,
+          x: (x - d) / d + 1,
+          y: (y - d) / d + 1,
         }
       })
     }
@@ -97,29 +97,29 @@ const addTouchAction = target =>{
 
 const createSelectBox = e =>{
   if (!elements.selectBox) {
-    const { cellD, gridWidth } = artData
+    const { d, gridWidth } = artData
     const selectBox = document.createElement('canvas')
     selectBox.classList.add('select_box')
-    const boxD = cellD - gridWidth
+    const boxD = d - gridWidth
     elements.canvasWrapper.append(selectBox)
     resizeCanvas({
       canvas: selectBox,
       w: boxD
     })
-    const { x, y } = drawPos(e, cellD)
+    const { x, y } = drawPos(e, d)
 
     Object.assign(copyData, {
       defPos: {
-        x: x - cellD,
-        y: y - cellD,
+        x: x - d,
+        y: y - d,
       },
       xy: {
-        x: (x - cellD) / cellD + 1,
-        y: (y - cellD) / cellD + 1,
+        x: (x - d) / d + 1,
+        y: (y - d) / d + 1,
       },
       size: {
-        w: cellD,
-        h: cellD,
+        w: d,
+        h: d,
       },
     })
     styleTarget({
@@ -136,13 +136,13 @@ const createSelectBox = e =>{
 
 // TODO this isn't working as expected. Not returning the selected area
 const copyTiles = ({ offset, w, h, copyData, tiles, cut }) =>{
-  const { cellD, column } = artData
+  const { d, column } = artData
   if (!cut) copyData.length = 0
   const tilesToCut = []
   for (let i = 0; i < w * h; i++) {
-    const x = i % w * cellD
-    const y = Math.floor(i / w) * cellD
-    const mapIndex = ((y / cellD) * column) + x / cellD
+    const x = i % w * d
+    const y = Math.floor(i / w) * d
+    const mapIndex = ((y / d) * column) + x / d
     if (cut){ 
       tilesToCut.push(mapIndex + offset)
     } else {
@@ -159,15 +159,15 @@ const copySelection = ({ crop, cut }) => {
     const { size: { w, h }, defPos: { x, y }, ctx } = copyData
     ctx.imageSmoothingEnabled = false
     ctx.putImageData(aCtx.getImageData(x, y, w, h), 0, 0)
-    const { column, cellD } = artData
+    const { column, d } = artData
     copyData.move = true
-    const offset = ((y / cellD) * column) + x / cellD
+    const offset = ((y / d) * column) + x / d
     
     tilesData.forEach(data => {
       copyTiles({
         offset,
-        w: w / artData.cellD,
-        h: h / artData.cellD,
+        w: w / artData.d,
+        h: h / artData.d,
         copyData: copyData[data.tiles],
         tiles: data.tiles
       })
@@ -175,8 +175,8 @@ const copySelection = ({ crop, cut }) => {
         data.ctx.clearRect(x, y, w, h) 
         copyTiles({ 
           offset,
-          w: w / artData.cellD,
-          h: h / artData.cellD,
+          w: w / artData.d,
+          h: h / artData.d,
           copyData: artData,
           cut: true,
           tiles: data.tiles
@@ -190,8 +190,8 @@ const copySelection = ({ crop, cut }) => {
         paste({ data, crop: true })
         artData[data.tiles] = copyData[data.tiles]
       })
-      update('column', w / cellD)
-      update('row', h / cellD)
+      update('column', w / d)
+      update('row', h / d)
       // When cropping, we need to resize after updating column and row
       resize()
       copyData.defPos = { x: 0, y: 0 }
@@ -202,11 +202,11 @@ const copySelection = ({ crop, cut }) => {
 
 const paste = ({ data, crop }) => {
   if (copyData[data.tiles].length){
-    const { cellD, column } = artData
+    const { d, column } = artData
     const { size: { w, h }, defPos: { x, y } } = copyData
-    const index = (((y + cellD) / cellD - 1) * column) + (x + cellD) / cellD - 1
-    const width = w / cellD
-    copyData.index = Array(width * (h / cellD)).fill('').map((_, i) => {
+    const index = (((y + d) / d - 1) * column) + (x + d) / d - 1
+    const width = w / d
+    copyData.index = Array(width * (h / d)).fill('').map((_, i) => {
       return index + i + Math.floor(i / width) * (column - width)
     }) 
     copyData.index.forEach((index, i) => {
