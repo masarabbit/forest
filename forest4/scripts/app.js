@@ -105,6 +105,7 @@ function init() {
     e.preventDefault()
     elements.transitionCover.classList.remove('intro')
     transition()
+    elements.startButton.blur()
     setTimeout(()=> {
       player.pause = false
       transport('start')
