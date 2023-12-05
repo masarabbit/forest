@@ -1,0 +1,181 @@
+
+/* ----  text display ------ */
+
+.text {
+  color: white;
+  transition: 0.4s;
+}
+
+.face {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border: 2px solid white;
+  background-color: var(--light-green);
+  top: -20px;
+  left: 20px;
+  overflow: hidden;
+}
+
+.text.name {
+  position: absolute;
+  top: 50px;
+  animation: slide-in-from-left forwards ease 0.5s;
+  width: 68px;
+  text-align: center;
+  color: #b69c8b;
+}
+
+.text-display {
+  position: fixed;
+  width: 100%;
+  height: 180px;
+  bottom: 0;
+  transition: 0.4s;
+  z-index: 5;
+}
+
+.text-display:not(.hidden) {
+  background-color: #4f443d;
+}
+
+.text-display.hidden .next {
+  bottom: -100px;
+}
+
+.text-display-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.choice {
+  position: absolute;
+  right: 100vh;
+  bottom: 20px;
+  background-color: #392a20d8;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  animation: slide-in-from-right forwards ease 0.5s;
+}
+
+.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.next {
+  position: absolute;
+  bottom: 40px;
+  right: 15px;
+  border: 0px;
+  padding: 10px;
+  font-size: 16px;
+  color: #031f5C;
+  background-color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.next:hover {
+  color: white;
+  background-color: #a2fcf0ba;
+}
+
+.text_display.hidden .next {
+  bottom: -100px;
+}
+
+/** big window */
+.dialog-box {
+  width: 100%;
+  height: 100%;
+  padding: 25px 30px 0;
+}
+
+.dialog-box.face-displayed {
+  padding: 25px 30px 0 110px;
+}
+
+/** multiple choice selection */
+.choice {
+  position: absolute;
+  right: 100vh;
+  bottom: 20px;
+  background-color: #392a20d8;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  animation: slide-in-from-right forwards ease 0.5s;
+}
+
+.face {
+  animation: slide-in-from-left forwards ease 0.5s;
+  z-index: 5;
+}
+
+.sprite-face {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.choice:empty {
+  right: 100vh;
+  animation: none;
+}
+
+.name:empty,
+.face:empty {
+  left: -100vh;
+  animation: none;
+}
+
+.option {
+  color: white;
+  background-color: transparent;
+  border: 0;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.option.selected {
+  color: #3e3530;
+  background-color: white;
+}
+
+.event-cover,
+.event-cover::after {
+  position: fixed;
+  width: 100%;
+  height: 190px;
+  transition: 0.3s;
+  pointer-events: none;
+  background-color: #4f443d;
+  z-index: 5;
+}
+
+.event-cover {
+  top: 0px;
+}
+
+.event-cover::after {
+  content: '';
+  bottom: 0;
+}
+
+.event-cover.hidden::after {
+  bottom: -200px;
+}
+.event-cover.hidden {
+  opacity: 0;
+  top: -200px;
+}

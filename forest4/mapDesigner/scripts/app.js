@@ -1,9 +1,9 @@
-import { tiles, tilesList, tileSheetData, tileX, tileY } from '../../data/tileData.js'
+import { tiles, tilesList, tileSheetData, tileX, tileY } from '../../scripts/data/tileData.js'
 import { artData } from './mapState.js'
 import { drawPos, grid, resize, drawDataUrl } from './artUtils/draw.js'
 import { createSelectBox, copySelection, paste, select  } from './artUtils/select.js'
 
-import { compress, decompress } from '../../utils/compression.js'
+import { compress, decompress } from '../../scripts/utils/compression.js'
 
 import {
   input,
@@ -21,7 +21,7 @@ import {
   update,
 } from './artUtils/mapUtils.js'
 
-import { mapData } from '../../data/mapData.js'
+import { mapData } from '../../scripts/data/mapData.js'
 
 function init() {
 
