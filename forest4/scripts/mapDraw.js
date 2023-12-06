@@ -60,7 +60,9 @@ const createSpriteSheet = () => {
   const triggerLast = {
     count: 0,
     limit: tilesList.length - 1,
-    action: ()=> elements.startButton.classList.remove('hidden')
+    action: ()=> {
+      if (elements?.startButton)  elements.startButton.classList.remove('hidden')
+    }
   }
   tilesList.forEach((code, i) => {
     const tile = code[0]?.split('.')?.[0] || code[0]

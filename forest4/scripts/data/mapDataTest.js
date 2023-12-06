@@ -12,9 +12,9 @@ const mapData = {
       { pos: 313, avatar: 'bunny', defaultDir: 'right', event: 'tomato', name: 'tololo', motion: [0] },
     ],
     events: {
-      14: { event: 'transport', url: 'test-floor.html' },
-      15: { event: 'transport', url: 'test-floor.html' },
-      // 464: { event: 'event-animation', act: 'greeting' },
+      14: { event: 'transport', gateway: 'portal1' },
+      15: { event: 'transport', gateway: 'portal1' },
+      464: { event: 'event-animation', act: 'greeting' },
       249: { event: 'check', key: 'art1' },
     },
     eventContents: {
