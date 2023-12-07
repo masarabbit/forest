@@ -34,7 +34,10 @@ function init() {
     artwork: document.querySelector('.artwork'),
     spriteFace: document.querySelector('.face'),
     controlButtons: document.querySelectorAll('.control-button'),
-    eventButtons: document.querySelector('.event-buttons')
+
+
+    eventButtons: document.querySelector('.event-buttons'),
+    eventsDisplay: document.querySelector('.events-display')
   }
   
   // console.log('app', 
@@ -58,7 +61,8 @@ function init() {
     button.addEventListener('click', ()=> {
       console.log(map)
       testSetting.eventPoint = map['first']
-      investigate(0, testSetting.eventPoint)
+      // investigate(0, testSetting.eventPoint)
+      elements.eventsDisplay.innerHTML = testSetting.eventPoint.text
     })
 
     elements.eventButtons.appendChild(button)

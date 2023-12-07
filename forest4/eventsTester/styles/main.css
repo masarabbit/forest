@@ -21,3 +21,10 @@ nav {
   padding: 0 10px;
   z-index: 100;
 }
+
+.events-display {
+  width: 100%;
+  max-width: 800px;
+  margin: 100px auto 0;
+  border: 1px solid white;
+}
