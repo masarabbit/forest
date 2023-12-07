@@ -21,7 +21,7 @@ import {
   update,
 } from './artUtils/mapUtils.js'
 
-import { mapData } from '../../data/mapData.js'
+import { mapData } from '../../../area1/mapData.js'
 
 function init() {
 
