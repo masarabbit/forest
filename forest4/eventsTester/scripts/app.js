@@ -1,5 +1,5 @@
 
-import { mapData } from '../../scripts/data/mapData.js'
+import { mapData } from '../../area1/mapData.js'
 // import { player } from '../../scripts/state.js'
 
 const player = {
