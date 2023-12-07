@@ -2,7 +2,6 @@ import { settings } from '../state.js'
 import { setPos, randomDirection } from './utils.js'
 import avatars from '../data/avatars.js'
 import { walkDirections } from '../data/config.js'
-import { mapData } from '../data/mapData.js'
 import { walk } from '../actions.js'
 
 const setSpritePos = (n, actor) =>{
@@ -74,7 +73,7 @@ const npcMotion = actor =>{
   }
 }
 
-const spawnNpcs = () =>{
+const spawnNpcs = mapData =>{
   const { map: { column }, d } = settings
   mapData[settings.map.key].npcs?.forEach((c, i)=>{
     const { pos, avatar, defaultDir } = c
