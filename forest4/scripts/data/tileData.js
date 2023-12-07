@@ -236,6 +236,24 @@ const tiles = {
     ],
     sequence: [0, 0, 0, 1, 1, 1]
   },
+  ak: {
+    id: 'white round corner dark green background',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADZJREFUOE9jZMAC/v///x+bODYxRmRBUjTC9MENIEczyBCwAeRqpo4BlNgOdsGoAaNhMCjSAQBl0D/RLovMkAAAAABJRU5ErkJggg==',
+    type: 'L',
+    color: '#0d8799',
+  },
+  al: {
+    id: 'green rounded half-corner',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAERJREFUOE9jZKAQMFKon2HUAIahGAahV678Z2Jghcc+0dGIrhFmAlEG4NIMMoQoA8Kv3PyPK8USNACf7US5AJ/tg8MAAAdsGCm+oom3AAAAAElFTkSuQmCC',
+    type: 'L',
+    color: '#0d8799',
+  },
+  am: {
+    id: 'green half-wall',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEdJREFUOE9jZKAQMFKon2HUAIbBEAbhV27+JyUq/zH8ZmBiYIVrYSTVAHTLiDIA3VZkQ4gyAJ8XCRqAz3aQwQQNIBTAA28AAJuNHimSWaKCAAAAAElFTkSuQmCC',
+    type: 'L',
+    color: '#0d8799',
+  },
   zz: {
     id: '',
     color: 'transparent',

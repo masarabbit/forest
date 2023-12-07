@@ -250,6 +250,50 @@ button.disable {
   cursor: grab;
 }
 
+.deactivate {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sign {
+  position: absolute;
+  color: white;
+  bottom: 10px;
+  right: 10px;
+  font-size: 10px;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+.intro-box {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.intro-box button {
+  margin-top: 20px;
+}
+
+.transition-cover.intro .intro_box button {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.start-button.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ----  text display ------ */
 
 .text {
@@ -264,16 +308,13 @@ button.disable {
   border: 2px solid white;
   background-color: var(--light-green);
   top: -20px;
-  /* left: 20px; */
-  left: 15px;
+  left: 20px;
   overflow: hidden;
 }
 
 .text.name {
   position: absolute;
   top: 50px;
-  /* animation: scale-in forwards ease 0.5s;
-  left: 15px; */
   animation: slide-in-from-left forwards ease 0.5s;
   width: 68px;
   text-align: center;
@@ -307,7 +348,6 @@ button.disable {
 
 .choice {
   position: absolute;
-  /* right: 15px; */
   right: 100vh;
   bottom: 20px;
   background-color: #392a20d8;
@@ -315,7 +355,6 @@ button.disable {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* animation: scale-in forwards ease 0.5s; */
   animation: slide-in-from-right forwards ease 0.5s;
 }
 
@@ -361,19 +400,17 @@ button.disable {
 .choice {
   position: absolute;
   right: 100vh;
-  /* right: 15px; */
   bottom: 20px;
   background-color: #392a20d8;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* animation: scale-in forwards ease 0.5s; */
   animation: slide-in-from-right forwards ease 0.5s;
 }
 
 .face {
-  /* animation: scale-in forwards ease 0.5s; */
+  animation: slide-in-from-left forwards ease 0.5s;
   z-index: 5;
 }
 
@@ -410,11 +447,6 @@ button.disable {
   background-color: white;
 }
 
-.deactivate {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .event-cover,
 .event-cover::after {
   position: fixed;
@@ -442,44 +474,3 @@ button.disable {
   opacity: 0;
   top: -200px;
 }
-
-
-.sign {
-  position: absolute;
-  color: white;
-  bottom: 10px;
-  right: 10px;
-  font-size: 10px;
-}
-
-a {
-  color: white;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-
-.intro-box {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.intro-box button {
-  margin-top: 20px;
-}
-
-.transition-cover.intro .intro_box button {
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.start-button.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-

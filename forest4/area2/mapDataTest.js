@@ -165,6 +165,23 @@ const mapData = {
       },
     }
   },
+  test1: {
+    column: 11,
+    row: 9,
+    // events: {
+    //   80: { event: 'transport', gateway: 'portal2' },
+    //   100: { event: 'transport', gateway: 'portal2' },
+    // },
+    map: 'l12,al1,am7,al.a1,l2,am.c1,n7,am.a1,l2,am.c1,n7,am.a1,l2,am.c1,f7,am.a1,l2,am.c1,f7,am.a1,l2,am.c1,f7,am.a1,l2,al.c1,am.b2,m1,am.b4,al.b1,l12',
+    walls: '',
+    // entry: {
+    //   portal2: {
+    //     map: 'one',
+    //     pos: 44,
+    //     dir: 'down',
+    //   },
+    // }
+  },
 }
 
 export {
