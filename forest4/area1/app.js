@@ -1,9 +1,9 @@
-import { elements } from '../elements.js'
-import { player } from '../state.js'
-import { transport, transition } from '../actions.js'
-import { addEventListeners } from '../addEventListeners.js'
+import { elements } from '../scripts/elements.js'
+import { player } from '../scripts/state.js'
+import { transport, transition } from '../scripts/actions.js'
+import { addEventListeners } from '../scripts/addEventListeners.js'
 
-import { mapData } from '../data/mapData.js'
+import { mapData } from './mapData.js'
 
 // TODO possibly change file structure to keep area, mapData and html together.
 
