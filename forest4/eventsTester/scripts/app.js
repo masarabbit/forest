@@ -277,7 +277,7 @@ function init() {
     if (player.isTalking) {
       handleTalk(key)
     } else if ([' ', 'enter'].includes(key)) {
-      check(player.textCount)
+      check({ count: player.textCount })
     }
   }
 

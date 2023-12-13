@@ -1,7 +1,8 @@
 
-import { tiles, editConfig, tilesList, tileSheetData,  tileX, tileY } from './data/tileData.js'
+// import { tiles, tilesList, tileSheetData,  tileX, tileY } from './data/tileData.js'
 import { elements } from './elements.js'
 import { degToRad, resizeCanvas, clampMax, setStyles, setPos } from './utils/utils.js'
+import { editConfig } from './data/config.js'
 
 import { settings, player } from './state.js'
 
@@ -51,7 +52,8 @@ const drawDataUrl = ({ url, color, index, edit, ctx, gridData, triggerLast }) =>
   }
 }
 
-const createSpriteSheet = () => {
+const createSpriteSheet = tileData => {
+  const { tiles, tilesList, tileSheetData } = tileData
   resizeCanvas({
     canvas: elements.spriteSheet.el,
     w: tileSheetData.d * tileSheetData.column, 
@@ -84,7 +86,8 @@ const createSpriteSheet = () => {
   })
 }
 
-const outputFromSpriteSheet = ({ code, i, offset = 0 }) => {
+const outputFromSpriteSheet = ({ code, i, offset = 0, tileData }) => {
+  const { tileX, tileY, tilesList } = tileData 
   const { d, map: { column } } = settings
 
   const mapX = (i % column) * d
@@ -95,7 +98,8 @@ const outputFromSpriteSheet = ({ code, i, offset = 0 }) => {
   elements.mapImage.ctx.drawImage(elements.spriteSheet.el, tileX(index), tileY(index), 16, 16, mapX, mapY, d, d)
 }
 
-const animateMap = () => {
+const animateMap = tileData => {
+  const { tiles } = tileData
   clearInterval(settings.animInterval)
   settings.animInterval = setInterval(()=> {
     settings.animCounter++
@@ -105,7 +109,8 @@ const animateMap = () => {
       const tile = code?.split('.')?.[0] || code
       if (tiles[tile]?.frames && tiles[tile]?.sequence) {
         outputFromSpriteSheet({ 
-          code, i, offset: tiles[tile].sequence[settings.animCounter] 
+          code, i, tileData,
+          offset: tiles[tile].sequence[settings.animCounter],
         })
       }
     })

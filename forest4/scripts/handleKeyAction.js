@@ -13,7 +13,7 @@ const displayChoiceDetails = () =>{
   )
 }
 
-const handleTalk = ({ key, mapData }) =>{
+const handleTalk = ({ key, mapData, tileData }) =>{
   if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
     const { answering, options, choice, isTalking, textCount } = player
     if (isTalking) {
@@ -30,18 +30,18 @@ const handleTalk = ({ key, mapData }) =>{
       }
     }
     if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
-      check(textCount, mapData)
+      check({ count: textCount, mapData, tileData })
       return
     }
   }
 }
 
-const check = (count, mapData) =>{
+const check = ({ count, mapData, tileData }) =>{
   const event = settings.map.events[player.pos]
   if (event?.key) {
     const eventPoint = settings.map.eventContents[event.key]
     if (player.facingDirection === eventPoint.direction) {
-      investigate(count, eventPoint, mapData)
+      investigate({ count, eventPoint, mapData, tileData })
       return
     }
   }
@@ -54,26 +54,27 @@ const check = (count, mapData) =>{
   })
 }
 
-const handleWalk = ({ dir, mapData }) =>{
+const handleWalk = ({ dir, mapData, tileData }) =>{
   if (player.walkingDirection !== dir){
     clearInterval(player.walkingInterval)
     player.walkingDirection = dir
     player.walkingInterval = setInterval(()=>{
       player.walkingDirection && !settings.activeEvent
-        ? walk({ mapData, actor: player, dir })
+        ? walk({ mapData, tileData, actor: player, dir })
         : clearInterval(player.walkingInterval)
     }, 150)
   }
 }
 
-const handleKeyAction = ({ e, mapData }) => {
+const handleKeyAction = ({ e, mapData, tileData }) => {
   const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
   if (player.isTalking) {
-    handleTalk({ key, mapData })
+    handleTalk({ key, mapData, tileData })
   } else if (e.key && e.key[0] === 'A'){
-    handleWalk({ dir: key, mapData })
+    handleWalk({ dir: key, mapData, tileData })
   } else if ([' ', 'enter'].includes(key)) {
-    check(player.textCount, mapData)
+    console.log('enter')
+    check({ count: player.textCount, mapData })
   }
 }
 

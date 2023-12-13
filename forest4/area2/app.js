@@ -4,16 +4,17 @@ import { transport, transition } from '../scripts/actions.js'
 import { addEventListeners } from '../scripts/addEventListeners.js'
 
 import { mapData } from './mapDataTest.js'
+import tileData from './tileData.js'
 
 function init() {
 
-  addEventListeners(mapData)
+  addEventListeners({ mapData, tileData })
 
   elements.transitionCover.classList.remove('intro')
   transition()
   setTimeout(()=> {
     player.pause = false
-    transport({ portal: 'start', mapData })
+    transport({ portal: 'start', mapData, tileData })
     // if (e.touches?.length) {
     //   elements.control.classList.remove('hide')
     //   elements.touchToggle.innerText = 'touch: ON'

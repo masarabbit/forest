@@ -4,6 +4,7 @@ import { transport, transition } from '../scripts/actions.js'
 import { addEventListeners } from '../scripts/addEventListeners.js'
 
 import { mapData } from './mapData.js'
+import tileData from './tileData.js'
 
 // TODO possibly change file structure to keep area, mapData and html together.
 
@@ -16,7 +17,7 @@ function init() {
     elements.startButton.blur()
     setTimeout(()=> {
       player.pause = false
-      transport({ portal: 'start', mapData })
+      transport({ portal: 'start', mapData, tileData })
       if (e.touches?.length) {
         elements.control.classList.remove('hide')
         elements.touchToggle.innerText = 'touch: ON'
@@ -25,7 +26,7 @@ function init() {
   }
 
   ;['click', 'touchstart'].forEach(action => elements.startButton.addEventListener(action, e => start(e)))
-  addEventListeners(mapData)
+  addEventListeners({ mapData, tileData })
   
 }
 

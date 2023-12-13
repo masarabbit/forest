@@ -1,9 +1,12 @@
 // copyColors, paintCanvas, resize
 import { artboard, overlay, aCtx, oCtx, elements, drawboard, dCtx } from '../mapElements.js'
-import { nearestN, resizeCanvas, styleTarget, tileX, tileY } from './mapUtils.js'
+import { nearestN, resizeCanvas, styleTarget } from './mapUtils.js'
 import { artData } from '../mapState.js'
 // import { plainColors, blank } from '../data/tileData.js'
-import { tiles, editConfig } from '../../../scripts/data/tileData.js'
+import { editConfig } from '../../../scripts/data/config.js'
+import tileData from '../../../area1/tileData.js'
+
+const { tiles } = tileData
 
 const degToRad = deg => deg / (180 / Math.PI)
 

@@ -1,18 +1,4 @@
-
-const editConfig = {
-  a: 90,
-  b: 180,
-  c: 270,  
-}
-
-const tileTypes = {
-  Q: ['', 'a', 'b', 'c', 'h', 'v', 'ah', 'bh', 'ch', 'av', 'bv', 'cv', 'avh', 'bvh', 'cbh'],
-  X: [''],
-  L: ['', 'a', 'b', 'c'],
-  H: ['', 'a'],
-  A: ['', 'h'],
-  T: ['', 'v']
-}
+import { tileTypes } from '../scripts/data/config.js'
 
 const tiles = {
   a: {
@@ -281,19 +267,19 @@ const tilesList = Object.keys(tiles).map(tile => {
 
 const tileSheetData = {
   column: tilesList.length,
-  row:  1,
+  row: 1,
   d: 16
 }
 
 const tileX = index => (index % tileSheetData.column) * tileSheetData.d
 const tileY = index => Math.floor(index / tileSheetData.column) * tileSheetData.d
 
-export {
+const tileData = {
   tiles,
-  editConfig,
-  tileTypes,
   tilesList,
   tileSheetData,
   tileX,
   tileY
 }
+
+export default tileData

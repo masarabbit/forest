@@ -8,26 +8,26 @@ import { walk } from './actions.js'
 import { handleKeyAction } from './handleKeyAction.js'
 
 
-const addEventListeners = mapData => {
+const addEventListeners = ({ mapData, tileData }) => {
   settings.isWindowActive = true
   window.addEventListener('focus', ()=> settings.isWindowActive = true)
   window.addEventListener('blur', ()=> settings.isWindowActive = false)
   
-  createSpriteSheet()
+  createSpriteSheet(tileData)
 
   window.addEventListener('keyup', () => {
     player.walkingDirection = null
     clearInterval(player.walkingInterval)
   })
-  window.addEventListener('keydown', e => handleKeyAction({ e, mapData }))
+  window.addEventListener('keydown', e => handleKeyAction({ e, mapData, tileData }))
 
   elements.controlButtons.forEach(c =>{
-    c.addEventListener('click', ()=> handleKeyAction({ e: c.dataset.c, mapData}))
+    c.addEventListener('click', ()=> handleKeyAction({ e: c.dataset.c, mapData, tileData }))
   })
 
   window.addEventListener('resize', adjustMapWidthAndHeight)
 
-  addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk({ mapData, actor: player, dir }))
+  addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk({ mapData, tileData, actor: player, dir }))
 
   elements.touchToggle.addEventListener('click', e => {
     e.preventDefault()
