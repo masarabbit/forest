@@ -1,5 +1,5 @@
 import { elements } from './elements.js'
-import { player } from './state.js'
+import { player, data } from './state.js'
 import { animateCell } from './utils/animation.js'
 import { spriteWrapper, turnSprite, spawnNpcs, clearNpcs } from './utils/sprite.js'
 import { settings } from './state.js'
@@ -38,25 +38,25 @@ const updateNextButtonText = (count, text) => {
   elements.controlButtons[0].innerHTML = count === text.length - 1 ? 'end' : 'next'
 }
 
-const displayTextGradual = ({ count: t, prev: i, tileData, mapData }) =>{
+const displayTextGradual = ({ count: t, prev: i }) =>{
   elements.texts[1].innerHTML = t.slice(0, i)
   if (i < t.length) {
     setTimeout(()=>{
-      displayTextGradual({ count: t, prev: i + 1, tileData, mapData })
+      displayTextGradual({ count: t, prev: i + 1 })
     }, 30)
   }
 }
 
-const resumeOrEndEvent = ({ tileData, mapData, event }) => {
+const resumeOrEndEvent = event => {
   if (event && !settings.completedEvents.some(e => e === event.act)){
     settings.activeEvent = event.act
-    eventAnimation({ mapData, tileData, act: event.act.sequences, index: settings.eventIndex })
+    eventAnimation(event.act.sequences, settings.eventIndex)
   } else {
     settings.eventIndex = 0
   }
 }
 
-const clearText = ({ mapData, tileData }) =>{
+const clearText = () =>{
   const event = player.dialogKey && player.dialog[player.dialogKey].event
 
   Object.assign(player, {
@@ -77,11 +77,11 @@ const clearText = ({ mapData, tileData }) =>{
   elements.spriteFace.innerHTML = ''
   toggleControl('remove')
 
-  resumeOrEndEvent({ event, mapData, tileData })
+  resumeOrEndEvent(event)
 }
 
 
-const investigate = ({ count, eventPoint, mapData, tileData }) =>{
+const investigate = (count, eventPoint) =>{
   if (count < eventPoint.text.length){
     toggleControl('add')
     // displays text and answer
@@ -90,12 +90,12 @@ const investigate = ({ count, eventPoint, mapData, tileData }) =>{
     player.pause = true
     elements.texts[0].parentNode.parentNode.classList.remove('hidden')
     updateNextButtonText(count, eventPoint.text)
-    displayTextGradual({ count: text, prev: 0, mapData, tileData })
+    displayTextGradual({ count: text, prev: 0 })
     if (eventPoint.art && !elements.artwork.innerHTML) elements.artwork.innerHTML = `<img src=${eventPoint.art} />`
     // TODO add trigger for event?
     return
   }
-  clearText({ mapData, tileData }) 
+  clearText() 
 }
 
 const select = () =>{
@@ -132,7 +132,7 @@ const displayAnswer = prev =>{
   })
 }
 
-const displayText = ({ count, prev, mapData, tileData }) =>{
+const displayText = ({ count, prev }) =>{
   const eventPoint = player.dialog[player.dialogKey]
   const nextButton = elements.controlButtons[0]
   elements.texts[1].classList.add('face-displayed')
@@ -157,7 +157,7 @@ const displayText = ({ count, prev, mapData, tileData }) =>{
     player.textCount++
     // TODO check why player is pausing at this timing and not elsewhere
     player.pause = true
-    displayTextGradual({ count: text, prev: 0, mapData, tileData })
+    displayTextGradual({ count: text, prev: 0 })
     if (eventPoint.choice && count === eventPoint.text.length - 1) {
       displayAnswer(prev)
       nextButton.classList.add('hide')
@@ -166,11 +166,11 @@ const displayText = ({ count, prev, mapData, tileData }) =>{
       nextButton.classList.remove('hide')
     }
   } else {
-    clearText({ mapData, tileData })
+    clearText()
   }
 }
 
-const showDialog = ({ talkTarget, dir, dialog, mapData, tileData }) =>{
+const showDialog = ({ talkTarget, dir, dialog }) =>{
   player.isTalking = true
   // talkTarget.pause = true //TODO check if this is necessary
   elements.texts[0].parentNode.parentNode.classList.remove('hidden')
@@ -183,16 +183,16 @@ const showDialog = ({ talkTarget, dir, dialog, mapData, tileData }) =>{
 
   player.dialog[player.dialogKey].text.length !== player.textCount
     ? displayText({ count: player.textCount, prev: false })
-    : clearText({ mapData, tileData })
+    : clearText()
 }
 
 
-const checkAndContinueEvent = ({ mapData, tileData, act, index }) =>{ 
+const checkAndContinueEvent = (act, index) =>{ 
   // carries on event
   if (!Object.keys(act[index]).some(k => isObject(act[index][k])) && index < act.length - 1 && settings.activeEvent){
     settings.eventIndex = index + 1
     setTimeout(()=>{
-      eventAnimation({ mapData, tileData, act, index: settings.eventIndex })
+      eventAnimation(act, settings.eventIndex)
     }, 600)
   } else {
     endEvent()
@@ -216,32 +216,32 @@ const animateActor = ({ frame, actor }) =>{
   if (!isPlayer) {
     actorData.pause = true
   }
-  if (['u', 'd', 'r', 'l'].includes(frame)) walk({ dir, actor: actorData })
+  if (['u', 'd', 'r', 'l'].includes(frame)) walk(actorData, dir)
   if (['tu', 'td', 'tr', 'tl'].includes(frame)) turnSprite({ dir, actor: actorData })
   // if (dir === 'stop') console.log('stop') // TODO possibly redundant?
   // if (dir === 'resume') actorData.pause = false
   if (isObject(frame)) showDialog({ talkTarget: actorData, dialog: frame.dialog }) 
 }
 
-const chainAnimation = ({ mapData, tileData, act, index, actorData, motionIndex }) =>{
+const chainAnimation = ({ act, index, actorData, motionIndex }) =>{
   const frame = decompress(act[index][actorData.name])
   animateActor({ frame: frame[motionIndex], actor: actorData.name })
   if (motionIndex <= frame.length) {
     actorData.motionIndex++
     setTimeout(()=>{
-      chainAnimation({ mapData, tileData, act, index, actorData, motionIndex: actorData.motionIndex })
+      chainAnimation({ act, index, actorData, motionIndex: actorData.motionIndex })
     }, 300)
   } else {
     settings.eventChainActors = settings.eventChainActors.filter(name => name !== actorData.name)
-    if (!settings.eventChainActors.length) checkAndContinueEvent({ mapData, tileData, act, index })
+    if (!settings.eventChainActors.length) checkAndContinueEvent(act, index)
   }
 }
 
-const eventAnimation = ({ mapData, tileData, act, index }) =>{
+const eventAnimation = (act, index) =>{
   if (act[index] === 'end'){
     endEvent()
   } else if (act[index]?.gateway) {
-    transport({ mapData, portal: act[index].gateway, tileData })
+    transport(act[index].gateway)
     endEvent()
   } else {
     elements.eventCover.classList.remove('hidden')
@@ -251,20 +251,20 @@ const eventAnimation = ({ mapData, tileData, act, index }) =>{
         settings.eventChainActors.push(actor)
         const actorData = getActorData(actor)
         actorData.motionIndex = 0
-        chainAnimation({ mapData, tileData, act, index, actorData, motionIndex: actorData.motionIndex })
+        chainAnimation({ act, index, actorData, motionIndex: actorData.motionIndex })
       } else {
         animateActor({ frame, actor })
       }
     })
-    if (!settings.eventChainActors.length) checkAndContinueEvent({ mapData, tileData, act, index })
+    if (!settings.eventChainActors.length) checkAndContinueEvent(act, index)
   }
 }
 
-const triggerEventAnimation = (act, mapData, tileData) => {
+const triggerEventAnimation = act => {
   settings.activeEvent = act
   setTimeout(()=> {
     elements.eventCover.classList.remove('hidden')
-    eventAnimation({ tileData, mapData, act: settings.map.eventContents[act].sequences, index: 0 })
+    eventAnimation(settings.map.eventContents[act].sequences, 0)
   }, 200)
 }
 
@@ -274,7 +274,7 @@ const noWall = pos =>{
   return settings.map.walls[pos] !== '$'
 }
 
-const walk = ({ actor, dir, mapData, tileData }) => {
+const walk = (actor, dir) => {
   if (!dir || player.pause) return
 
   turnSprite({ dir, actor, animate: true })
@@ -285,7 +285,7 @@ const walk = ({ actor, dir, mapData, tileData }) => {
       settings.mapImage[para] += dist
       setStyles(settings.mapImage)
       player.pos += diff
-      checkAndTriggerEvent({ mapData, tileData })
+      checkAndTriggerEvent()
       setPos({ el: elements.location.mark, x: mapX() * 4, y: mapY() * 4 })
       elements.indicator.innerHTML = `pos:${player.pos} dataX:${mapX()} dataY:${mapY()}`
     } else {
@@ -296,22 +296,24 @@ const walk = ({ actor, dir, mapData, tileData }) => {
   }
 }
 
-const checkAndTriggerEvent = ({ mapData, tileData }) => {
+const checkAndTriggerEvent = () => {
   const event = settings.map.events[player.pos]
   if (event) {
     const { gateway, act, url } = event
-    if (gateway) setTimeout(()=> transport({ mapData, portal: gateway, tileData }), 100)
+    if (gateway) setTimeout(()=> transport(gateway), 100)
     if (act && !settings.completedEvents.some(e => e === act)) {
-      triggerEventAnimation(act, mapData, tileData)
+      triggerEventAnimation(act)
     }
     if (url) {
       console.log('url', url)
       window.location = url
+      window.location.reload()
     }
   }
 }
 
-const createMap = ({ mapData, key })=> {
+const createMap = key => {
+  const { mapData } = data
   settings.map = {
     ...settings.map,
     ...mapData[key],
@@ -344,35 +346,36 @@ const outputLocationWall = ({ i, tile, d }) => {
   elements.location.ctx.fillRect(mapX, mapY, d, d)
 }
 
-const transport = ({ mapData, tileData, portal }) => {
+const transport = portal => {
+  const { mapData } = data
   transition()
   settings.mapImage.el.classList.add('transition')
   const entryPoint = mapData[settings.map.key].entry[portal]
   if (!entryPoint) return // this added to prevent error when user walks too fast
 
   player.pos = entryPoint.pos
-  createMap({ mapData, key: entryPoint.map })
+  createMap(entryPoint.map)
   adjustMapWidthAndHeight()
   clearNpcs()
 
   setTimeout(()=> {
     settings.mapImage.el.classList.remove('transition')
     settings.map.data.forEach((code, i) => {
-      outputFromSpriteSheet({ code, i, tileData })
+      outputFromSpriteSheet({ code, i })
     })
     settings.map.walls.forEach((tile, i) =>{
       outputLocationWall({ 
         i, d: 4, tile
       })
     })
-    animateMap(tileData)
-    spawnNpcs(mapData)
+    animateMap()
+    spawnNpcs()
     turnSprite({ 
       actor: player,
       dir: entryPoint.dir
     })
     
-    checkAndTriggerEvent({ mapData, tileData })
+    checkAndTriggerEvent()
   }, 300)
 }
 

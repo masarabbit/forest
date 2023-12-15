@@ -1,10 +1,9 @@
 
-// import { tiles, tilesList, tileSheetData,  tileX, tileY } from './data/tileData.js'
 import { elements } from './elements.js'
 import { degToRad, resizeCanvas, clampMax, setStyles, setPos } from './utils/utils.js'
 import { editConfig } from './data/config.js'
 
-import { settings, player } from './state.js'
+import { settings, player, data } from './state.js'
 
 const placeTile = ({ mapIndex, color, url, ctx, gridData, triggerLast }) =>{
   const { d, column } = gridData
@@ -52,8 +51,8 @@ const drawDataUrl = ({ url, color, index, edit, ctx, gridData, triggerLast }) =>
   }
 }
 
-const createSpriteSheet = tileData => {
-  const { tiles, tilesList, tileSheetData } = tileData
+const createSpriteSheet = () => {
+  const { tileData: { tiles, tilesList, tileSheetData } } = data
   resizeCanvas({
     canvas: elements.spriteSheet.el,
     w: tileSheetData.d * tileSheetData.column, 
@@ -86,8 +85,8 @@ const createSpriteSheet = tileData => {
   })
 }
 
-const outputFromSpriteSheet = ({ code, i, offset = 0, tileData }) => {
-  const { tileX, tileY, tilesList } = tileData 
+const outputFromSpriteSheet = ({ code, i, offset = 0 }) => {
+  const { tileData: { tilesList, tileX, tileY } } = data
   const { d, map: { column } } = settings
 
   const mapX = (i % column) * d
@@ -98,8 +97,8 @@ const outputFromSpriteSheet = ({ code, i, offset = 0, tileData }) => {
   elements.mapImage.ctx.drawImage(elements.spriteSheet.el, tileX(index), tileY(index), 16, 16, mapX, mapY, d, d)
 }
 
-const animateMap = tileData => {
-  const { tiles } = tileData
+const animateMap = () => {
+  const { tileData: { tiles } } = data
   clearInterval(settings.animInterval)
   settings.animInterval = setInterval(()=> {
     settings.animCounter++
@@ -109,7 +108,7 @@ const animateMap = tileData => {
       const tile = code?.split('.')?.[0] || code
       if (tiles[tile]?.frames && tiles[tile]?.sequence) {
         outputFromSpriteSheet({ 
-          code, i, tileData,
+          code, i,
           offset: tiles[tile].sequence[settings.animCounter],
         })
       }

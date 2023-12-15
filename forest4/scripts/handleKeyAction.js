@@ -13,7 +13,7 @@ const displayChoiceDetails = () =>{
   )
 }
 
-const handleTalk = ({ key, mapData, tileData }) =>{
+const handleTalk = key =>{
   if (['up', 'down', 'left', 'right', ' ', 'enter'].includes(key)) {
     const { answering, options, choice, isTalking, textCount } = player
     if (isTalking) {
@@ -30,18 +30,18 @@ const handleTalk = ({ key, mapData, tileData }) =>{
       }
     }
     if ([' ', 'enter'].includes(key) || (key === 'right' && isTalking)) {
-      check({ count: textCount, mapData, tileData })
+      check(textCount)
       return
     }
   }
 }
 
-const check = ({ count, mapData, tileData }) =>{
+const check = count =>{
   const event = settings.map.events[player.pos]
   if (event?.key) {
     const eventPoint = settings.map.eventContents[event.key]
     if (player.facingDirection === eventPoint.direction) {
-      investigate({ count, eventPoint, mapData, tileData })
+      investigate(count, eventPoint)
       return
     }
   }
@@ -54,27 +54,27 @@ const check = ({ count, mapData, tileData }) =>{
   })
 }
 
-const handleWalk = ({ dir, mapData, tileData }) =>{
+const handleWalk = dir =>{
   if (player.walkingDirection !== dir){
     clearInterval(player.walkingInterval)
     player.walkingDirection = dir
     player.walkingInterval = setInterval(()=>{
       player.walkingDirection && !settings.activeEvent
-        ? walk({ mapData, tileData, actor: player, dir })
+        ? walk(player, dir)
         : clearInterval(player.walkingInterval)
     }, 150)
   }
 }
 
-const handleKeyAction = ({ e, mapData, tileData }) => {
+const handleKeyAction = e => {
   const key = e.key ? e.key.toLowerCase().replace('arrow','') : e
   if (player.isTalking) {
-    handleTalk({ key, mapData, tileData })
+    handleTalk(key)
   } else if (e.key && e.key[0] === 'A'){
-    handleWalk({ dir: key, mapData, tileData })
+    handleWalk(key)
   } else if ([' ', 'enter'].includes(key)) {
     console.log('enter')
-    check({ count: player.textCount, mapData })
+    check(player.textCount)
   }
 }
 

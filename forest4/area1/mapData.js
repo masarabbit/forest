@@ -12,8 +12,8 @@ const mapData = {
       { pos: 313, avatar: 'bunny', defaultDir: 'right', event: 'tomato', name: 'tololo', motion: [0] },
     ],
     events: {
-      14: { event: 'transport', url: 'area2#area2' },
-      15: { event: 'transport', url: 'area2#area2' },
+      14: { event: 'transport', url: '#area2' },
+      15: { event: 'transport', url: '#area2' },
       // 464: { event: 'event-animation', act: 'greeting' },
       249: { event: 'check', key: 'art1' },
     },
@@ -167,6 +167,4 @@ const mapData = {
   },
 }
 
-export {
-  mapData
-}
+export default mapData
