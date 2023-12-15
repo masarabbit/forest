@@ -282,4 +282,6 @@ const tileData = {
   tileY
 }
 
-export default tileData
+export { 
+  tileData
+}

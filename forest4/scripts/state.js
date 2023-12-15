@@ -58,10 +58,15 @@ const player = {
   dialogKey: null,
 }
 
+const data = {
+  mapData: null,
+  tileData: null
+}
 
 
 export {
   settings,
   touchControl,
   player,
+  data
 }

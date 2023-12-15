@@ -1,10 +1,12 @@
 import { elements } from '../scripts/elements.js'
-import { player } from '../scripts/state.js'
+import { player, data } from '../scripts/state.js'
 import { transport, transition } from '../scripts/actions.js'
 import { addEventListeners } from '../scripts/addEventListeners.js'
 
-import { mapData } from './mapDataTest.js'
-import tileData from './tileData.js'
+// import { mapData } from './mapDataTest.js'
+// import { tileData } from './tileData.js'
+
+const { mapData, tileData } = data
 
 function init() {
 
