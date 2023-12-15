@@ -1,4 +1,6 @@
 
+// TODO not complete
+
 import { mapData } from '../../area1/mapData.js'
 // import { player } from '../../scripts/state.js'
 

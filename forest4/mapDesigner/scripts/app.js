@@ -1,8 +1,9 @@
+
 import { artData } from './mapState.js'
 import { drawPos, grid, resize, drawDataUrl } from './artUtils/draw.js'
 import { createSelectBox, copySelection, paste, select  } from './artUtils/select.js'
 
-import { compress, decompress } from '../../scripts/utils/compression.js'
+import { compress, decompress } from '../.././scripts/utils/compression.js'
 
 import {
   input,
@@ -21,18 +22,20 @@ import {
 } from './artUtils/mapUtils.js'
 
 import { mapData } from '../../area1/mapData.js'
+
 import tileData from '../../area1/tileData.js'
 
-const { tiles, tilesList, tileSheetData, tileX, tileY } = tileData
+
+// TODO add function in bit by bit and test where the error is coming from
 
 function init() {
-
+  const { tiles, tilesList, tileSheetData, tileX, tileY } = tileData
 
   const createSpriteSheet = () => {
     resizeCanvas({
       canvas: elements.spriteSheet,
-      w: tileSheetData.cellD * tileSheetData.column, 
-      h: tileSheetData.cellD * tileSheetData.row
+      w: tileSheetData.d * tileSheetData.column, 
+      h: tileSheetData.d * tileSheetData.row
     })
     const triggerLast = {
       count: 0,
@@ -68,7 +71,7 @@ function init() {
 
   const updateCodesDisplay = (box, arr) =>{
     box.value = `${arr.map(ele => ele).join(',')}`
-    window.location.hash = `${input.column.value}#${input.row.value}#${input.cellD.value}#${compress(input.codesBox[0].value).join('-')}`
+    window.location.hash = `${input.column.value}#${input.row.value}#${input.d.value}#${compress(input.codesBox[0].value).join('-')}`
   }
 
   const generateFromCode = () =>{
@@ -164,7 +167,7 @@ function init() {
     elements.palette.innerHTML = tilesList.map(t =>`<canvas class="palette_cell tile" data-tile="${t.join('*')}"></canvas>`).join('')
     elements.paletteCells = document.querySelectorAll('.palette_cell')
 
-    elements.paletteCells.forEach((canvas, i) => {
+    elements.paletteCells.forEach(canvas => {
       resizeCanvas({ canvas, w: 32 })
       const ctx = canvas.getContext('2d')
       const index = tilesList.map(t => t.join('*')).indexOf(canvas.dataset.tile)
@@ -190,10 +193,10 @@ function init() {
     const queryArray = query.split('#')
     artData.column = +queryArray[1]
     artData.row = +queryArray[2]
-    artData.cellD = +queryArray[3]
+    artData.d = +queryArray[3]
     input.row.value = artData.row
     input.column.value = artData.column
-    input.cellD.value = artData.cellD
+    input.d.value = artData.d
 
     artData.tiles = decompress(queryArray[4].replaceAll('-',','))
     input.codesBox[0].value = artData.tiles
@@ -212,7 +215,7 @@ function init() {
   }
 
   const drawTile = e => {
-    const { cellD: d, column } = artData
+    const { d, column } = artData
     const { x, y } = drawPos(e, d)
     const { value: key } = input.letter
 
@@ -291,7 +294,7 @@ function init() {
   mapLinkCells.forEach((link, i)=>{
     link.addEventListener('click',()=>{
       const { column, row, map } = mapData[mapKeys[i]]
-      const url = `${column}#${row}#${artData.cellD}#${map.replaceAll(',','-')}#${i}#${mapKeys[i]}`
+      const url = `${column}#${row}#${artData.d}#${map.replaceAll(',','-')}#${i}#${mapKeys[i]}`
       window.location.hash = url      
       location.reload(true)
     })
@@ -305,8 +308,8 @@ function init() {
     compressButton.addEventListener('click', ()=> compressCode(i === 0 ? 0 : 2))
   })
 
-  input.cellD.addEventListener('change',()=> {
-    artData.cellD = +input.cellD.value
+  input.d.addEventListener('change',()=> {
+    artData.d = +input.d.value
     generateFromCode()
   })
 
@@ -382,8 +385,8 @@ function init() {
   const makeMapIntoBg = () => {
     artboard.parentNode.style.background = `url(${artboard.toDataURL()})`
     artboard.classList.add('bg_mode')
-    const { cellD, column, row } = artData
-    aCtx.clearRect(0, 0, column * cellD, row * cellD)
+    const { d, column, row } = artData
+    aCtx.clearRect(0, 0, column * d, row * d)
 
     artData.tiles = Array(column * row).fill('')
     input.codesBox[0].value = artData.tiles
@@ -461,27 +464,27 @@ function init() {
   artboard.addEventListener('mouseleave',()=> artData.draw = false)  
 
   window.addEventListener('mousemove', e =>{
-    const { cellD, gridWidth, column } = artData
+    const { d, gridWidth, column } = artData
     const { left, top } = artboard.getBoundingClientRect()
     const isArtboard = artData.cursor === 'artboard' 
     const pos = isArtboard
       ? { 
-        x: drawPos(e, cellD).x - cellD + left, 
-        y: drawPos(e, cellD).y - cellD + top 
+        x: drawPos(e, d).x - d + left, 
+        y: drawPos(e, d).y - d + top 
       }
       : { x: e.pageX, y: e.pageY }
     elements.cursor.classList[isArtboard ? 'add' : 'remove']('highlight')
     if (isArtboard) {
-      const { x, y } = drawPos(e, cellD)
-      const mapIndex = ((y / cellD - 1) * column) + x / cellD - 1
+      const { x, y } = drawPos(e, d)
+      const mapIndex = ((y / d - 1) * column) + x / d - 1
       elements.cursor.setAttribute('code', artData.number ? mapIndex : artData.tiles[mapIndex])
     }
     styleTarget({
       target: elements.cursor,
       x: pos.x + (2 * gridWidth) + (isArtboard ? window.scrollX : 0),
       y: pos.y + (2 * gridWidth) + (isArtboard ? window.scrollY : 0),
-      w: cellD - gridWidth,
-      h: cellD - gridWidth,
+      w: d - gridWidth,
+      h: d - gridWidth,
     })
   })
 

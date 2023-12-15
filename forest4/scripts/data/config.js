@@ -1,4 +1,4 @@
-import { settings } from '../state.js'
+
 
 
 const walkDirections = {
@@ -15,15 +15,7 @@ const walkDirections = {
   // re: 'resume',
 }
 
-const getWalkConfig = dir => {
-  const { map: { column }, d } = settings
-  return {
-    right: { diff: 1, para: 'x', dist: -d },
-    left: { diff: -1, para: 'x', dist: d },
-    up: { diff: -column, para: 'y', dist: d },
-    down: { diff: column, para: 'y', dist: -d }
-  }[dir] 
-}
+
 
 const editConfig = {
   a: 90,
@@ -42,7 +34,6 @@ const tileTypes = {
 
 export {
   walkDirections,
-  getWalkConfig,
   editConfig,
   tileTypes
 }

@@ -4,10 +4,19 @@ import { animateCell } from './utils/animation.js'
 import { spriteWrapper, turnSprite, spawnNpcs, clearNpcs } from './utils/sprite.js'
 import { settings } from './state.js'
 import { decompress } from './utils/compression.js'
-import { walkDirections, getWalkConfig } from './data/config.js'
+import { walkDirections } from './data/config.js'
 import { setStyles, isObject, setPos } from './utils/utils.js'
 import { outputFromSpriteSheet, animateMap, mapX, mapY, setUpCanvas, adjustMapWidthAndHeight } from './mapDraw.js'
 
+const getWalkConfig = dir => {
+  const { map: { column }, d } = settings
+  return {
+    right: { diff: 1, para: 'x', dist: -d },
+    left: { diff: -1, para: 'x', dist: d },
+    up: { diff: -column, para: 'y', dist: d },
+    down: { diff: column, para: 'y', dist: -d }
+  }[dir] 
+}
 
 const transition = () =>{
   elements.transitionCover.classList.add('transition')

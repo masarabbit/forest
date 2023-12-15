@@ -3,12 +3,17 @@ import { artboard, overlay, aCtx, oCtx, elements, drawboard, dCtx } from '../map
 import { nearestN, resizeCanvas, styleTarget } from './mapUtils.js'
 import { artData } from '../mapState.js'
 // import { plainColors, blank } from '../data/tileData.js'
-import { editConfig } from '../../../scripts/data/config.js'
 import tileData from '../../../area1/tileData.js'
 
 const { tiles } = tileData
 
 const degToRad = deg => deg / (180 / Math.PI)
+
+const editConfig = {
+  a: 90,
+  b: 180,
+  c: 270,  
+}
 
 const grid = {
   draw: () => {
