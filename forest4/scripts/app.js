@@ -4,6 +4,8 @@ import startWorld from '../scripts/startWorld.js'
 
 const query = window.location.hash || '#area1'
 
+// TODO keep certain settings like touch mode in localstorage
+
 if (query){
   const filePath = query.replace('#', '')
   const keys = Object.keys(data)

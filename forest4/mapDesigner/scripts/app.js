@@ -21,8 +21,8 @@ import {
   update,
 } from './artUtils/mapUtils.js'
 
-import { mapData } from '../../area1/mapData.js'
-
+// TODO refactor to get these from query param
+import mapData from '../../area1/mapData.js'
 import tileData from '../../area1/tileData.js'
 
 
