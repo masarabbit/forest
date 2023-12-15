@@ -27,7 +27,7 @@ const addEventListeners = () => {
 
   window.addEventListener('resize', adjustMapWidthAndHeight)
 
-  addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk({ actor: player, dir }))
+  addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk(player, dir))
 
   elements.touchToggle.addEventListener('click', e => {
     e.preventDefault()

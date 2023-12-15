@@ -33,7 +33,14 @@ const copyData = {
   index: [],
 }
 
+const data = {
+  mapData: null,
+  tileData: null
+}
+
+
 export {
   artData,
   copyData,
+  data
 }
