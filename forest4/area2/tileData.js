@@ -3,12 +3,12 @@ import { tileTypes } from '../scripts/data/config.js'
 const tiles = {
   a: {
     id: 'green rounded corner',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEFJREFUOE9jZEACoVeu/AdxmRhYkYXxshlhsiDNpGiE6QMbQK5mkF5GSjRTx4DwKzfBAUcuYBw1gGE0DBgGQRgAAFrpMEH7yl7MAAAAAElFTkSuQmCC',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADZJREFUOE9jZMACwq/c/I9NHJsYI7IgKRph+uAGkKMZZAjYAHI1U8cASmwHu2DUgNEwGBTpAAATSTBBsjy3lAAAAABJRU5ErkJggg==',
     type: 'L'
   },
   b: {
     id: 'green rounded corner white background',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEFJREFUOE9jZEACoVeu/AdxmRhYkYXxshlhsiDNpGiE6QMbQK5mkF5GSjRTx4DwKzfBAUcuYBw1gGE0DBgGQRgAAFrpMEH7yl7MAAAAAElFTkSuQmCC',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADZJREFUOE9jZMACwq/c/I9NHJsYI7IgKRph+uAGkKMZZAjYAHI1U8cASmwHu2DUgNEwGBTpAAATSTBBsjy3lAAAAABJRU5ErkJggg==',
     color: '#fff',
     type: 'L'
   },

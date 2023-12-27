@@ -273,6 +273,10 @@ a:hover {
 }
 
 
+.wrapper.hidden .player {
+  display: none;
+}
+
 .intro-box {
   width: 300px;
   display: flex;

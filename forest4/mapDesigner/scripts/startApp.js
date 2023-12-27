@@ -73,7 +73,8 @@ const startApp = () => {
 
   const updateCodesDisplay = (box, arr) =>{
     box.value = `${arr.map(ele => ele).join(',')}`
-    window.location.hash = `${input.column.value}#${input.row.value}#${input.d.value}#${compress(input.codesBox[0].value).join('-')}`
+    const filePath = query.split('#')?.[1] || '#area1'
+    window.location.hash = `${filePath}#${input.column.value}#${input.row.value}#${input.d.value}#${compress(input.codesBox[0].value).join('-')}`
   }
 
   const generateFromCode = () =>{
@@ -246,6 +247,8 @@ const startApp = () => {
           index: mapIndex,
           ctx: elements.wCtx
         })  
+        artData.walls[mapIndex] = key === '$' ? '$' : null
+        updateCodesDisplay(input.codesBox[2], artData.walls) 
       }
   
     }

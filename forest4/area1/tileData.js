@@ -3,12 +3,12 @@ import { tileTypes } from '../scripts/data/config.js'
 const tiles = {
   a: {
     id: 'green rounded corner',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEFJREFUOE9jZEACoVeu/AdxmRhYkYXxshlhsiDNpGiE6QMbQK5mkF5GSjRTx4DwKzfBAUcuYBw1gGE0DBgGQRgAAFrpMEH7yl7MAAAAAElFTkSuQmCC',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADZJREFUOE9jZMACwq/c/I9NHJsYI7IgKRph+uAGkKMZZAjYAHI1U8cASmwHu2DUgNEwGBTpAAATSTBBsjy3lAAAAABJRU5ErkJggg==',
     type: 'L'
   },
   b: {
     id: 'green rounded corner white background',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEFJREFUOE9jZEACoVeu/AdxmRhYkYXxshlhsiDNpGiE6QMbQK5mkF5GSjRTx4DwKzfBAUcuYBw1gGE0DBgGQRgAAFrpMEH7yl7MAAAAAElFTkSuQmCC',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADZJREFUOE9jZMACwq/c/I9NHJsYI7IgKRph+uAGkKMZZAjYAHI1U8cASmwHu2DUgNEwGBTpAAATSTBBsjy3lAAAAABJRU5ErkJggg==',
     color: '#fff',
     type: 'L'
   },
@@ -100,7 +100,8 @@ const tiles = {
   },
   t: {
     id: 'tree bottom left',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAFdJREFUOE9jZGBgYAi/cvM/iCYHMA4OAyhxBdgLVDGAXEPgLkCOAVJiBasBpBhG0ABkw/7///8/4uotlORCsgHoiW0IGQDyP7a8Ql8vgFyA7hKSXIDNCwBbxTYUVVbliQAAAABJRU5ErkJggg==',
+    // img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAFdJREFUOE9jZGBgYAi/cvM/iCYHMA4OAyhxBdgLVDGAXEPgLkCOAVJiBasBpBhG0ABkw/7///8/4uotlORCsgHoiW0IGQDyP7a8Ql8vgFyA7hKSXIDNCwBbxTYUVVbliQAAAABJRU5ErkJggg==',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAGhJREFUOE9jZGBgYAi/cvM/iCYHMA4OAyhxBdgLVDGAXIPgLkCPAfSYWamjzogttnAagC1K/////z/i6i0UKZINgOmGGUS2ATCD6GcAyP/YwoVoF1BsAMh2bIYQ7QJk5yMbRJYByK4BAOTwQRDpIwyDAAAAAElFTkSuQmCC',
     type: 'A'
   },
   u: {
@@ -134,7 +135,7 @@ const tiles = {
     type: 'L'
   },
   aa: {
-    id: '',
+    id: 'sand',
     color: '#d7fbfa',
     type: 'X'
   },
@@ -239,6 +240,68 @@ const tiles = {
     img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEdJREFUOE9jZKAQMFKon2HUAIbBEAbhV27+JyUq/zH8ZmBiYIVrYSTVAHTLiDIA3VZkQ4gyAJ8XCRqAz3aQwQQNIBTAA28AAJuNHimSWaKCAAAAAElFTkSuQmCC',
     type: 'L',
     color: '#0d8799',
+  },
+  an: {
+    id: 'rock corner',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAC1JREFUOE9j3Hrm/H8GCgDjqAEMo2HAMCzCAJQNKEnOjFQxgBJDwC5ABqR6BwB37zUBurEQMAAAAABJRU5ErkJggg==',
+    type: 'A',
+    color: '#57d4d9',
+  },
+  ao: {
+    id: 'rock',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEVJREFUOE9j3LL/wH8GCgDjqAEMGGHAyMuPEqT/P3/EG8QDawDItYxbz5zHmw4IeoHmBqCHILqLCHph8BmA7iKSvUB1AwB2t0ulp0cLAQAAAABJRU5ErkJggg==',
+    // color: '#e0ccc0',
+    type: 'A',
+  },
+  ap: {
+    id: 'grass corner',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADFJREFUOE9jZEAD13//+o8uho/PCJMkVSNMH9gAcjWD9FJuACW2g10wasBoGAyPdAAAEz48wSGi3XsAAAAASUVORK5CYII=',
+    color: '#b4bfc0',
+    type: 'L',
+  },
+  aq: {
+    id: 'rock plain',
+    color: '#b5cccf',
+    type: 'X',
+  },
+  aw: {
+    id: 'rock dark plain',
+    color: '#b4bfc0',
+    type: 'X'
+  },
+  ax: {
+    id: 'rock corner sand',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAC1JREFUOE9j3Hrm/H8GCgDjqAEMo2HAMCzCAJQNKEnOjFQxgBJDwC5ABqR6BwB37zUBurEQMAAAAABJRU5ErkJggg==',
+    type: 'L',
+    color: '#d7fbfa',
+  },
+  ay: {
+    id: 'grass2',
+    color: '#c2bdb2',
+    type: 'X'
+  },
+  az: {
+    id: 'sand corner',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADFJREFUOE9jZEAD13//+o8uho/PCJMkVSNMH9gAcjWD9FJuACW2g10wasBoGAyPdAAAEz48wSGi3XsAAAAASUVORK5CYII=',
+    type: 'L',
+    color: '#a2fcf0',
+  },
+  ba: {
+    id: 'rock corner grass',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAC1JREFUOE9j3Hrm/H8GCgDjqAEMo2HAMCzCAJQNKEnOjFQxgBJDwC5ABqR6BwB37zUBurEQMAAAAABJRU5ErkJggg==',
+    type: 'L',
+    color: '#a2fcf0',
+  },
+  bb: {
+    id: 'sand edge',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADlJREFUOE9jXPTnw38GCgDj9d+/UAw4zfiNJOMwDEDXjW6g6X8uFCUEDSDknFEDGBhGw2A0DED5BABULkFFb2n5SQAAAABJRU5ErkJggg==',
+    type: 'L'
+  },
+  bc: {
+    id: 'grass corner sand',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAEVJREFUOE9jXPTnw38GCgDjgBgQxyLACHM0XhcgK8TlS6wGEKMRpwtI0QwyBMMFFBlAqmYMF4wawMBAURiQoxklFgbMAAC//j8rLjXbKQAAAABJRU5ErkJggg==',
+    type: 'L',
+    color: '#d7fbfa',
   },
   zz: {
     id: '',

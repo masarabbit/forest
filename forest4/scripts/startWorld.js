@@ -13,6 +13,7 @@ const startWorld = autoStart => {
     elements.startButton.blur()
     setTimeout(()=> {
       player.pause = false
+      elements.wrapper.classList.remove('hidden')
       transport('start')
       if (e?.touches?.length) {
         elements.control.classList.remove('hide')
@@ -28,6 +29,9 @@ const startWorld = autoStart => {
   ;['click', 'touchstart'].forEach(action => elements.startButton.addEventListener(action, e => start(e)))
   addEventListeners()
 }
+
+
+
 
 // function init() {
 
