@@ -1,6 +1,7 @@
 // import { elements } from './elements.js'
 import { setStyles, setPos } from './utils/utils.js'
 import { addTouchAction } from './utils/touchControl.js'
+import { decompress } from './utils/compression.js'
 
 function init() {
   console.log('test')
@@ -48,9 +49,11 @@ function init() {
     offsetPos: {
       x: 0, y: 0,
     },
+    npcs: [],
     mapData: {
       column: 30,
       row: 20,
+      walls: '$31,28,$2,28,$2,28,$2,12,$6,10,$2,12,$6,10,$2,12,$6,10,$2,12,$3,1,$2,10,$2,28,$2,28,$2,28,$2,28,$2,28,$2,28,$2,4,$6,18,$2,4,$6,18,$2,4,$6,18,$2,4,$2,1,$3,8,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$5,5,$2,18,$2,1,$2,5,$2,28,$2,28,$2,28,$2,28,$2,28,$2,28,$2,28,$2,28,$31',
       pos: {
         x: 64, y: 64,
       }
@@ -61,8 +64,9 @@ function init() {
     map: {
       el: document.querySelector('.map-image-wrapper'),
       canvas: document.querySelector('.map-image'),
+      walls: [],
       w: 30 * 32,
-      h: 30 * 32,
+      h: 40 * 32,
     }, 
     mapImage: {
       el: elements.mapImage.el.parentNode,
@@ -129,11 +133,11 @@ function init() {
     settings.mapImage.y = settings.offsetPos.y - player.pos.y
   }
 
-  // const noWall = pos =>{    
-  //   const { map: { data }, npcs } = settings
-  //   if (!data[pos] || player.pos === pos || npcs.some(s => s.pos === pos)) return false
-  //   return settings.map.walls[pos] !== '$'
-  // }
+  const noWall = pos =>{    
+    // const { map: { data }, npcs } = settings
+    // if (!data[pos] || player.pos === pos || npcs.some(s => s.pos === pos)) return false
+    return settings.map.walls[pos] !== '$'
+  }
 
   
   const walk = (actor, dir) => {
@@ -165,7 +169,7 @@ function init() {
 
 
 
-
+  settings.map.walls = decompress( settings.mapData.walls)
 
   player.pos.x = settings.mapData.pos.x
   player.pos.y = settings.mapData.pos.y

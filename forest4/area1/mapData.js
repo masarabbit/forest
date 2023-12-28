@@ -17,6 +17,14 @@ const mapData = {
       // 464: { event: 'event-animation', act: 'greeting' },
       249: { event: 'check', key: 'art1' },
     },
+    mapAssets: [
+      {
+        img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA8CAYAAAAgwDn8AAAAAXNSR0IArs4c6QAAAS1JREFUaEPtmOESgjAMg+H9H1pPlDv1gKZL2NZe/ctWm3xxK66L/vMwSq7Kr5QW+zQWVoDV+L/xEvMkRUDnpxXgdV4qREEgrAC2cQkJhkBYAerGKRItBMIKuLvxJhIeAmEF9G7cRQIhEFbA6MYhElcEwgqYrfFLEkcESoDyjeug1o/pKQmcGdg7WsgRv0CLGt+42CRBvSGLejsPnf/7otQCRjsPkaibmP2lNuzPew/MlnkLzkbiG0cJsCwTP89HwDKod8SQS7ZmIYua4vklCQRT7+hAIwQyzI1uHBJSs5Ai5M4aNQs5DbtteZ6beLbTxoXshaEEuCwTL05BYPckWpTynEJsKllyyEB52iO1WfSfKdUDtbkEvB2gTKQ2F4EiQOavIlQRqghtGRg6SjwBzME8OQGJzeQAAAAASUVORK5CYII=',
+        w: 48,
+        h: 60,
+        pos: 50,
+      }
+    ],
     eventContents: {
       hello: { first: { text: ['hello!'], }, },
       tomato: {

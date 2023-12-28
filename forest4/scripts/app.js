@@ -16,7 +16,7 @@ if (query){
     ),
   ).then((modules) => modules.forEach((module, i) => {
     data[keys[i]] = module[keys[i]] || module.default
-    console.log(module, data)
+    // console.log(module, data)
   })).then(()=> startWorld(filePath !== 'area1'))
 }
 

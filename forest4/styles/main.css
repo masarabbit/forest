@@ -17,6 +17,10 @@ body {
   overscroll-behavior: contain;
 }
 
+.absolute {
+  position: absolute;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -164,8 +168,15 @@ canvas {
 }
 
 .map-image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
   transition: 0.5s;
 }
+
+/* .player {
+  transition: 0.5s;
+} */
 
 .map-image-wrapper.transition {
   transition: 0s;

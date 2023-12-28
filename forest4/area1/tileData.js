@@ -357,6 +357,7 @@ const tileSheetData = {
 const tileX = index => (index % tileSheetData.column) * tileSheetData.d
 const tileY = index => Math.floor(index / tileSheetData.column) * tileSheetData.d
 
+
 const tileData = {
   tiles,
   tilesList,

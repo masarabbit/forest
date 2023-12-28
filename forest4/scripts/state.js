@@ -30,6 +30,9 @@ const settings = {
     w: 0,
     h: 0,
   },
+  offsetPos: {
+    x: 0, y: 0
+  }
 }
 
 const touchControl = {

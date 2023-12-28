@@ -6,7 +6,7 @@ const resizeCanvas = ({ canvas, w, h }) =>{
 }
 
 const px = n => `${n}px`
-const clampMax = (n, max) =>  n < max ? n : max
+// const clampMax = (n, max) =>  n < max ? n : max
 
 const setStyles = ({ el, x, y, w, h, d }) => {
   const m = d || 1
@@ -35,7 +35,7 @@ export {
   degToRad,
   resizeCanvas,
   px,
-  clampMax,
+  // clampMax,
   setStyles,
   mouse,
   setPos,

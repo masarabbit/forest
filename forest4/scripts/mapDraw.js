@@ -1,6 +1,6 @@
 
 import { elements } from './elements.js'
-import { degToRad, resizeCanvas, clampMax, setStyles, setPos } from './utils/utils.js'
+import { degToRad, resizeCanvas, setStyles } from './utils/utils.js'
 import { editConfig } from './data/config.js'
 
 import { settings, player, data } from './state.js'
@@ -119,24 +119,25 @@ const animateMap = () => {
 const mapX = () => player.pos % settings.map.column 
 const mapY = () => Math.floor(player.pos / settings.map.column)
 
-const getMapCoord = para => (Math.floor(settings.map[para] / 2) - 1) * settings.d
+
+const updateOffset = () => {
+  const { width, height } = elements.wrapper.getBoundingClientRect()
+  settings.offsetPos = {
+    x: (width / 2) - 16,
+    y: (height / 2) - 16,
+  }
+}
+
+
+const positionMapImage = () => {
+  const { offsetPos: { x, y }, d } = settings
+  settings.mapImage.x = x - (mapX() * d)
+  settings.mapImage.y = y - (mapY() * d)
+}
 
 const adjustMapWidthAndHeight = () =>{
-  const { offsetWidth: w, offsetHeight: h } = elements.wrapper
-  const { d } = settings
-
-  settings.map.w = 2 * Math.floor((clampMax(w, 800) / d) / 2)
-  settings.map.h = 2 * Math.floor((clampMax(h, 600) / d) / 2)
-  setStyles(settings.map)
-
-  const x = getMapCoord('w')
-  const y = getMapCoord('h')
-  
-  setPos({ el: elements.player, x, y })
-  
-  // adjust mapPosition
-  settings.mapImage.x = mapX() * -d + x
-  settings.mapImage.y = mapY() * -d + y
+  updateOffset()
+  positionMapImage()
   setStyles(settings.mapImage)
 
   settings.mapImage.el.classList.add('transition')
@@ -164,5 +165,6 @@ export {
   adjustMapWidthAndHeight,
   mapX,
   mapY,
-  setUpCanvas
+  setUpCanvas,
+  positionMapImage
 }

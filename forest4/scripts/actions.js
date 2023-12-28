@@ -6,7 +6,7 @@ import { settings } from './state.js'
 import { decompress } from './utils/compression.js'
 import { walkDirections } from './data/config.js'
 import { setStyles, isObject, setPos } from './utils/utils.js'
-import { outputFromSpriteSheet, animateMap, mapX, mapY, setUpCanvas, adjustMapWidthAndHeight } from './mapDraw.js'
+import { outputFromSpriteSheet, animateMap, mapX, mapY, setUpCanvas, adjustMapWidthAndHeight, positionMapImage } from './mapDraw.js'
 
 const getWalkConfig = dir => {
   const { map: { column }, d } = settings
@@ -274,6 +274,14 @@ const noWall = pos =>{
   return settings.map.walls[pos] !== '$'
 }
 
+// const positionPlayer = () => {
+//   setPos({
+//     el: player.el,
+//     x: settings.offsetPos.x - settings.mapImage.x,
+//     y: settings.offsetPos.y - settings.mapImage.y,
+//   })
+// }
+
 const walk = (actor, dir) => {
   if (!dir || player.pause) return
 
@@ -285,9 +293,11 @@ const walk = (actor, dir) => {
       settings.mapImage[para] += dist
       setStyles(settings.mapImage)
       player.pos += diff
+      positionMapImage()
       checkAndTriggerEvent()
       setPos({ el: elements.location.mark, x: mapX() * 4, y: mapY() * 4 })
       elements.indicator.innerHTML = `pos:${player.pos} dataX:${mapX()} dataY:${mapY()}`
+      // positionPlayer()
     } else {
       actor[para] -= dist // note that dist needs to be flipped around
       setPos(actor)
@@ -327,6 +337,7 @@ const createMap = key => {
   const { w, h, d } = settings.map
   settings.mapImage.w = w * d
   settings.mapImage.h = h * d
+  // setStyles(settings.mapImage)
 
   setUpCanvas({ canvas: elements.mapImage, w, h, d })
 
@@ -357,6 +368,30 @@ const transport = portal => {
   createMap(entryPoint.map)
   adjustMapWidthAndHeight()
   clearNpcs()
+
+  if (settings.map?.mapAssets) {
+    const { map: { column }, d } = settings
+
+    document.querySelectorAll('.map-asset').forEach(m => {
+      settings.mapImage.el.removeChild(m)
+    })
+  
+    settings.map.mapAssets.forEach(m => {
+      const { h, w, pos } = m
+      const asset = {
+        el: Object.assign(document.createElement('img'), { 
+          className: 'map-asset absolute',
+          src: m.img,
+        }),
+        h, w,
+        x: (pos % column) * d, 
+        y: Math.floor(pos / column) * d,
+        zIndex: 1000,
+      }
+      setStyles(asset)
+      settings.mapImage.el.appendChild(asset.el)
+    })
+  }
 
   setTimeout(()=> {
     settings.mapImage.el.classList.remove('transition')
