@@ -291,8 +291,9 @@ const walk = (actor, dir) => {
   if (noWall(actor.pos + diff)) {
     if (actor === player) {
       settings.mapImage[para] += dist
-      setStyles(settings.mapImage)
+      setPos(settings.mapImage)
       player.pos += diff
+      player.el.parentNode.style.zIndex = mapY() * 32
       positionMapImage()
       checkAndTriggerEvent()
       setPos({ el: elements.location.mark, x: mapX() * 4, y: mapY() * 4 })
@@ -357,6 +358,33 @@ const outputLocationWall = ({ i, tile, d }) => {
   elements.location.ctx.fillRect(mapX, mapY, d, d)
 }
 
+const addMapAssets = () => {
+  if (settings.map?.mapAssets) {
+    const { map: { column }, d } = settings
+
+    document.querySelectorAll('.map-asset').forEach(m => {
+      settings.mapImage.el.removeChild(m)
+    })
+  
+    settings.map.mapAssets.forEach(m => {
+      const { h, w, pos } = m
+      const y = Math.floor(pos / column) * d
+      const asset = {
+        el: Object.assign(document.createElement('img'), { 
+          className: 'map-asset absolute',
+          src: m.img,
+        }),
+        h, w,
+        x: (pos % column) * d, 
+        y,
+      }
+      setStyles(asset)
+      asset.el.style.zIndex = y
+      settings.mapImage.el.appendChild(asset.el)
+    })
+  }
+}
+
 const transport = portal => {
   const { mapData } = data
   transition()
@@ -369,29 +397,7 @@ const transport = portal => {
   adjustMapWidthAndHeight()
   clearNpcs()
 
-  if (settings.map?.mapAssets) {
-    const { map: { column }, d } = settings
-
-    document.querySelectorAll('.map-asset').forEach(m => {
-      settings.mapImage.el.removeChild(m)
-    })
-  
-    settings.map.mapAssets.forEach(m => {
-      const { h, w, pos } = m
-      const asset = {
-        el: Object.assign(document.createElement('img'), { 
-          className: 'map-asset absolute',
-          src: m.img,
-        }),
-        h, w,
-        x: (pos % column) * d, 
-        y: Math.floor(pos / column) * d,
-        zIndex: 1000,
-      }
-      setStyles(asset)
-      settings.mapImage.el.appendChild(asset.el)
-    })
-  }
+  addMapAssets()
 
   setTimeout(()=> {
     settings.mapImage.el.classList.remove('transition')

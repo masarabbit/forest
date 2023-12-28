@@ -1,6 +1,6 @@
 
 import { elements } from './elements.js'
-import { degToRad, resizeCanvas, setStyles } from './utils/utils.js'
+import { degToRad, resizeCanvas, setStyles, setPos } from './utils/utils.js'
 import { editConfig } from './data/config.js'
 
 import { settings, player, data } from './state.js'
@@ -138,7 +138,7 @@ const positionMapImage = () => {
 const adjustMapWidthAndHeight = () =>{
   updateOffset()
   positionMapImage()
-  setStyles(settings.mapImage)
+  setPos(settings.mapImage)
 
   settings.mapImage.el.classList.add('transition')
   clearTimeout(settings.transitionTimer)
