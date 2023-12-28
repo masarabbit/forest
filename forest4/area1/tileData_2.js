@@ -303,26 +303,6 @@ const tiles = {
     type: 'L',
     color: '#d7fbfa',
   },
-  bd: {
-    id: 'hex1',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAGJJREFUOE+dkUkOACAIA+X/j8aIwcQFafHiacbaSqsfHagUeANV7aIEG+gPIwmeICL4gj8BBL4EFHgK1FtlVxkllmGf0QQicxA2yZWAFYVfQEVpB5koFay5go5gQSSiBaeoAwzwTtfXNix7AAAAAElFTkSuQmCC',
-    type: 'Q'
-  },
-  be: {
-    id: 'hex2',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAACNJREFUOE9jZGBg+M9AAWD8////qAGjYTCaDhgYBkEYUJqdAUpDOdcJKGDjAAAAAElFTkSuQmCC',
-    type: 'H'
-  },
-  bf: {
-    id: 'hex3',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAACRJREFUOE9j/P///38GCgDjqAEMo2HAMBoGDIMiDBgYGCjKzgBozTzU2T77WQAAAABJRU5ErkJggg==',
-    type: 'L'
-  },
-  bg: {
-    id: 'hex4',
-    img:   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAFJJREFUOE9jZCAf/AdpZSRDP1jj//9giiQDUDSCNTMyEmUAhkaYqwkZgFMjIQMIasRlANEasRnwHxaqpMQKLAzI0owcC6MGgJM1JF2TCgZHLAAAbAw8/lleA6AAAAAASUVORK5CYII=',
-    type: 'Q'
-  },
   zz: {
     id: '',
     color: 'transparent',

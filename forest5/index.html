@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./styles/main.css">
+  <script type="module" src ="./scripts/app.js" charset="utf-8"></script>
+
+  <title>forest5</title>
+</head>
+<body>
+  <button class="touch-toggle green-btn">touch: OFF</button>
+  <div class="indicator"></div>
+  
+  <div class="wrapper overflow-hidden flex-center hidden">
+    <div class="map-cover flex-center overflow-hidden">
+      <div class="map-image-wrapper">
+        <canvas class="map-image"></canvas>
+      </div>
+      <div class="player sprite-container overflow-hidden">
+        <div class="bear sprite"></div>
+      </div>
+    </div>  
+  </div>
+
+  <div class="control hide">
+    <div class="touch-control">
+      <div class="touch-circle"></div>
+    </div>
+    <button class="control-button" data-c="enter">&#9733;</button>
+  </div>
+
+  <div class="sign">
+    by masahito / <a href="http://www.ma5a.com/" >ma5a.com</a>
+  </div>
+
+</body>
+</html>
