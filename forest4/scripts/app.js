@@ -19,20 +19,3 @@ if (query){
     // console.log(module, data)
   })).then(()=> startWorld(filePath !== 'area1'))
 }
-
-
-
-// if (query){
-//   const queryArray = query.split('#').filter(q => q)
-//   const keys = object.keys(data)
-  
-//   Promise.all(
-//     queryArray.map(
-//       file => import(`../area1/${file}.js`)
-//     ),
-//   ).then((modules) => modules.forEach((module, i) => {
-//     console.log(module)
-//     data[queryArray[i]] = module[queryArray[i]] || module.default
-//     console.log(data)
-//   }))
-// }

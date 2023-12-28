@@ -1,5 +1,5 @@
 // import { elements } from './elements.js'
-import { setStyles, setPos } from './utils/utils.js'
+import { setStyles } from './utils/utils.js'
 import { addTouchAction } from './utils/touchControl.js'
 import { decompress } from './utils/compression.js'
 
@@ -32,15 +32,7 @@ function init() {
     facingDirection: 'down',
     walkingDirection: '',
     walkingInterval: null,
-    // isTalking: false,
-    // talkTarget: null,
-    // answering: false,
     pause: false,
-    // textCount: 0,
-    // prevChoices: {},
-    // dialogHistory: [],
-    // dialog: {},
-    // dialogKey: null,
   }
 
 
@@ -57,9 +49,6 @@ function init() {
       pos: {
         x: 64, y: 64,
       }
-      // pos: {
-      //   x: 0, y: 0,
-      // }
     },
     map: {
       el: document.querySelector('.map-image-wrapper'),
@@ -167,7 +156,17 @@ function init() {
     setStyles(settings.mapImage)
   }
 
-
+  const handleWalk = dir =>{
+    if (player.walkingDirection !== dir){
+      clearInterval(player.walkingInterval)
+      player.walkingDirection = dir
+      player.walkingInterval = setInterval(()=>{
+        player.walkingDirection && !settings.activeEvent
+          ? walk(player, dir)
+          : clearInterval(player.walkingInterval)
+      }, 150)
+    }
+  }
 
   settings.map.walls = decompress( settings.mapData.walls)
 
@@ -176,6 +175,12 @@ function init() {
   setStyles(settings.map)
 
   addTouchAction(elements.control.childNodes[1].childNodes[1], dir => walk(player, dir))
+
+  window.addEventListener('keydown', e => handleWalk(e.key.toLowerCase().replace('arrow','')))
+  window.addEventListener('keyup', () => {
+    player.walkingDirection = null
+    clearInterval(player.walkingInterval)
+  })
 
   window.addEventListener('resize', resizeAndRepositionMap)
   resizeAndRepositionMap()

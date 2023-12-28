@@ -15,8 +15,6 @@ const walkDirections = {
   // re: 'resume',
 }
 
-
-
 const editConfig = {
   a: 90,
   b: 180,
