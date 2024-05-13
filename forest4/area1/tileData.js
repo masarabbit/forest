@@ -3,7 +3,7 @@ import { tileTypes } from '../scripts/data/config.js'
 const tiles = {
   a: {
     id: 'green rounded corner',
-    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADZJREFUOE9jZMACwq/c/I9NHJsYI7IgKRph+uAGkKMZZAjYAHI1U8cASmwHu2DUgNEwGBTpAAATSTBBsjy3lAAAAABJRU5ErkJggg==',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAD5JREFUOE9jZMACpKSk/mMTxybGiCwI0/j06VNi9TPADQBpJkUjzAawAeRqBuml3ABKbAe7YNSA0TAYFOkAAA2FPSKFSn9MAAAAAElFTkSuQmCC',
     type: 'L'
   },
   b: {

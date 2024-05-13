@@ -1,4 +1,4 @@
-
+/* 
 
 .intro-img {
   position: relative;
@@ -42,7 +42,7 @@
   --w: 26px;
   --h: 15px;
   width: calc(var(--w) * 4);
-  height: 56px; /* (--h - 1) * 4 */
+  height: 56px; 
   background-size: calc(var(--w) * 4) calc(var(--h) * 4) !important; 
   animation: bop infinite 2s;
   background-repeat: no-repeat;
@@ -55,7 +55,7 @@
   50% {
     background-position: 0 4px;
   }
-}
+} */
 
 @keyframes left-to-right {
   0% {
@@ -66,31 +66,9 @@
   }
 }
 
-@keyframes slide-in-from-left {
-  0% { left: -100%; }
-  50% { opacity: 0; }
-  95% { 
-    left: 25px;
-    opacity: 1; 
-  }
-  100% { left: 15px; }
-}
-
 @keyframes display-artwork {
   0% { opacity: 0; }
   100% { opacity: 1; }
-}
-
-@keyframes slide-in-from-right {
-  0% { right: -100vh; }
-  50% {
-    opacity: 0;
-  }
-  95% { 
-    right: 25px;
-    opacity: 1; 
-  }
-  100% { right: 15px }
 }
 
 
