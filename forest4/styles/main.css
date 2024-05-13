@@ -219,7 +219,7 @@ canvas {
 .control button {
   height: 60px;
   width: 60px;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   border: 0;
   transition: 0.2s;
   margin: 10px;
@@ -227,7 +227,7 @@ canvas {
   font-size: 20px;
   color:rgb(89, 92, 114);
   /* background-color: white; */
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgb(255, 255, 255);
 }
 
 .control button:hover {
@@ -245,26 +245,40 @@ button.disable {
   width: 150px;
   height: 150px;
   background-color: #a2fcf0ba;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   transition: 0.3s;
   z-index: 6;
+  --c: 16px;
+  clip-path: 
+    polygon(
+      0 var(--c),  var(--c) var(--c), var(--c) 0, calc(100% - var(--c)) 0,
+      calc(100% - var(--c)) var(--c), 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) calc(100% - var(--c)),
+      calc(100% - var(--c)) 100%, var(--c) 100%, var(--c) calc(100% - var(--c)), 0 calc(100% - var(--c))
+    );
 }
 
 .touch-circle {
   position: absolute;
   top: 0;
   left: 0;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   --size: 96px;
   width: var(--size);
   height: var(--size);
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAI1JREFUWEftV0EOwCAIW///aBYOJG6TJQIbmOBZSqlYEURER+JCE/AoAAB8ei4Ma7Akl/Yx41gC78k9JLoJW4FWoKYCfM8t/vD2pmmYj0QR9jojouFeCIwO94UCM8esRYAZph6BSJTahH9PZ+HXbbWAJtAK7KlAiaE0dSwfHTPtY7JqONr+PZswqnrGOQHGKseh+5Ps2AAAAABJRU5ErkJggg==);
-  opacity: 0.7;
+  /* opacity: 0.7; */
   image-rendering: pixelated;
   background-repeat: no-repeat;
   background-size: var(--size); 
   transform: translate(27px, 27px);
   cursor: grab;
+  --c: 16px;
+  clip-path: 
+    polygon(
+      0 var(--c),  var(--c) var(--c), var(--c) 0, calc(100% - var(--c)) 0,
+      calc(100% - var(--c)) var(--c), 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) calc(100% - var(--c)),
+      calc(100% - var(--c)) 100%, var(--c) 100%, var(--c) calc(100% - var(--c)), 0 calc(100% - var(--c))
+    );
 }
 
 .deactivate {
@@ -391,7 +405,7 @@ a:hover {
   border: 0px;
   padding: 10px;
   font-size: 16px;
-  color: #031f5C;
+  color: var(-black);
   background-color: white;
   cursor: pointer;
   transition: 0.3s;
