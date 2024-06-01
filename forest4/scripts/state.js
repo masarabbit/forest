@@ -29,6 +29,7 @@ const settings = {
     canvas: elements.location.el,
     w: 0,
     h: 0,
+    z: 5,
   },
   offsetPos: {
     x: 0, y: 0

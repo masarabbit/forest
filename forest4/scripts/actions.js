@@ -38,13 +38,10 @@ const updateNextButtonText = (count, text) => {
   elements.controlButtons[0].innerHTML = count === text.length - 1 ? 'end' : 'next'
 }
 
-const displayTextGradual = ({ count: t, prev: i }) =>{
-  elements.texts[1].innerHTML = t.slice(0, i)
-  if (i < t.length) {
-    setTimeout(()=>{
-      displayTextGradual({ count: t, prev: i + 1 })
-    }, 30)
-  }
+const displayTextGradual = text =>{
+  elements.texts[1].innerHTML = text.split('').map((letter, i) => {
+    return `<span style="animation-delay: ${i * 0.03}s">${letter}</span>`
+  }).join('')
 }
 
 const resumeOrEndEvent = event => {
@@ -90,7 +87,7 @@ const investigate = (count, eventPoint) =>{
     player.pause = true
     elements.texts[0].parentNode.parentNode.classList.remove('hidden')
     updateNextButtonText(count, eventPoint.text)
-    displayTextGradual({ count: text, prev: 0 })
+    displayTextGradual(text)
     if (eventPoint.art && !elements.artwork.innerHTML) elements.artwork.innerHTML = `<img src=${eventPoint.art} />`
     // TODO add trigger for event?
     return
@@ -157,7 +154,7 @@ const displayText = ({ count, prev }) =>{
     player.textCount++
     // TODO check why player is pausing at this timing and not elsewhere
     player.pause = true
-    displayTextGradual({ count: text, prev: 0 })
+    displayTextGradual(text)
     if (eventPoint.choice && count === eventPoint.text.length - 1) {
       displayAnswer(prev)
       nextButton.classList.add('hide')
@@ -338,8 +335,6 @@ const createMap = key => {
   const { w, h, d } = settings.map
   settings.mapImage.w = w * d
   settings.mapImage.h = h * d
-  // setStyles(settings.mapImage)
-
   setUpCanvas({ canvas: elements.mapImage, w, h, d })
 
   // create location map
@@ -390,7 +385,7 @@ const transport = portal => {
   transition()
   settings.mapImage.el.classList.add('transition')
   const entryPoint = mapData[settings.map.key].entry[portal]
-  if (!entryPoint) return // this added to prevent error when user walks too fast
+  if (!entryPoint) return // prevent error when user walks too fast
 
   player.pos = entryPoint.pos
   createMap(entryPoint.map)

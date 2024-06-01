@@ -80,3 +80,8 @@
     transform: scale(1);
   }
 }
+
+@keyframes fade-in-text {
+  0%, 99% { opacity: 0; }
+  100% { opacity: 1; }
+}

@@ -8,12 +8,12 @@ const resizeCanvas = ({ canvas, w, h }) =>{
 const px = n => `${n}px`
 // const clampMax = (n, max) =>  n < max ? n : max
 
-const setStyles = ({ el, x, y, w, h, d }) => {
+const setStyles = ({ el, x, y, z, w, h, d }) => {
   const m = d || 1
   if (w) el.style.width = px(w * m)
   if (h) el.style.height = px(h * m)
   el.style.transform = `translate(${x ? px(x) : 0}, ${y ? px(y) : 0})`
-  el.style.zIndex = y || 0
+  el.style.zIndex = z|| y || 0
 }
 
 const addEvents = (target, event, action, array) =>{
@@ -28,9 +28,9 @@ const mouse = {
   leave: (t, e, a) => addEvents(t, e, a, ['mouseleave'])
 }
 
-const setPos = ({ el, x, y }) => {
+const setPos = ({ el, x, y, z }) => {
   Object.assign(el.style, { left: `${x}px`, top: `${y}px` })
-  el.style.zIndex = y || 0
+  el.style.zIndex = z || y || 0
 }
 const randomDirection = () => ['down', 'right', 'up', 'left'][Math.floor(Math.random() * 4)]
 const isObject = target => Object.prototype.toString.call(target) === '[object Object]'
