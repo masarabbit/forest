@@ -66,6 +66,7 @@ const clearText = () =>{
     talkTarget: null,
     isTalking: false, // maybe this and answering can be combined or referenced from active event instead
     answering: false,
+    // isTalking: false // TODO when player is talking, there's always a talk target so maybe we don't need this?
   })
   elements.texts[0].parentNode.parentNode.classList.add('hidden')
   elements.texts[1].classList.remove('face_displayed')
