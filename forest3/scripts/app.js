@@ -346,7 +346,7 @@ function init() {
   }
   
   // displays multiple choice
-  const displayAnswer = prev =>{ 
+  const displayOptions = prev =>{ 
     const eventPoint = bear.dialog[bear.dialogKey]
     bear.answering = true
     bear.choice = prev ? bear.prevChoices[bear.dialogKey] : 0 
@@ -435,7 +435,7 @@ function init() {
       bear.pause = true
       displayTextGradual(text, 0)
       if (eventPoint.choice && count === eventPoint.text.length - 1) {
-        displayAnswer(prev)
+        displayOptions(prev)
         nextButton.classList.add('hide')
       } else {
         updateNextButtonText(count, eventPoint.text)

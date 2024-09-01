@@ -60,12 +60,12 @@ const clearText = () =>{
     textCount: 0,
     prevChoices: {},
     pause: false,
-    answering: false,
     dialogHistory: [],
     dialog: {},
     dialogKey: null,
     talkTarget: null,
-    isTalking: false
+    isTalking: false, // maybe this and answering can be combined or referenced from active event instead
+    answering: false,
   })
   elements.texts[0].parentNode.parentNode.classList.add('hidden')
   elements.texts[1].classList.remove('face_displayed')
@@ -107,7 +107,7 @@ const select = () =>{
 }
 
 // displays multiple choice
-const displayAnswer = prev =>{ 
+const displayOptions = prev =>{ 
   const eventPoint = player.dialog[player.dialogKey]
   player.answering = true
   player.choice = prev ? player.prevChoices[player.dialogKey] : 0 
@@ -138,7 +138,7 @@ const displayText = ({ count, prev }) =>{
 
   if (count < eventPoint.text.length){
     const text = eventPoint.text[count]
-    const targetExpression = (eventPoint.face && eventPoint.face[count]) || 'happy'
+    const targetExpression = (eventPoint?.face?.[count]) || 'happy'
     const { img, frameNo } = player.talkTarget.face[targetExpression]
     
     elements.spriteFace.innerHTML = spriteWrapper({
@@ -156,7 +156,7 @@ const displayText = ({ count, prev }) =>{
     player.pause = true
     displayTextGradual(text)
     if (eventPoint.choice && count === eventPoint.text.length - 1) {
-      displayAnswer(prev)
+      displayOptions(prev)
       nextButton.classList.add('hide')
     } else {
       updateNextButtonText(count, eventPoint.text)

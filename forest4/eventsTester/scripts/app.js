@@ -1,7 +1,7 @@
 
 // TODO not complete
 
-import { mapData } from '../../area1/mapData.js'
+import mapData from '../../area1/mapData.js'
 // import { player } from '../../scripts/state.js'
 
 const player = {
@@ -154,7 +154,7 @@ function init() {
   }
   
   // displays multiple choice
-  const displayAnswer = prev =>{ 
+  const displayOptions = prev =>{ 
     const eventPoint = player.dialog[player.dialogKey]
     player.answering = true
     player.choice = prev ? player.prevChoices[player.dialogKey] : 0 
@@ -203,7 +203,7 @@ function init() {
       player.pause = true
       displayTextGradual(text, 0)
       if (eventPoint.choice && count === eventPoint.text.length - 1) {
-        displayAnswer(prev)
+        displayOptions(prev)
         nextButton.classList.add('hide')
       } else {
         updateNextButtonText(count, eventPoint.text)
