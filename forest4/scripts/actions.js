@@ -413,6 +413,10 @@ const transport = portal => {
     })
     
     checkAndTriggerEvent()
+
+    if (portal === 'start') {
+      elements.player.classList.add('teleport')
+    }
   }, 300)
 }
 

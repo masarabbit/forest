@@ -486,3 +486,42 @@ a:hover {
   content: '';
   bottom: 0;
 }
+
+.teleport .sprite {
+  animation: forwards teleport 0.5s;
+  opacity: 0;
+  animation-delay: 1s;
+}
+
+@keyframes teleport {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.teleport::after {
+  position: absolute;
+  content: '';
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAAXNSR0IArs4c6QAAAGNJREFUSEtjZKAQMML0R1y+/R/ZrBW6qnA5fHYMJwPIDUuiAgpkOK5AHkkG4ApklDAgJzUONwPISY1EJySiYgGXInyxQ5QLhoEBI6VMJCcngsKGqHRAVCDiUzQMEhLFXsAXPgCsmWAhkjezOQAAAABJRU5ErkJggg==);
+  image-rendering: pixelated;
+  background-repeat: no-repeat !important;
+  height: 64px;
+  width: 32px;
+  background-size: 32px 64px;
+  top: 0;
+  animation: forwards fall 2.5s;
+}
+
+@keyframes fall {
+  0% {
+    top: -64px;
+    opacity: 1;
+  }
+  100% {
+    top: 0;
+    opacity: 0;
+  }
+}
