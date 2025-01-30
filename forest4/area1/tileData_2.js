@@ -303,6 +303,12 @@ const tiles = {
     type: 'L',
     color: '#d7fbfa',
   },
+  bd: {
+    id: 'green rounded corner green background',
+    img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADZJREFUOE9jZMACwq/c/I9NHJsYI7IgKRph+uAGkKMZZAjYAHI1U8cASmwHu2DUgNEwGBTpAAATSTBBsjy3lAAAAABJRU5ErkJggg==',
+    color: '#a2fcf0',
+    type: 'L'
+  },
   zz: {
     id: '',
     color: 'transparent',

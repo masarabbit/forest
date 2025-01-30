@@ -145,7 +145,7 @@ const mapData = {
     entry: {
       //* change this to set where bear starts
       start: {
-        map: 'one',
+        map: 'three',
         pos: 464,
         dir: 'up',
       },
@@ -203,7 +203,12 @@ const mapData = {
     //   },
     // }
   },
-
+  three: {
+    column: 40,
+    row: 20,
+    map: 'zz14,w2,zz5,f1,i1,f3,i1,f1,zz5,w2,zz6,w10,s1,s.h1,w8,f7,w11,zz2,w10,t1,t.h1,w5,s1,s.h1,w1,g.c1,f2,h1,f2,g.b1,w8,s1,s.h1,w1,zz2,w6,v1,w1,v1,w8,t1,t.h1,w16,t1,t.h1,w2,zz1,w1,v1,w5,bd1,c3,bd.a1,w4,v1,w4,v1,w2,s1,s.h1,w13,zz1,w3,v1,w3,b.c1,c3,b.b1,w12,t1,t.h1,w12,zz2,w1,v1,w1,v2,w2,f1,k1,f1,k.h1,f1,w14,v1,w11,zz2,w7,f1,k1,f1,k.h1,f1,w26,zz2,w7,g.c1,f1,h1,f1,g.b1,w26,zz2,w38,zz2,w38,zz2,bb6,bc.a1,w14,bc1,bb16,zz2,aa7,bb14,aa17,zz2,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,ab1,ab.h1,zz2,c8,ac2,c6,ac2,c1,ac2,c5,ac2,c1,ac2,c7,zz2,ac2,c15,ac2,c8,ac2,c9,zz2,c1,ac3,c8,ac1,c25,zz2,c6,ac1,c8,ac1,c2,ac1,c9,ac1,c7,ac1,c1,zz2,c12,ac1,c8,ac1,c9,ac1,c6,zz41',
+    walls: '$14,2,$17,2,$6,10,$2,8,$7,11,$2,10,$2,5,$2,1,$3,1,$3,8,$2,1,$2,17,$2,16,$2,2,$1,7,$5,12,$2,13,$1,7,$5,12,$2,12,$2,7,$5,26,$2,7,$5,26,$2,7,$2,zz1,$2,26,$2,38,$2,38,$2,38,$2,38,$2,38,$241'
+  }
 }
 
 export default mapData
