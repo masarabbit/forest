@@ -7,14 +7,14 @@ const elements = {
 
 const settings = {
   dialogIndex: 0,
-  isDialogOpen: true,
+  isDialogOpen: false,
 
   d: 20,
   offsetPos: {
     x: 0, y: 0,
   },
   elements: [],
-  // npcs: [],
+  npcs: [],
   map: {},
   transitionTimer: null,
   isWindowActive: true,

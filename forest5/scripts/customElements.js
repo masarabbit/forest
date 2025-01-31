@@ -95,8 +95,67 @@ const defineCustomElements = () => {
   })
 
 
+  customElements.define('slide-carousel',
+    class extends HTMLElement {
+      constructor() {
+        super()
+        this.className = 'slide-carousel'
+        this.innerHTML = `
+          <div class="slides">
+            <img class="slide show" src='./assets/img1.jpg' />
+            <img class="slide" src='./assets/img2.jpg' />
+            <img class="slide" src='./assets/img3.jpg' />
+            <div class="slide-nav">
+              <button class="prev arrow" data-dir="-1" >&#10229;</button>
+              <button class="next arrow" data-dir="1">&#10230;</button>
+            </div>
+            <div class="pagination">
+              <div class="dot active"></div> 
+              <div class="dot"></div> 
+              <div class="dot"></div>
+            </div>
+          </div>
+      
+        `
+    }
+    updatePagination() {
+      this.slideDots.forEach(dot => dot.classList.remove('active'))
+      this.slideDots[this.activeSlide].classList.add('active')
+    }
+    adjustActiveNo() {
+      if (this.activeSlide === this.slides.length) {
+        this.activeSlide = 0
+      }
+      if (this.activeSlide < 0) {
+        this.activeSlide = this.slides.length - 1
+      }
+    }
+    handleArrow(e) {
+      clearInterval(this.slideInterval)
+      const dir = +e.target.dataset.dir
+      this.slides[this.activeSlide].classList.remove('show')
+      this.activeSlide += dir
+      this.adjustActiveNo()
+      this.slides[this.activeSlide].classList.add('show')
+      this.updatePagination()
+    }
+    connectedCallback () {
+      this.slides = this.querySelectorAll('.slide')
+      this.slideDots = this.querySelectorAll('.dot')
+      this.activeSlide = 0
+      this.slideInterval = setInterval(()=> {
+        this.slides[this.activeSlide].classList.remove('show')
+        this.activeSlide++
+        this.adjustActiveNo()
+        this.slides[this.activeSlide].classList.add('show')
+        this.updatePagination()
+      }, 4000)
 
-
+      this.querySelectorAll('.arrow').forEach(btn => {
+        btn.addEventListener('click', e => this.handleArrow(e, this))
+      })
+    }
+  })
 }
 
 

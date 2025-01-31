@@ -1,13 +1,6 @@
-import {
-  getRandomPos,
-} from './utils.js'
-
-import { Sprite, Map } from './classes.js'
-
-import {
-  elements,
-  settings
-} from './elements.js'
+import { randomN, getRandomPos } from './utils.js'
+import { Map, Bunny, Player } from './classes.js'
+import { elements, settings } from './elements.js'
 
 import defineCustomElements from './customElements.js'
 
@@ -34,30 +27,58 @@ function init() {
       }
     })
 
-  //* map
 
+  const addPlayer = ({ x, y }) => {
+    const player = new Player({
+      id: 'bear',
+      x, y,
+      el: elements.player,
+      sprite: {
+        el: document.querySelector('.player').childNodes[1],
+        x: 0, y: 0
+      },
+      walkingDirection: '',
+      walkingInterval: null,
+      pause: false,
+      buffer: 20,
+      move: { x: 0, y: 0 }
+    })
+    settings.player = player
+    player.el.style.zIndex = player.y
+    player.animationProps()
+  }
 
+  const addBunny = ({ x, y }) => {
+    const bunny = new Bunny({
+      id: `bunny-${settings.npcslength + 1}`,
+      x, y,
+      el: Object.assign(document.createElement('div'), 
+      { 
+        className: 'sprite-container sad',
+        innerHTML: '<div class="bunny sprite"></div>'
+      }),
+      sprite: {
+        el: null,
+        x: 0, y: 0
+      },
+      sad: true,
+      buffer: 20,
+    })
+
+    settings.npcs.push(bunny)
+    settings.map.el.appendChild(bunny.el)
+    bunny.sprite.el = bunny.el.childNodes[0]
+    bunny.el.style.zIndex = bunny.y
+    bunny.animationProps()
+    bunny.setPos()
+    if (randomN(2) === 2) bunny.triggerBunnyWalk()
+  }
   
-  const player = new Sprite({
-    id: 'bear',
-    x: getRandomPos('w'),
-    y: getRandomPos('h'),
-    frameOffset: 1,
-    animationTimer: null,
-    el: elements.player,
-    sprite: {
-      el: document.querySelector('.player').childNodes[1],
-      x: 0, y: 0
-    },
-    walkingDirection: '',
-    walkingInterval: null,
-    pause: false,
-    buffer: 20,
-    move: { x: 0, y: 0 }
+  addPlayer({ 
+    x: settings.map.w / 2, 
+    y: settings.map.h / 2, 
   })
-
-  settings.player = player
-  player.el.style.zIndex = player.y
+  addBunny({ x: getRandomPos('w'), y: getRandomPos('h') })
 
 
 
@@ -79,106 +100,8 @@ function init() {
   // }
 
 
-  const noWall = actor => {
-    const newPos = {...actor}
-    newPos.x += actor.move.x
-    newPos.y += actor.move.y
-    // if (actor === player && !player.pause) {
-    //   const bunnyToHug = settings.bunnies.find(el => el.sad && el.id !== actor.id && distanceBetween(el, newPos) <= el.buffer)
-    //   if (bunnyToHug) {
-    //     hugBunny(bunnyToHug)
-    //     stopSprite(player)
-    //     return 
-    //   }
-    // } 
-    // if ([
-    //   ...settings.bunnies.filter(el => el.id !== actor.id), 
-    //   ...settings.elements].some(el => {
-    //   return distanceBetween(el, newPos) <= el.buffer 
-    //         && distanceBetween(el, actor) > el.buffer
-    // })) return
 
-    const buffer = 40
-    const noWallX = actor.move.x > 0
-      ? newPos.x + buffer < settings.map.w 
-      : newPos.x - buffer > 0 
-    const noWallY = actor.move.y > 0
-      ? newPos.y < settings.map.h - buffer
-      : newPos.y - buffer > 0 
-
-    return noWallX && noWallY
-  }
-
-
-  const walk = (actor, dir) => {
-    if (!dir || player.pause || !settings.isWindowActive) return
-    if (noWall(actor)) {
-      actor.animateSprite(dir)
-      actor.x += actor.move.x
-      actor.y += actor.move.y
-      if (actor === player) {
-        settings.map.positionMap()
-        settings.map.setPos()
-        player.el.parentNode.style.zIndex = player.y
-      } else {
-        player.setPos()
-        actor.el.style.zIndex = actor.y
-      }
-    } else {
-      actor.stopSprite()
-    }
-  }
-
-
-
-  
-  const handleWalk = () =>{
-    let dir = 'right'
-    const { d } = settings
-
-      player.walkingInterval = setInterval(()=>{
-      if (Math.abs(player.y - settings.controlPos.y) > 20) {
-        player.move.y = player.y > settings.controlPos.y ? -d : d
-        dir = player.move.y === -d ? 'up' : 'down'
-      } else {
-        player.move.y = 0
-      }
-      if (Math.abs(player.x - settings.controlPos.x) > 20) {
-        player.move.x = player.x > settings.controlPos.x ? -d : d
-        dir = player.move.x === -d ? 'left' : 'right'
-      } else {
-        player.move.x = 0
-      }
-
-      player.move.x || player.move.y
-        ? walk(player, dir)
-        : player.stopSprite()
-    }, 150)
-  }
-
-
-
-  document.addEventListener('click', e => {
-    if (settings.isDialogOpen) return
-
-    player.stopSprite()
-    const { left, top } = settings.map.el.getBoundingClientRect()
-
-    if (e.targetTouches) {
-      settings.controlPos = { 
-        x: e.targetTouches[0].offsetX - left,
-        y: e.targetTouches[0].offsetY - top
-      }
-    } else {
-      settings.controlPos = { 
-        x: e.pageX - left,
-        y: e.pageY - top
-      }
-    }
-    elements.indicator.innerHTML = `x2: ${settings.controlPos.x} | y: ${settings.controlPos.y}`
-
-    handleWalk()
-  })
+  document.addEventListener('click', e => settings.player.handleWalk(e))
 
   // const elAngle = pos => {
   //   const { x, y } = pos
@@ -189,15 +112,10 @@ function init() {
 
   window.addEventListener('focus', ()=> settings.isWindowActive = true)
   window.addEventListener('blur', ()=> settings.isWindowActive = false)
-
-
   window.addEventListener('resize', ()=> settings.map.resizeAndRepositionMap())
 
 
-
-
   settings.map.setSize()
-
   settings.map.resizeAndRepositionMap()
 }
 
