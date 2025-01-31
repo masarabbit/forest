@@ -1,171 +1,47 @@
 import {
   getRandomPos,
-  px,
-  setPos,
-  setSize
 } from './utils.js'
+
+import { Sprite, Map } from './classes.js'
 
 import {
   elements,
   settings
 } from './elements.js'
 
+import defineCustomElements from './customElements.js'
+
 function init() {  
+  
+  defineCustomElements()
+  
+  settings.map = new Map({
+    walls: [],
+    w: 20 * 50,
+    h: 20 * 50,
+    x: 0, y: 0,
+  })
 
-
-  const dialogData = [
-    'Hi! Welcome to Masa land',
-    'Here, you can walk around by touching or clicking on the map',
-    'test test test 3'
-  ]
-
-  customElements.define('dialog-window',
+  customElements.define('map-el',
     class extends HTMLElement {
       constructor() {
         super()
-        this.innerHTML = `
-          <div class="inner-dialog-wrapper">
-            <div class="inner-dialog">
-              <npc-text></npc-text>
-            </div>  
-          </div>  
-          <div class="dialog-nav">
-            <next-btn></next-btn>
-          </div>
-        `
-        this.className = 'dialog-window'
-    }
-    connectedCallback () {
-      elements.dialogContainer = this.querySelector('.inner-dialog')
-      elements.dialogWindow = this
-    }
-  })
-
-  const removeElement = el => {
-    el.classList.add('scale-out')
-    setTimeout(()=> {
-      el.remove()
-    }, 300)
-  }
-
-  const positionMap = () => {
-    settings.map.x = settings.offsetPos.x - player.x
-    settings.map.y = settings.offsetPos.y - player.y
-  }
-
-  const showNextNpcText = () => {
-    settings.dialogIndex++
-    elements.dialogContainer.insertAdjacentHTML('beforeend', '<npc-text></npc-text>')
-    setTimeout(elements.dialogContainer.parentNode.scrollTo({ top: elements.dialogContainer.parentNode.scrollHeight, behavior: 'smooth' }), 400)
-
-    if (settings.dialogIndex === 2) {
-      const text = dialogData[settings.dialogIndex] || 'test test'
-      setTimeout(()=> {
-        elements.dialogContainer.insertAdjacentHTML('beforeend', '<option-texts></option-texts>')
-        setTimeout(()=> {
-          elements.dialogContainer.parentNode.scrollTo({ top: elements.dialogContainer.parentNode.scrollHeight, behavior: 'smooth' })
-        }, 400)
-      }, text.length * 40)
-    }
-
-    if (settings.dialogIndex === 4) {
-      removeElement(elements.dialogWindow)
-      settings.isDialogOpen = false
-    }
-  }
-
-  customElements.define('next-btn',
-    class extends HTMLElement {
-      constructor() {
-        super()
-        this.innerHTML = `
-          next
-        `
-        this.className = 'next btn'
-    }
-    connectedCallback () {
-      this.addEventListener('click', showNextNpcText)
-    }
-  })
-
-  const updateOffset = () => {
-    const { width, height } = elements.wrapper.getBoundingClientRect()
-    settings.offsetPos = {
-      x: (width / 2),
-      y: (height / 2),
-    }
-  }
-
-  const displayTextGradual = text =>{
-    return text.split('').map((letter, i) => {
-      return `<span style="animation-delay: ${i * 0.03}s">${letter}</span>`
-    }).join('')
-  }
-
-  customElements.define('npc-text',
-    class extends HTMLElement {
-      constructor() {
-        super()
-        this.innerHTML = `
-          <div class="text-wrapper">
-            <div class="npc text">${displayTextGradual(dialogData[settings.dialogIndex] || 'test test')}</div>
-          </div>
-          <character-icon></character-icon>
-        `
-        this.className = 'npc-text'
-    }
-  })
-
-  customElements.define('option-texts',
-    class extends HTMLElement {
-      constructor() {
-        super()
-        this.innerHTML = `
-          ${['yes', 'no'].map((option, i) => `<button class="btn option-${i + 1}">${option}</button>`).join('')}
-        `
-        this.className = 'option-texts'
-    }
-    connectedCallback () {
-      this.querySelector('.option-1').addEventListener('click', e => {
-        settings.dialogOption = 'option-1'
-        console.log('yes')
-        showNextNpcText()
-        e.target.classList.add('selected')
-        // removeElement(this)
-      })
-
-      this.querySelector('.option-2').addEventListener('click', ()=> {
-        settings.dialogOption = 'option-2'
-        console.log('no')
-        showNextNpcText()
-        e.target.classList.add('selected')
-        // removeElement(this)
-      })
-    
-    }
-  })
-
-
-  customElements.define('character-icon',
-    class extends HTMLElement {
-      constructor() {
-        super()
-        this.innerHTML = `
-        :)
-        `
-        this.className = 'character-icon'
-    }
-  })
-
-
+        this.className = 'map-wrapper overflow-hidden'
+        this.innerHTML = '<div class="map"></div>'
+      }
+      connectedCallback() {
+        settings.map.el = this.querySelector('.map')
+      }
+    })
 
   //* map
 
 
   
-  const player = {
+  const player = new Sprite({
     id: 'bear',
-    x: 0, y: 0,
+    x: getRandomPos('w'),
+    y: getRandomPos('h'),
     frameOffset: 1,
     animationTimer: null,
     el: elements.player,
@@ -178,7 +54,10 @@ function init() {
     pause: false,
     buffer: 20,
     move: { x: 0, y: 0 }
-  }
+  })
+
+  settings.player = player
+  player.el.style.zIndex = player.y
 
 
 
@@ -199,10 +78,6 @@ function init() {
   //   setPos(tree)
   // }
 
-  const setBackgroundPos = ({ el, x, y }) => {
-    el.style.setProperty('--bx', px(x))
-    el.style.setProperty('--by', px(y))
-  }
 
   const noWall = actor => {
     const newPos = {...actor}
@@ -234,54 +109,28 @@ function init() {
     return noWallX && noWallY
   }
 
-  const animateSprite = (actor, dir) => {
-    const h = -32 * 2
-    actor.sprite.y = {
-      down: 0,
-      up: h,
-      right: h * 2,
-      left: h * 3
-    }[dir]
-    actor.frameOffset = actor.frameOffset === 1 ? 2 : 1
-    actor.sprite.x = actor.frameOffset * (2 * -20)
-    setBackgroundPos(actor.sprite)
-  }
 
   const walk = (actor, dir) => {
-    if (!dir || player.pause || !settings.isWindowActive || settings.isDialogOpen) return
+    if (!dir || player.pause || !settings.isWindowActive) return
     if (noWall(actor)) {
-      animateSprite(actor, dir)
+      actor.animateSprite(dir)
       actor.x += actor.move.x
       actor.y += actor.move.y
       if (actor === player) {
-        positionMap()
-        setPos(settings.map)
+        settings.map.positionMap()
+        settings.map.setPos()
         player.el.parentNode.style.zIndex = player.y
       } else {
-        setPos(actor)
+        player.setPos()
         actor.el.style.zIndex = actor.y
       }
     } else {
-      stopSprite(actor)
+      actor.stopSprite()
     }
   }
 
-  const resizeAndRepositionMap = () => {
-    settings.map.el.classList.add('transition')
-    clearTimeout(settings.transitionTimer)
-    settings.transitionTimer = setTimeout(()=> {
-      settings.map.el.classList.remove('transition')
-    }, 500)
-    updateOffset()
-    positionMap()
-    setPos(settings.map)
-  }
 
-  const stopSprite = actor => {
-    actor.sprite.x = 0
-    setBackgroundPos(actor.sprite)
-    clearInterval(actor.walkingInterval)
-  }
+
   
   const handleWalk = () =>{
     let dir = 'right'
@@ -303,17 +152,16 @@ function init() {
 
       player.move.x || player.move.y
         ? walk(player, dir)
-        : stopSprite(player)
+        : player.stopSprite()
     }, 150)
   }
 
-  player.x = getRandomPos('w')
-  player.y = getRandomPos('h')
-  player.el.style.zIndex = player.y
-  setSize(settings.map)
+
 
   document.addEventListener('click', e => {
-    stopSprite(player)
+    if (settings.isDialogOpen) return
+
+    player.stopSprite()
     const { left, top } = settings.map.el.getBoundingClientRect()
 
     if (e.targetTouches) {
@@ -343,11 +191,14 @@ function init() {
   window.addEventListener('blur', ()=> settings.isWindowActive = false)
 
 
-  window.addEventListener('resize', ()=> {
-    resizeAndRepositionMap()
-  })
+  window.addEventListener('resize', ()=> settings.map.resizeAndRepositionMap())
 
-  resizeAndRepositionMap()
+
+
+
+  settings.map.setSize()
+
+  settings.map.resizeAndRepositionMap()
 }
 
 window.addEventListener('DOMContentLoaded', init)
