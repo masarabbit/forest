@@ -2,7 +2,7 @@ import { px, distanceBetween } from './utils.js'
 import { settings, elements } from './elements.js'
 import { dialogData } from './data.js'
 
-class GameObject {
+class WorldObject {
   constructor(props) {
     Object.assign(this, props)
   }
@@ -15,9 +15,15 @@ class GameObject {
   setPos () {
     Object.assign(this.el.style, { left: `${this.x}px`, top: `${this.y}px` })
   }
+  addToWorld() {
+    this.setPos()
+    settings.elements.push(this)
+    settings.map.el.appendChild(this.el)
+    this.el.style.zIndex = this.y
+  }
 }
 
-class Sprite extends GameObject {
+class Sprite extends WorldObject {
   animationProps() {
     Object.assign(this, {
       frameOffset: 1,
@@ -52,6 +58,7 @@ class Sprite extends GameObject {
 
     if (this.action) this.action()
 
+    // TODO add logic to check rectangle collision
     if ([
       ...settings.npcs.filter(el => el.id !== this.id), 
       ...settings.elements].some(el => {
@@ -199,7 +206,7 @@ class Player extends Sprite {
   }
 }
 
-class Map extends GameObject {
+class Map extends WorldObject {
   positionMap() {
     this.x = settings.offsetPos.x - settings.player.x
     this.y = settings.offsetPos.y - settings.player.y
@@ -262,5 +269,6 @@ export {
   Sprite,
   Ui,
   Bunny,
-  Player
+  Player,
+  WorldObject
 }

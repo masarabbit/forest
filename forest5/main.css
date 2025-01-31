@@ -401,13 +401,13 @@ body {
   height: 100%;
 }
 
-.tree {
+.object {
   position: absolute;
   width: 0;
   height: 0;
 }
 
-.tree > div {
+.object > div {
   position: absolute;
   --w: 24px;
   --h: 30px;
@@ -420,11 +420,10 @@ body {
   top: calc((var(--m) / -2) * var(--w));
 }
 
-.tree > div::after {
+.object > div::after {
   position: absolute;
   content: '';
   bottom: 0;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAeCAYAAAA2Lt7lAAAAAXNSR0IArs4c6QAAAKJJREFUSEvtlssRgCAMRKUwu7AdT7ZjFxamIzM4gIRdg8YLXIF9bD5M3ECubV32+Og4zY65Sh3KxYMwA4EASZyFVAFInIGIAFYcQYqAp+I1yA2gFZcgCaBVvAS5AG+J5xA7QNyVWjelxutJFv+7EC4fIm3M0W96QmwA+Uu0jnoVoZwm+3ZVpE0oa8d9DjBptJpd5BCNLv+OLUz4ugOf/5bZ9ACJXnYB/NLxRwAAAABJRU5ErkJggg==);
   image-rendering: pixelated;
   background-repeat: no-repeat;
   width: var(--width);
@@ -432,6 +431,13 @@ body {
   background-size: var(--width) var(--height); 
 }
 
+.tree > div::after {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAeCAYAAAA2Lt7lAAAAAXNSR0IArs4c6QAAAKJJREFUSEvtlssRgCAMRKUwu7AdT7ZjFxamIzM4gIRdg8YLXIF9bD5M3ECubV32+Og4zY65Sh3KxYMwA4EASZyFVAFInIGIAFYcQYqAp+I1yA2gFZcgCaBVvAS5AG+J5xA7QNyVWjelxutJFv+7EC4fIm3M0W96QmwA+Uu0jnoVoZwm+3ZVpE0oa8d9DjBptJpd5BCNLv+OLUz4ugOf/5bZ9ACJXnYB/NLxRwAAAABJRU5ErkJggg==);
+}
+
+.building > div::after{
+  background-color: hotpink;
+}
 
 
 /* animation */

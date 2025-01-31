@@ -1,5 +1,5 @@
 import { randomN, getRandomPos } from './utils.js'
-import { Map, Bunny, Player } from './classes.js'
+import { Map, Bunny, Player, WorldObject } from './classes.js'
 import { elements, settings } from './elements.js'
 
 import defineCustomElements from './customElements.js'
@@ -48,9 +48,38 @@ function init() {
     player.animationProps()
   }
 
+  const addToWorld = ({ x, y, type, buffer=40 }) => {
+    const el = new WorldObject({
+      id: `${type}-${settings.elements.length + 1}`,
+      x, y,
+      el: Object.assign(document.createElement('div'), 
+      { 
+        className: `object ${type}`,
+        innerHTML: '<div></div>' 
+      }),
+      buffer,
+    })
+    el.addToWorld()
+  }
+
+  // const addTree = ({ x, y }) => {
+  //   const tree = new WorldObject({
+  //     id: `tree-${settings.elements.length + 1}`,
+  //     x, y,
+  //     el: Object.assign(document.createElement('div'), 
+  //     { 
+  //       className: 'tree',
+  //       innerHTML: '<div></div>' 
+  //     }),
+  //     buffer: 40,
+  //   })
+  //   tree.addToWorld()
+  // }
+
+
   const addBunny = ({ x, y }) => {
     const bunny = new Bunny({
-      id: `bunny-${settings.npcslength + 1}`,
+      id: `bunny-${settings.npcs.length + 1}`,
       x, y,
       el: Object.assign(document.createElement('div'), 
       { 
@@ -80,24 +109,11 @@ function init() {
   })
   addBunny({ x: getRandomPos('w'), y: getRandomPos('h') })
 
+  addToWorld({ x: getRandomPos('w'), y: getRandomPos('h'), type: 'tree' })
+
+  addToWorld({ x: getRandomPos('w'), y: getRandomPos('h'), type: 'building' })
 
 
-  // const addTree = () => {
-  //   const tree = {
-  //     id: `tree-${settings.elements.length + 1}`,
-  //     x: getRandomPos('w'), y: getRandomPos('h'),
-  //     el: Object.assign(document.createElement('div'), 
-  //     { 
-  //       className: 'tree',
-  //       innerHTML: '<div></div>' 
-  //     }),
-  //     buffer: 40,
-  //   }
-  //   settings.elements.push(tree)
-  //   settings.map.el.appendChild(tree.el)
-  //   tree.el.style.zIndex = tree.y
-  //   setPos(tree)
-  // }
 
 
 
