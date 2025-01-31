@@ -102,20 +102,16 @@ const defineCustomElements = () => {
         this.className = 'slide-carousel'
         this.innerHTML = `
           <div class="slides">
-            <img class="slide show" src='./assets/img1.jpg' />
-            <img class="slide" src='./assets/img2.jpg' />
-            <img class="slide" src='./assets/img3.jpg' />
+            ${['img1.jpg', 'img2.jpg', 'img3.jpg'].map((img, i) => {
+              return ` <img class="slide${i ? '' : ' show'}" src='./assets/${img}' />`
+            }).join('')}
             <div class="slide-nav">
               <button class="prev arrow" data-dir="-1" >&#10229;</button>
               <button class="next arrow" data-dir="1">&#10230;</button>
             </div>
             <div class="pagination">
-              <div class="dot active"></div> 
-              <div class="dot"></div> 
-              <div class="dot"></div>
             </div>
           </div>
-      
         `
     }
     updatePagination() {
@@ -141,6 +137,7 @@ const defineCustomElements = () => {
     }
     connectedCallback () {
       this.slides = this.querySelectorAll('.slide')
+      this.pagination = this.querySelector('.pagination').innerHTML = new Array(this.slides.length).fill('').map((_, i) => `<div class="dot${i ? '' : ' active'}"></div>`).join('')
       this.slideDots = this.querySelectorAll('.dot')
       this.activeSlide = 0
       this.slideInterval = setInterval(()=> {
